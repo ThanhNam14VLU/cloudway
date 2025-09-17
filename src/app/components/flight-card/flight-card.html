@@ -1,1 +1,31 @@
-<p>flight-card works!</p>
+<div class="flight-card">
+  <div class="airline">
+    <img [src]="flight.logo" [alt]="flight.airline" />
+    <div class="airline-info">
+      <div class="flight-code">{{ flight.code }}</div>
+      <div class="airline-name">{{ flight.airline }}</div>
+    </div>
+  </div>
+
+  <div class="time">
+    <div class="depart">{{ flight.departTime }}</div>
+    <div class="airport">{{ flight.departAirport }}</div>
+  </div>
+
+  <div class="time">
+    <div class="arrive">{{ flight.arriveTime }}</div>
+    <div class="airport">{{ flight.arriveAirport }}</div>
+  </div>
+
+  <div class="price">
+    <div class="amount">
+      {{ flight.price }}
+    </div>
+    <div class="currency">VND</div>
+  </div>
+
+  <div class="action">
+    <button matButton="filled">Chọn</button>
+    <span class="chevron">⌄</span>
+  </div>
+</div>
