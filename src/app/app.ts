@@ -4,11 +4,12 @@ import { Footer } from './components/footer/footer';
 import { Feature } from './feature/feature';
 import { FlightCard } from './components/flight-card/flight-card';
 import { Login } from './pages/login/login';
+import { FlightSearch } from './components/flight-search/flight-search';
 
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Footer, Feature, FlightCard,RouterLink,Login],
+  imports: [RouterOutlet, Footer, Feature, FlightCard,RouterLink,Login,FlightSearch],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
