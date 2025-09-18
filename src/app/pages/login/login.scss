@@ -1,0 +1,145 @@
+* {
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #eceff1;
+  margin: 0;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.container {
+  position: relative;
+  width: 800px;
+  max-width: 100%;
+  min-height: 500px;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+}
+
+/* ===== FORM BOX ===== */
+.form-box {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  padding: 60px;
+  transition: all 0.8s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.login-box {
+  opacity: 1;
+  transform: translateX(0%);
+  pointer-events: auto;
+}
+
+.register-box {
+  transform: translateX(100%);
+  opacity: 0;
+
+}
+
+.container.active .login-box {
+  transform: translateX(100%);
+  opacity: 1;
+  pointer-events: auto ;
+}
+
+.container.active .register-box {
+  transform: translateX(0%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  outline: none;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #2196f3;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: #1976d2;
+}
+
+/* ===== TOGGLE BOX ===== */
+.toggle-box {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, #2196f3, #42a5f5);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  transition: transform 0.8s ease-in-out;
+  z-index: 3;
+}
+
+.toggle-panel {
+  text-align: center;
+  position: absolute;
+  width: 100%;
+  padding: 40px;
+  transition: all 0.8s ease-in-out;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.toggle-left {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: auto;
+}
+
+.toggle-right {
+  transform: translateX(0%);
+  opacity: 1;
+  pointer-events: auto;
+}    
+
+.container.active .toggle-left {
+  transform: translateX(0%);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.container.active .toggle-right {
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
+}

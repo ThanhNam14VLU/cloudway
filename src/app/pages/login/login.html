@@ -1,1 +1,37 @@
-<p>login works!</p>
+    <div class="container" [class.active]="isActive">
+    <!-- Phần login -->
+    <div class="form-box login-box">
+        <h2>Đăng nhập</h2>
+        <form>
+        <input type="text" placeholder="Email" required>
+        <input type="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng nhập</button>
+        </form>
+    </div>
+
+    <!-- Phần register -->
+    <div class="form-box register-box">
+        <h2>Đăng ký</h2>
+        <form>
+        <input type="text" placeholder="Tên tài khoản" required>
+        <input type="email" placeholder="Email" required>
+        <input type="password" placeholder="Mật khẩu" required>
+        <button type="submit">Đăng ký</button>
+        </form>
+    </div>
+
+    <!-- Panel điều hướng -->
+    <div class="toggle-box">
+        <div class="toggle-panel toggle-left">
+        <h2>Chào mừng trở lại!</h2>
+        <p>Đăng nhập để tiếp tục</p>
+        <button (click)="toggle(false)">Đăng nhập</button>
+        </div>
+        <div class="toggle-panel toggle-right">
+        <h2>Xin chào bạn mới!</h2>
+        <p>Chưa có tài khoản? Hãy đăng ký ngay</p>
+        <button (click)="toggle(true)">Đăng ký</button>
+        </div>
+    </div>
+    </div>
+    
