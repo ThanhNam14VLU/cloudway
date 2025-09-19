@@ -1,0 +1,121 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f5f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 420px;
+}
+
+.login-card {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 16px;
+  background: #e8f4ff;
+  color: #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 24px;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #777;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  border: 1px solid #ddd;
+  border-radius: 30px;
+  padding: 10px 14px;
+  gap: 8px;
+}
+
+.input-wrapper i {
+  color: #888;
+  font-size: 16px;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+  border: none;
+  outline: none;
+  flex: 1;
+  background: transparent;
+  font-size: 14px;
+}
+
+.input-wrapper select {
+  appearance: none;
+}
+
+.toggle-password {
+  cursor: pointer;
+}
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 30px;
+  background: #90caf9;
+  color: #fff;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-login:hover {
+  background: #408cca;
+}
+
+.back-home {
+  margin-top: 20px;
+}
+
+.back-home a {
+  text-decoration: none;
+  font-size: 14px;
+  color: #333;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.back-home a:hover {
+  color: #007bff;
+}

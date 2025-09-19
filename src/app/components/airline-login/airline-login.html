@@ -1,0 +1,59 @@
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<body>
+  <div class="login-container">
+    <div class="login-card">
+      <div class="icon">
+        <i class="fa-solid fa-building"></i>
+      </div>
+      <h2>Đăng nhập Hãng bay</h2>
+      <p class="subtitle">Truy cập cổng quản lý dành cho hãng hàng không</p>
+
+      <form>
+        <!-- Hãng hàng không -->
+        <div class="form-group">
+          <label for="airline"></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-plane"></i>
+            <select id="airline" required>
+              <option value="">Chọn hãng hàng không</option>
+              <option value="vna">Vietnam Airlines</option>
+              <option value="vj">VietJet Air</option>
+              <option value="bl">Bamboo Airways</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email"></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" id="email" placeholder="admin@vietnamairlines.com" required>
+          </div>
+        </div>
+
+        <!-- Mật khẩu -->
+        <div class="form-group">
+          <label for="password"></label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input [type]="isPassWordVisible ? 'password' :' text'" id="password" placeholder="Mật khẩu quản trị" required>
+            @if (isPassWordVisible) {
+                <i class="fa-solid fa-eye" (click)="togglePassword()"></i>
+            }
+            @else {
+                <i class="fa-solid fa-eye-slash" (click)="togglePassword()"></i>
+            }
+
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login">Đăng nhập</button>
+      </form>
+
+      <div class="back-home">
+        <a routerLink="home"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</a>
+      </div>
+    </div>
+  </div>
+</body>
