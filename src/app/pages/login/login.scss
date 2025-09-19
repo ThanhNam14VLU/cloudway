@@ -35,7 +35,7 @@ h2 {
   top: 0;
   width: 50%;
   height: 100%;
-  padding: 60px;
+  padding: 20px 60px;
   transition: all 0.8s ease-in-out;
   opacity: 0;
   pointer-events: none;
@@ -43,25 +43,39 @@ h2 {
 
 .login-box {
   opacity: 1;
+  z-index: 1;
   transform: translateX(0%);
   pointer-events: auto;
+}
+
+.login-box span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  padding: 10px;
 }
 
 .register-box {
   transform: translateX(100%);
   opacity: 0;
-
+  z-index: 0;
+  pointer-events: none;
+  
 }
 
 .container.active .login-box {
   transform: translateX(100%);
-  opacity: 1;
-  pointer-events: auto ;
+  z-index: 0;
+  opacity: 0;
+  pointer-events: nono;
+  
 }
 
 .container.active .register-box {
   transform: translateX(0%);
   opacity: 1;
+  z-index: 1;
   pointer-events: auto;
 }
 
@@ -70,14 +84,54 @@ form {
   flex-direction: column;
   gap: 15px;
 }
-
+.input-group {
+  position: relative;
+  width: 100%;
+}
+.input-group input{
+  width: 100%;
+  padding-left: 40px; /* Đảm bảo có khoảng trống cho icon */
+  
+}
+.icon-info{
+  position: absolute;
+  top: 50%;
+  margin-right: 5px;
+  left: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bbb;
+}
 input {
-  padding: 12px;
+  padding: 12px 40px;
   border-radius: 8px;
   border: 1px solid #bbb;
   outline: none;
 }
-
+.passwor_group{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+#forget_pass{
+  text-align: right;
+  font-size: 14px;
+  color: #2196f3;
+  text-decoration: none;
+  margin-bottom: 10px;
+}
+.passwor_group input{
+  width: 100%;
+  padding-right: 40px; /* Đảm bảo có khoảng trống cho icon */
+}
+.icon{
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #bbb;
+}
 button {
   padding: 12px;
   border: none;
@@ -123,23 +177,39 @@ button:hover {
 .toggle-left {
   transform: translateX(-100%);
   opacity: 0;
-  pointer-events: auto;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .toggle-right {
   transform: translateX(0%);
   opacity: 1;
+  z-index: 1;
   pointer-events: auto;
-}    
+}
 
 .container.active .toggle-left {
   transform: translateX(0%);
   opacity: 1;
+  z-index: 1;
   pointer-events: auto;
 }
 
 .container.active .toggle-right {
   transform: translateX(-100%);
+  z-index: 0;
   opacity: 0;
   pointer-events: none;
+}
+
+//đăng nhâp google
+#google-login {
+  background: white;
+  color: #444;
+  border: 1px solid lightgrey;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
 }

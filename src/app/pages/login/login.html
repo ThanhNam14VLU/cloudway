@@ -1,37 +1,97 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<body>
     <div class="container" [class.active]="isActive">
-    <!-- Phần login -->
-    <div class="form-box login-box">
-        <h2>Đăng nhập</h2>
-        <form>
-        <input type="text" placeholder="Email" required>
-        <input type="password" placeholder="Mật khẩu" required>
-        <button type="submit">Đăng nhập</button>
-        </form>
+        <!-- Phần login -->
+        <div class="form-box login-box">
+            <h2>Đăng nhập</h2>
+            <form>
+                <div class="input-group">
+                     <i class="fa-solid fa-envelope icon-info"></i>
+                    <input type="email" placeholder="Email" required>
+                </div>
+               
+                <div class="passwor_group">
+                    <i class="fa-solid fa-lock icon-info"></i>
+                    <input [type]="isPassWordVisible ? 'text' : 'password'" placeholder="Mật khẩu" required>
+                    @if (isPassWordVisible){
+                    <i class="fa-solid fa-eye icon" (click)="togglePasswordVisibility()"></i>
+                    }
+                    @else{
+                    <i class="fa-solid fa-eye-slash icon" (click)="togglePasswordVisibility()"></i>
+                    }
+                </div>
+
+                <a id="forget_pass" href="">Quên mật khẩu?</a>
+                <button type="submit">Đăng nhập</button>
+
+            </form>
+            <span>HOẶC</span>
+            <button id="google-login" type="submit"><img height="20px" width="20px" src="assets/images/google-logo.png"
+                    alt="">Đăng nhập bằng Google </button>
+        </div>
+
+        <!-- Phần register -->
+        <div class="form-box register-box">
+            <h2>Đăng ký</h2>
+            <form>
+                <div class="input-group">
+                    <i class="fa-solid fa-user icon-info"></i>
+                    <input type="text" placeholder="Họ" required>
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-user icon-info"></i>
+                    <input type="text" placeholder="Tên" required>
+
+                </div>
+                <div class="input-group">
+                    <i class="fa-solid fa-envelope icon-info"></i>
+                    <input type="email" placeholder="Email" required>
+
+                </div>
+                <div class="input-group ">
+                    <i class="fa-solid fa-phone icon-info"></i>
+                    <input type="tel" placeholder="Số điện thoại" name="telphone" pattern="[0-9]{10}"
+                        title="nhập đúng số điện thoại" required />
+                </div>
+                <div class="passwor_group">
+                    <i class="fa-solid fa-lock icon-info"></i>
+                    <input [type]="isPassWordVisible ? 'text' : 'password'" placeholder="Mật khẩu" required>
+                    @if (isPassWordVisible){
+                    <i class="fa-solid fa-eye icon" (click)="togglePasswordVisibility()"></i>
+                    }
+                    @else{
+                    <i class="fa-solid fa-eye-slash icon" (click)="togglePasswordVisibility()"></i>
+                    }
+                </div>
+                <div class="passwor_group">
+                    <i class="fa-solid fa-lock icon-info"></i>
+                    <input [type]="isPassWordVisibleconfirm ? 'text' : 'password'" placeholder="Xác nhận mật khẩu"
+                        required>
+                    @if (isPassWordVisibleconfirm){
+                    <i class="fa-solid fa-eye icon" (click)="togglePasswordVisibilityconfirm()"></i>
+                    }
+                    @else{
+                    <i class="fa-solid fa-eye-slash icon" (click)="togglePasswordVisibilityconfirm()"></i>
+                    }
+                </div>
+                <button type="submit">Đăng ký</button>
+            </form>
+        </div>
+
+        <!-- Panel điều hướng -->
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h2>Chào mừng trở lại!</h2>
+                <p>Đăng nhập để tiếp tục</p>
+                <button (click)="toggle(false)">Đăng nhập</button>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h2>Xin chào bạn mới!</h2>
+                <p>Chưa có tài khoản? Hãy đăng ký ngay</p>
+                <button (click)="toggle(true)">Đăng ký</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Phần register -->
-    <div class="form-box register-box">
-        <h2>Đăng ký</h2>
-        <form>
-        <input type="text" placeholder="Tên tài khoản" required>
-        <input type="email" placeholder="Email" required>
-        <input type="password" placeholder="Mật khẩu" required>
-        <button type="submit">Đăng ký</button>
-        </form>
-    </div>
-
-    <!-- Panel điều hướng -->
-    <div class="toggle-box">
-        <div class="toggle-panel toggle-left">
-        <h2>Chào mừng trở lại!</h2>
-        <p>Đăng nhập để tiếp tục</p>
-        <button (click)="toggle(false)">Đăng nhập</button>
-        </div>
-        <div class="toggle-panel toggle-right">
-        <h2>Xin chào bạn mới!</h2>
-        <p>Chưa có tài khoản? Hãy đăng ký ngay</p>
-        <button (click)="toggle(true)">Đăng ký</button>
-        </div>
-    </div>
-    </div>
-    
+</body>

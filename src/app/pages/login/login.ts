@@ -8,7 +8,17 @@ import { Component } from '@angular/core';
   styleUrl: './login.scss'
 })
 export class Login {
-  isActive: boolean = false;    
+
+  isActive: boolean = false;   
+  isPassWordVisible: boolean = false;
+  isPassWordVisibleconfirm: boolean = false;
+  togglePasswordVisibility() {
+    this.isPassWordVisible = !this.isPassWordVisible;
+  }
+  togglePasswordVisibilityconfirm() {
+    this.isPassWordVisibleconfirm = !this.isPassWordVisibleconfirm;
+  }
+
   toggle(isRegister: boolean) {
     this.isActive = isRegister;
   }

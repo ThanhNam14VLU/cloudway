@@ -39,7 +39,7 @@
             <i class="fa-solid fa-lock"></i>
             <input [type]="isPassWordVisible ? 'password' :' text'" id="password" placeholder="Mật khẩu quản trị" required>
             @if (isPassWordVisible) {
-                <i class="fa-solid fa-eye" (click)="togglePassword()"></i>
+                <i class="fa-solid fa-eye " (click)="togglePassword()"></i>
             }
             @else {
                 <i class="fa-solid fa-eye-slash" (click)="togglePassword()"></i>
