@@ -1,0 +1,104 @@
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 40px;
+  font-size: 14px;
+  color: #475569;
+}
+
+.top-bar .contact-info span {
+  margin-right: 20px;
+}
+
+.top-bar .contact-info span i {
+  margin-right: 6px;
+}
+
+.top-bar .top-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.top-bar .top-actions .special-offer {
+  border: 1px solid #38bdf8;
+  background: transparent;
+  color: #0ea5e9;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.top-bar .top-actions .special-offer:hover {
+  background: #0ea5e9;
+  color: #fff;
+}
+
+.top-bar .top-actions span {
+  cursor: pointer;
+}
+
+.top-bar .top-actions span i {
+  margin-right: 6px;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 80px;
+}
+
+.navbar .logo {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+
+}
+.navbar .brand {
+  display: flex;
+  line-height: 1;
+  margin-top: 5px;
+  gap: 5px;
+}
+.navbar .logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.navbar .logo .brand h2 {
+  font-size: 18px;
+  color: #0ea5e9;
+  display: inline-block;
+}
+
+.navbar .logo  p {
+  font-size: 13px;
+  margin: 0;
+  color: #64748b;
+}
+
+.navbar .menu {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+}
+
+.navbar .menu li a {
+  text-decoration: none;
+  color: #111;
+  font-size: 15px;
+  transition: color 0.3s;
+}
+
+.navbar .menu li a:hover {
+  color: #0ea5e9;
+}
+
+.navbar .menu li a.highlight {
+  font-weight: 600;
+}
