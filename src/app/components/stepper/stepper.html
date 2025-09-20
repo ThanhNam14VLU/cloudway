@@ -1,0 +1,39 @@
+<div class="stepper">
+    <!-- step 1 -->
+
+    <div class="step"  
+                [class.current]='currentStep === 1'>
+        <div class="circle">@if(isStep1Completed){<span>✔</span>}</div>
+        <div class="text">
+            <div class="title">Chọn chuyến bay</div>
+            <div class="subtitle">Vui lòng chọn chuyến bay</div>
+        </div>
+    </div>
+
+    <div class="line"></div>
+    <!-- step 2-->
+
+    <div class="step" 
+        [class.current]='currentStep === 2'>
+        <div class="circle">@if(isStep2Completed){<span>✔</span>}</div>
+        <div class="text">
+            <div class="title">Đặt chỗ</div>
+            <div class="subtitle">Điền thông tin để đặt chỗ</div>
+        </div>
+    </div>
+
+
+    <div class="line"></div>
+    <!-- step 3 -->
+
+    <div class="step" 
+        [class.current]='currentStep === 3'>
+        <div class="circle">@if(isStep2Completed){<span>✔</span>}</div>
+        <div class="text">
+            <div class="title">Thanh toán</div>
+            <div class="subtitle">Thanh toán để nhận vé máy bay</div>
+        </div>
+    </div>
+
+
+</div>

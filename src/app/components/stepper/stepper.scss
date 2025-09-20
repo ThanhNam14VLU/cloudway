@@ -1,0 +1,49 @@
+.stepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 30px auto;
+    font-family: sans-serif;
+}
+
+.step {
+    text-align: center;
+    position: relative;
+}
+
+.step .circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #00c2c9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.step.current .circle {
+    border: 4px solid #00c2c9;
+    background: #fff;
+    color: transparent;
+}
+
+.step .text .title {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.step .text .subtitle {
+    font-size: 13px;
+    color: #666;
+}
+
+.line {
+    width: 200px;
+    height: 2px;
+    background: #00c2c9;
+    margin: 0 12px;
+}
