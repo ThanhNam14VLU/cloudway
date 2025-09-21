@@ -1,31 +1,53 @@
 <div class="flight-card">
-  <div class="airline">
-    <img [src]="flight.logo" [alt]="flight.airline" />
-    <div class="airline-info">
-      <div class="flight-code">{{ flight.code }}</div>
-      <div class="airline-name">{{ flight.airline }}</div>
+  <div class="col-1">
+    <div class="airline">
+      <img [src]="flight.logo" [alt]="flight.airline" />
+      <div class="airline-info">
+        <div class="flight-code">{{ flight.code }}</div>
+        <div class="airline-name">{{ flight.airline }}</div>
+      </div>
+    </div>
+
+    <div class="time">
+      <div class="depart">{{ flight.departTime }}</div>
+      <div class="airport">{{ flight.departAirport }}</div>
+    </div>
+
+    <div class="time">
+      <div class="arrive">{{ flight.arriveTime }}</div>
+      <div class="airport">{{ flight.arriveAirport }}</div>
+    </div>
+
+    <div class="price">
+      <div class="amount">
+        {{ flight.price }}
+      </div>
+      <div class="currency">VND</div>
+    </div>
+
+    <div class="action">
+      <button matButton="filled">Chọn</button>
+      <span class="chevron" (click)="Dropdown()"><span
+          class="material-symbols-outlined">keyboard_arrow_down</span></span>
+      <div class="flight-rules dropped">
+      </div>
     </div>
   </div>
-
-  <div class="time">
-    <div class="depart">{{ flight.departTime }}</div>
-    <div class="airport">{{ flight.departAirport }}</div>
-  </div>
-
-  <div class="time">
-    <div class="arrive">{{ flight.arriveTime }}</div>
-    <div class="airport">{{ flight.arriveAirport }}</div>
-  </div>
-
-  <div class="price">
-    <div class="amount">
-      {{ flight.price }}
+  @if (isDropped){
+    <div class="line"></div>
+    <div class="col-2">
+      <h4>Điều kiện vé</h4>
+      <ul>
+        <li><strong>Hành lý xách tay:</strong> 7kg (01 kiện)</li>
+        <li><strong>Hành lý ký gửi:</strong> Mua thêm (tùy chọn)</li>
+        <li><strong>Đổi tên:</strong> 350.000 VND/lần</li>
+        <li><strong>Đổi ngày/giờ bay:</strong> 500.000 VND + chênh lệch giá vé</li>
+        <li><strong>Hoàn vé:</strong> Không áp dụng</li>
+        <li><strong>Check-in:</strong> Có mặt trước giờ khởi hành 120 phút</li>
+      </ul>
     </div>
-    <div class="currency">VND</div>
-  </div>
+  }
 
-  <div class="action">
-    <button matButton="filled">Chọn</button>
-    <span class="chevron">⌄</span>
-  </div>
+
+
 </div>

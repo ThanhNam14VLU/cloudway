@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 6px 40px;
+  padding: 6px 80px;
   font-size: 14px;
   color: #475569;
 }
@@ -44,7 +44,10 @@
 .top-bar .top-actions span i {
   margin-right: 6px;
 }
-
+.line{
+  border-top: 1px solid #d4d5d7;
+  margin: 5px 80px;
+}
 /* NAVBAR */
 .navbar {
   display: flex;

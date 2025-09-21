@@ -8,6 +8,11 @@ import {MatButtonModule} from '@angular/material/button';
   styleUrl: './flight-card.scss'
 })
 export class FlightCard {
+  isDropped: boolean = false;//check xem chi tiết vé
+  Dropdown() {
+    this.isDropped = !this.isDropped;
+  }
+
 flight = {
     code: 'QH290',
     airline: 'Vietravel Airlines',
