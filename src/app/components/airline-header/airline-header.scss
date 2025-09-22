@@ -1,0 +1,57 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 80px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+/* Cột 1: nút */
+.col-1 button {
+    padding: 8px 16px;
+    background-color: var(--base-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.3s;
+}
+
+.col-1 button:hover {
+    background-color: #0056b3;
+}
+
+/* Cột 2: thông tin hãng bay */
+.col-2 .airline-info {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* khoảng cách giữa logo và text */
+}
+
+/* Logo bên trái */
+.airline-info .left .logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Text bên phải */
+.airline-info .right {
+    display: flex;
+    flex-direction: column;
+}
+
+.airline-info .right .airline-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.airline-info .right span {
+    font-size: 0.9rem;
+    color: #555;
+}

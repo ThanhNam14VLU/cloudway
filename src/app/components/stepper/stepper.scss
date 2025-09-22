@@ -15,7 +15,7 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: #00c2c9;
+    background: var(--base-color);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,7 +26,7 @@
 }
 
 .step.current .circle {
-    border: 4px solid #00c2c9;
+    border: 4px solid var(--base-color);
     background: #fff;
     color: transparent;
 }
@@ -44,6 +44,6 @@
 .line {
     width: 200px;
     height: 2px;
-    background: #00c2c9;
+    background: var(--base-color);
     margin: 0 12px;
 }
