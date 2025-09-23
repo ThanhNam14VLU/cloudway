@@ -1,0 +1,122 @@
+.flight-management {
+  font-family: 'Arial', sans-serif;
+  padding: 20px 80px;
+//   background-color: #f8f9fa;
+  
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    p {
+      margin: 4px 0 0;
+      color: #6c757d;
+    }
+
+    .add-flight {
+      background-color: #0d6efd;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #0b5ed7;
+      }
+    }
+  }
+
+  .search-filter {
+    display: flex;
+    margin: 20px 0;
+    gap: 10px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    input {
+      flex: 1;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ced4da;
+    }
+
+    select {
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: 1px solid #ced4da;
+    }
+  }
+
+  .flight-list {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background-color: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+      }
+
+      thead {
+        background-color: #e9ecef;
+      }
+
+      tr:not(:last-child) {
+        border-bottom: 1px solid #dee2e6;
+      }
+
+      .arrow {
+        margin: 0 5px;
+      }
+
+      .airport-code, .duration {
+        font-size: 12px;
+        color: #6c757d;
+      }
+
+      .status {
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 12px;
+
+        &.active {
+          background-color: #d1e7dd;
+          color: #0f5132;
+        }
+
+        &.inactive {
+          background-color: #f8d7da;
+          color: #842029;
+        }
+      }
+
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-right: 5px;
+        font-size: 16px;
+
+        &.edit {
+          color: #0d6efd;
+        }
+
+        &.delete {
+          color: #dc3545;
+        }
+      }
+    }
+  }
+}

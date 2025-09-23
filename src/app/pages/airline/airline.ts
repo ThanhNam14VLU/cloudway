@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { AirlineHeader } from '../../components/airline-header/airline-header';
 import { AirlineNav } from '../../components/airline-nav/airline-nav';
 import { AirlineDashboard } from '../../components/airline-dashboard/airline-dashboard';
+import { AirlineManagement } from '../../components/airline-management/airline-management';
+import { AirlineFlightAdd } from '../../components/airline-flight-add/airline-flight-add';
 
 @Component({
   selector: 'app-airline',
-  imports: [AirlineHeader,AirlineNav,AirlineDashboard],
+  imports: [AirlineHeader,AirlineNav,AirlineDashboard,AirlineManagement,AirlineFlightAdd],
   templateUrl: './airline.html',
   styleUrl: './airline.scss'
 })

@@ -1,0 +1,111 @@
+<div class="flight-management">
+  <div class="header">
+    <h2>Quản lý chuyến bay</h2>
+    <p>Thêm, chỉnh sửa và quản lý các chuyến bay của hãng</p>
+    <button class="add-flight">+ Thêm chuyến bay</button>
+  </div>
+
+  <div class="search-filter">
+    <input type="text" placeholder="Tìm kiếm theo số hiệu hoặc tuyến bay..." />
+    <select class="flight-state">
+      <option value="">Tất cả trạng thái</option>
+      <option value="active">Hoạt động</option>
+      <option value="inactive">Ngừng hoạt động</option>
+    </select>
+  </div>
+
+  <div class="flight-list">
+    <table>
+      <thead>
+        <tr>
+          <th>Số hiệu</th>
+          <th>Tuyến bay</th>
+          <th>Lịch trình</th>
+          <th>Máy bay</th>
+          <th>Giá vé</th>
+          <th>Sức chứa</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>VN123</td>
+          <td>
+            Hà Nội <span class="arrow">✈</span> TP.HCM
+            <div class="airport-code">HAN → SGN</div>
+          </td>
+          <td>
+            08:30 - 10:45
+            <div class="duration">2h 15m • Hàng ngày</div>
+          </td>
+          <td>Airbus A321</td>
+          <td>1.200.000 ₫</td>
+          <td>180</td>
+          <td><span class="status active">Hoạt động</span></td>
+          <td>
+            <button class="edit">✏️</button>
+            <button class="delete">🗑️</button>
+          </td>
+        </tr>
+        <tr>
+          <td>VN456</td>
+          <td>
+            TP.HCM <span class="arrow">✈</span> Đà Nẵng
+            <div class="airport-code">SGN → DAD</div>
+          </td>
+          <td>
+            14:15 - 16:00
+            <div class="duration">1h 45m • Thứ 2,4,6</div>
+          </td>
+          <td>Boeing 737</td>
+          <td>850.000 ₫</td>
+          <td>165</td>
+          <td><span class="status active">Hoạt động</span></td>
+          <td>
+            <button class="edit">✏️</button>
+            <button class="delete">🗑️</button>
+          </td>
+        </tr>
+        <tr>
+          <td>VN456</td>
+          <td>
+            TP.HCM <span class="arrow">✈</span> Đà Nẵng
+            <div class="airport-code">SGN → DAD</div>
+          </td>
+          <td>
+            14:15 - 16:00
+            <div class="duration">1h 45m • Thứ 2,4,6</div>
+          </td>
+          <td>Boeing 737</td>
+          <td>850.000 ₫</td>
+          <td>165</td>
+          <td><span class="status active">Hoạt động</span></td>
+          <td>
+            <button class="edit">✏️</button>
+            <button class="delete">🗑️</button>
+          </td>
+        </tr>
+        <tr>
+          <td>VN456</td>
+          <td>
+            TP.HCM <span class="arrow">✈</span> Đà Nẵng
+            <div class="airport-code">SGN → DAD</div>
+          </td>
+          <td>
+            14:15 - 16:00
+            <div class="duration">1h 45m • Thứ 2,4,6</div>
+          </td>
+          <td>Boeing 737</td>
+          <td>850.000 ₫</td>
+          <td>165</td>
+          <td><span class="status active">Hoạt động</span></td>
+          <td>
+            <button class="edit">✏️</button>
+            <button class="delete">🗑️</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
