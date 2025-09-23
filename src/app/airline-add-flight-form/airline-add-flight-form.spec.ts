@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AirlineFlightAdd } from './airline-flight-add';
+import { AirlineAddFlightForm } from './airline-add-flight-form';
 
-describe('AirlineFlightAdd', () => {
-  let component: AirlineFlightAdd;
-  let fixture: ComponentFixture<AirlineFlightAdd>;
+describe('AirlineAddFlightForm', () => {
+  let component: AirlineAddFlightForm;
+  let fixture: ComponentFixture<AirlineAddFlightForm>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AirlineFlightAdd]
+      imports: [AirlineAddFlightForm]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AirlineFlightAdd);
+    fixture = TestBed.createComponent(AirlineAddFlightForm);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -2,7 +2,7 @@
   <div class="header">
     <h2>Quản lý chuyến bay</h2>
     <p>Thêm, chỉnh sửa và quản lý các chuyến bay của hãng</p>
-    <button class="add-flight">+ Thêm chuyến bay</button>
+    <button class="add-flight" (click)="ShowForm()">+ Thêm chuyến bay</button>
   </div>
 
   <div class="search-filter">
@@ -109,3 +109,6 @@
     </table>
   </div>
 </div>
+@if(isShowForm){
+  <app-airline-add-flight-form></app-airline-add-flight-form>
+}

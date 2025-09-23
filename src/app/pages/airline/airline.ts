@@ -3,11 +3,11 @@ import { AirlineHeader } from '../../components/airline-header/airline-header';
 import { AirlineNav } from '../../components/airline-nav/airline-nav';
 import { AirlineDashboard } from '../../components/airline-dashboard/airline-dashboard';
 import { AirlineManagement } from '../../components/airline-management/airline-management';
-import { AirlineFlightAdd } from '../../components/airline-flight-add/airline-flight-add';
+import { AirlineAddFlightForm } from '../../airline-add-flight-form/airline-add-flight-form';
 
 @Component({
   selector: 'app-airline',
-  imports: [AirlineHeader,AirlineNav,AirlineDashboard,AirlineManagement,AirlineFlightAdd],
+  imports: [AirlineHeader,AirlineNav,AirlineDashboard,AirlineManagement,AirlineAddFlightForm],
   templateUrl: './airline.html',
   styleUrl: './airline.scss'
 })

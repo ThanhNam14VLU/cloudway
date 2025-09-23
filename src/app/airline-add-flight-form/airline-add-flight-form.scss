@@ -1,0 +1,113 @@
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    /* làm mờ background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    /* đảm bảo nằm trên cùng */
+
+
+    .modal {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      width: 600px;
+      max-width: 90%;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+
+        h2 {
+          margin: 0;
+          font-size: 20px;
+        }
+
+        .close-btn {
+          background: none;
+          border: none;
+          font-size: 24px;
+          cursor: pointer;
+        }.close-btn:hover{
+          background: red;
+          color: #fff;
+          transition: background .2s, color .2s;
+              
+
+        }
+      }
+
+      .modal-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .form-row {
+          display: flex;
+          gap: 16px;
+
+          .form-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+
+            label {
+              margin-bottom: 4px;
+              font-weight: 500;
+            }
+
+            input,
+            select {
+              padding: 8px 12px;
+              border-radius: 8px;
+              border: 1px solid #ccc;
+              font-size: 14px;
+            }
+
+            input[type="time"] {
+              cursor: pointer;
+            }
+          }
+        }
+
+        .form-actions {
+          display: flex;
+          justify-content: flex-end;
+          gap: 12px;
+          margin-top: 8px;
+
+          .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+          }
+
+          .cancel {
+            background: #f0f0f0;
+          }.cancel:hover{
+             background:#e5e4e4;
+          }
+
+          .submit {
+            background: #0d6efd;
+            color: #fff;
+          }.submit:hover{
+            background: #054cb8;
+
+          }
+        }
+      }
+    }
+  }
