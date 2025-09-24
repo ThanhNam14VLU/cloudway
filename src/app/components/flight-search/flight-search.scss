@@ -1,24 +1,43 @@
-/* Wrapper */
+/* Khối tổng */
 .wrapper {
-  background-image: url('/assets/images/sky_bg.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  max-width: 950px;
-  margin: 15px auto;
-  padding: 15px;
-  font-family: "Segoe UI", sans-serif;
+  position: relative;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Flight search box */
-.flight-search {
-  background: #fff;
-  padding: 2rem;
+/* Hero: nửa trên */
+.hero {
+  width: 100%;
+  height: 450px; /* chỉnh cao theo ý bạn */
+  overflow: hidden;
   border-radius: 20px;
-  max-width: 750px;
-  margin: auto;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+.hero video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Form: nửa dưới */
+.flight-search {
+  position: absolute;
+  left: 50%;
+  bottom: -350px;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 950px;
+
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+
+  padding: 2rem;
   text-align: center;
 }
+
 
 .flight-search h2 {
   font-size: 26px;
