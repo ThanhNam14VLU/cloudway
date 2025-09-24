@@ -3,18 +3,21 @@ import { AirlineHeader } from '../../components/airline-header/airline-header';
 import { AirlineNav } from '../../components/airline-nav/airline-nav';
 import { AirlineDashboard } from '../../components/airline-dashboard/airline-dashboard';
 import { AirlineManagement } from '../../components/airline-management/airline-management';
-import { AirlineAddFlightForm } from '../../airline-add-flight-form/airline-add-flight-form';
+import { AirlineAddFlightForm } from '../../components/airline-add-flight-form/airline-add-flight-form';
+import { AirlineReport } from '../../components/airline-report/airline-report';
+import { AirlineSetting } from '../../components/airline-setting/airline-setting';
+import { RouterLink, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-airline',
-  imports: [AirlineHeader,AirlineNav,AirlineDashboard,AirlineManagement,AirlineAddFlightForm],
+  imports: [RouterOutlet,RouterLink,AirlineHeader, AirlineNav, AirlineDashboard, AirlineManagement,AirlineReport,AirlineSetting, AirlineAddFlightForm,],
   templateUrl: './airline.html',
   styleUrl: './airline.scss'
 })
 export class Airline {
-  nav_selected=1;//biến kiểm tra chức năng nào được chọn trên thanh nav
-  Selected(nav_selected:number){
-    this.nav_selected=nav_selected;
+  nav_selected = 1;//biến kiểm tra chức năng nào được chọn trên thanh nav
+  Selected(nav_selected: number) {
+    this.nav_selected = nav_selected;
   }
 
 }

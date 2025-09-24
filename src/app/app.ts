@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { RouterEvent, RouterLink, RouterOutlet } from '@angular/router';
 import { Footer } from './components/footer/footer';
-import { Feature } from './feature/feature';
+import { Feature } from './components/feature/feature';
 import { FlightCard } from './components/flight-card/flight-card';
 import { Login } from './pages/login/login';
 import { FlightSearch } from './components/flight-search/flight-search';
@@ -12,7 +12,7 @@ import { Stepper } from './components/stepper/stepper';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet,Header, Footer, Feature, FlightCard,RouterLink,Login,FlightSearch,AirlineLogin,Stepper],
+  imports: [RouterOutlet, Header, Footer, Feature, FlightCard, RouterLink, Login, FlightSearch, AirlineLogin, Stepper],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

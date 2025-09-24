@@ -1,14 +1,17 @@
-<body>
-    
-    <app-airline-header></app-airline-header>
-    <app-airline-nav></app-airline-nav>
-    @if (nav_selected==1){
+<app-airline-header></app-airline-header>
+<app-airline-nav></app-airline-nav>
 
+<div class="wrapper">
+    <!-- @if (nav_selected==1){
+   
         <app-airline-dashboard></app-airline-dashboard> 
         <app-airline-management></app-airline-management>
+            <app-airline-report></app-airline-report>
+        <app-airline-setting></app-airline-setting>
     }
     @else if(nav_selected==2){
-
-        <div>xin chào</div>
-    }
-</body>
+        
+    } -->
+    <router-outlet></router-outlet>
+</div>
+    

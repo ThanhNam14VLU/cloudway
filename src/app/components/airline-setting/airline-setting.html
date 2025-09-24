@@ -1,0 +1,111 @@
+<div class="settings-container">
+  <div class="header">
+    <h1>Cài đặt hãng bay</h1>
+    <button class="btn-primary">Chỉnh sửa</button>
+    <!-- <button class="btn-primary">Lưu thay đổi</button>   -->
+  </div>
+
+  <div class="settings-grid">
+    <!-- Thông tin công ty -->
+    <div class="card">
+      <h2>Thông tin công ty</h2>
+      <form>
+        <label>Tên hãng bay</label>
+        <input type="text" value="Vietnam Airlines" />
+
+        <label>Mã hãng</label>
+        <input type="text" value="VJ" />
+
+        <label>Mô tả</label>
+        <textarea rows="3">Hãng hàng không hàng đầu Việt Nam với dịch vụ chất lượng cao</textarea>
+
+        <label>Địa chỉ</label>
+        <input type="text" value="12 Lê Duẩn, Quận 1, TP.HCM" />
+
+        <div class="row">
+          <div class="col">
+            <label>Số điện thoại</label>
+            <input type="text" value="+84 28 1234 5678" />
+          </div>
+          <div class="col">
+            <label>Email</label>
+            <input type="text" value="contact@vietnamairline.com" />
+          </div>
+        </div>
+
+        <label>Website</label>
+        <input type="text" value="http://vietnamairline.com" />
+      </form>
+    </div>
+
+    <!-- Cài đặt thông báo -->
+    <div class="card">
+      <h2>Cài đặt thông báo</h2>
+      <div class="toggle-item">
+        <span>Email booking mới</span>
+        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-item">
+        <span>Khách hủy vé</span>
+        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-item">
+        <span>Chậm trễ chuyến bay</span>
+        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-item">
+        <span>SMS cảnh báo</span>
+        <label class="switch"><input type="checkbox" /><span class="slider"></span></label>
+      </div>
+      <div class="toggle-item">
+        <span>Push notifications</span>
+        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+      </div>
+    </div>
+
+    <!-- Cài đặt giá vé -->
+    <div class="card">
+      <h2>Cài đặt giá vé</h2>
+      <form>
+        <label>Đơn vị tiền tệ</label>
+        <input type="text" value="VND – Việt Nam Đồng" />
+
+        <label>Thuế (%)</label>
+        <input type="number" value="10" />
+
+        <label>Phí hành lý (VND)</label>
+        <input type="number" value="300000" />
+
+        <label>Phí đổi vé (VND)</label>
+        <input type="number" value="300000" />
+      </form>
+    </div>
+
+    <!-- Cài đặt vận hành -->
+    <div class="card">
+      <h2>Cài đặt vận hành</h2>
+      <div class="toggle-item">
+        <span>Tự động xác nhận booking</span>
+        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+      </div>
+
+      <form>
+        <label>Giới hạn overbooking (%)</label>
+        <input type="number" value="5" />
+
+        <label>Thời gian check-in (giờ)</label>
+        <input type="number" value="24" />
+
+        <label>Thời gian boarding (phút)</label>
+        <input type="number" value="30" />
+      </form>
+    </div>
+  </div>
+
+  <!-- Trạng thái tài khoản -->
+  <div class="account-status card">
+    <h2>Trạng thái tài khoản</h2>
+    <p><strong>Tài khoản được xác thực:</strong> Tài khoản của bạn đã được xác thực và có thể sử dụng đầy đủ tính năng</p>
+    <span class="status success">Đã xác thực</span>
+  </div>
+</div>

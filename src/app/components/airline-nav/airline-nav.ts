@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-airline-nav',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './airline-nav.html',
   styleUrl: './airline-nav.scss'
 })

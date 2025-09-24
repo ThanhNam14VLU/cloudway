@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AirlineAddFlightForm } from '../../airline-add-flight-form/airline-add-flight-form';
+import { AirlineAddFlightForm } from '../airline-add-flight-form/airline-add-flight-form';
 
 @Component({
   selector: 'app-airline-management',
