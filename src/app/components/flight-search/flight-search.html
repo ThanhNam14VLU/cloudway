@@ -1,62 +1,113 @@
 <div class="wrapper">
+  <div class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="/assets/videos/intro.mp4" type="video/mp4" />
+      Trình duyệt không hỗ trợ video.
+    </video>
+  </div>
+
   <div class="flight-search">
-  <h2>Bay nội địa dễ dàng cùng CloudWay</h2>
-  <p class="sub-title">CloudWay - Chạm tay dễ dàng, chuyến bay sẵn sàng</p>
+    <h2>Bay nội địa dễ dàng cùng CloudWay</h2>
+    <p class="sub-title">CloudWay - Chạm tay dễ dàng, chuyến bay sẵn sàng</p>
 
-  <div class="trip-type">
-    <label>
-      <input type="radio" name="trip" checked />
-      Một chiều
-    </label>
-    <label>
-      <input type="radio" name="trip" />
-      Khứ hồi
-    </label>
+    <!-- Trip type -->
+    <div class="trip-type">
+      <label>
+        <input
+          type="radio"
+          name="trip"
+          value="oneway"
+          [(ngModel)]="tripType"
+        />
+        Một chiều
+      </label>
+      <label>
+        <input
+          type="radio"
+          name="trip"
+          value="roundtrip"
+          [(ngModel)]="tripType"
+        />
+        Khứ hồi
+      </label>
+    </div>
+
+    <div class="form">
+
+      <!-- Điểm đi + Điểm đến -->
+      <div class="form-row">
+        <div class="form-group input-wrapper">
+          <label>Điểm đi</label>
+          <mat-icon>flight_takeoff</mat-icon>
+          <select>
+            <option selected disabled>Vui lòng chọn điểm đi</option>
+            <option value="SGN">TP Hồ Chí Minh (SGN)</option>
+            <option value="HAN">Hà Nội (HAN)</option>
+            <option value="DAD">Đà Nẵng (DAD)</option>
+          </select>
+        </div>
+
+        <div class="form-group input-wrapper">
+          <label>Điểm đến</label>
+          <mat-icon>flight_land</mat-icon>
+          <select>
+            <option selected disabled>Vui lòng chọn điểm đến</option>
+            <option value="SGN">TP Hồ Chí Minh (SGN)</option>
+            <option value="HAN">Hà Nội (HAN)</option>
+            <option value="DAD">Đà Nẵng (DAD)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Ngày đi + Ngày về -->
+      <div class="form-row" [ngClass]="{ 'single': tripType === 'oneway' }">
+        <div class="form-group">
+          <label>Ngày đi</label>
+          <input type="date" />
+        </div>
+
+        @if(isRoundTrip){
+        <div class="form-group">
+          <label>Ngày về</label>
+          <input type="date" />
+        </div>
+        }
+      </div>
+
+      <!-- Passenger -->
+      <div class="form-row passenger">
+        <div class="counter">
+          <label>Người lớn</label>
+          <div class="counter-box">
+            <button type="button" class="btn-counter">-</button>
+            <span><mat-icon>person</mat-icon> 1</span>
+            <button type="button" class="btn-counter">+</button>
+          </div>
+        </div>
+        <div class="counter">
+          <label>Trẻ em</label>
+          <div class="counter-box">
+            <button type="button" class="btn-counter">-</button>
+            <span><mat-icon>person</mat-icon> 0</span>
+            <button type="button" class="btn-counter">+</button>
+          </div>
+        </div>
+        <div class="counter">
+          <label>Em bé</label>
+          <div class="counter-box">
+            <button type="button" class="btn-counter">-</button>
+            <span><mat-icon>person</mat-icon> 0</span>
+            <button type="button" class="btn-counter">+</button>
+          </div>
+        </div>
+      </div>
+
+
+
+
+      <!-- Button -->
+      <button class="btn-search">Tìm chuyến bay</button>
+    </div>
+
   </div>
-
-  <div class="form">
-    <div class="form-group">
-      <label>Điểm đi</label>
-      <select>
-        <option selected disabled>✈ Vui lòng chọn điểm đi</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Điểm đến</label>
-      <select>
-        <option selected disabled>📍 Vui lòng chọn điểm đến</option>
-      </select>
-    </div>
-
-    <div class="form-group">
-      <label>Ngày đi</label>
-      <input type="date" />
-    </div>
-
-    <div class="passenger">
-      <div class="counter">
-        <span>Người lớn</span>
-        <button>-</button>
-        <span class="value">1</span>
-        <button>+</button>
-      </div>
-      <div class="counter">
-        <span>Trẻ em</span>
-        <button>-</button>
-        <span class="value">0</span>
-        <button>+</button>
-      </div>
-      <div class="counter">
-        <span>Em bé</span>
-        <button>-</button>
-        <span class="value">0</span>
-        <button>+</button>
-      </div>
-    </div>
-
-    <button class="btn-search">Tìm chuyến bay</button>
-  </div>
-</div>
-
 </div>
