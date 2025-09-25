@@ -39,10 +39,10 @@
             <i class="fa-solid fa-lock"></i>
             <input [type]="isPassWordVisible ? 'password' :' text'" id="password" placeholder="Mật khẩu quản trị" required>
             @if (isPassWordVisible) {
-                <i class="fa-solid fa-eye " (click)="togglePassword()"></i>
+                <i class="fa-solid fa-eye-slash " (click)="togglePassword()"></i>
             }
             @else {
-                <i class="fa-solid fa-eye-slash" (click)="togglePassword()"></i>
+                <i class="fa-solid fa-eye" (click)="togglePassword()"></i>
             }
 
           </div>
@@ -52,7 +52,7 @@
       </form>
 
       <div class="back-home">
-        <a routerLink="home"><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</a>
+        <a routerLink=""><i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ</a>
       </div>
     </div>
   </div>

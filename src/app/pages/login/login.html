@@ -4,7 +4,7 @@
     <div class="container" [class.active]="isActive">
         <!-- Phần login -->
         <div class="form-box login-box">
-            <h2>Đăng nhập</h2>
+            <h2 class="title">Đăng nhập</h2>
             <form>
                 <div class="input-group">
                      <i class="fa-solid fa-envelope icon-info"></i>
@@ -26,7 +26,9 @@
             </form>
             <span>HOẶC</span>
             <button id="google-login" type="submit"><img height="20px" width="20px" src="assets/images/google-logo.png"
-                    alt="">Đăng nhập bằng Google </button>
+                    alt="">Đăng nhập bằng Google 
+            </button>
+            <a href="" class="back"><i class="fa-solid fa-arrow-left"></i> Quay lại</a>
         </div>
 
         <!-- Phần register -->
@@ -81,12 +83,12 @@
         <div class="toggle-box">
             <div class="toggle-panel toggle-left">
                 <h2>Chào mừng trở lại!</h2>
-                <p>Đăng nhập để tiếp tục</p>
+                <p class="message">Đăng nhập để tiếp tục</p>
                 <button (click)="toggle(false)">Đăng nhập</button>
             </div>
             <div class="toggle-panel toggle-right">
                 <h2>Xin chào bạn mới!</h2>
-                <p>Chưa có tài khoản? Hãy đăng ký ngay</p>
+                <p class="message">Chưa có tài khoản? Hãy đăng ký ngay</p>
                 <button (click)="toggle(true)">Đăng ký</button>
             </div>
         </div>

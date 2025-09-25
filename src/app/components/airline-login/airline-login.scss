@@ -100,7 +100,7 @@ h2 {
 }
 
 .btn-login:hover {
-  background: #408cca;
+  background: var(--base-color);
 }
 
 .back-home {
@@ -117,5 +117,5 @@ h2 {
 }
 
 .back-home a:hover {
-  color: #007bff;
+  color: var(--base-color);
 }

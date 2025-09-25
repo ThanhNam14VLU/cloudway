@@ -6,6 +6,8 @@ import { AirlineDashboard } from './components/airline-dashboard/airline-dashboa
 import { AirlineManagement } from './components/airline-management/airline-management';
 import { AirlineReport } from './components/airline-report/airline-report';
 import { AirlineSetting } from './components/airline-setting/airline-setting';
+import { AirlineLogin } from './components/airline-login/airline-login';
+import { AirlineCardDetail } from './pages/airline-card-detail/airline-card-detail';
 export const routes: Routes = [
   {
     path: '',
@@ -16,6 +18,12 @@ export const routes: Routes = [
     path: 'login',
     loadComponent: () => {
       return import('../app/pages/login/login').then(m => m.Login)
+    }
+  },
+   {
+    path: 'airline-login',
+    loadComponent: () => {
+      return import('../app/components/airline-login/airline-login').then(m => m.AirlineLogin)
     }
   },
   {
@@ -36,7 +44,6 @@ export const routes: Routes = [
           import('./components/airline-dashboard/airline-dashboard')
             .then(m => m.AirlineDashboard)
       },
-
       {
         path: 'airline-management',
         loadComponent: () =>
@@ -61,6 +68,12 @@ export const routes: Routes = [
             .then(m => m.AirlineDashboard)
       }
     ]
+  },
+  {
+    path: "airline-card-detail/:id",//:id là tham số động, id vé
+    loadComponent() {
+       return import('./pages/airline-card-detail/airline-card-detail').then(m => m.AirlineCardDetail)
+    },
   }
 
 ];

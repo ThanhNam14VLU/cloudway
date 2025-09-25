@@ -14,7 +14,11 @@ body {
 
 h2 {
   text-align: center;
+
+  font-size: 24px;
+  font-weight: bold;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .container {
@@ -44,6 +48,7 @@ h2 {
 .login-box {
   opacity: 1;
   z-index: 1;
+  padding-top: 40px;
   transform: translateX(0%);
   pointer-events: auto;
 }
@@ -201,7 +206,11 @@ button:hover {
   opacity: 0;
   pointer-events: none;
 }
-
+.message{
+  margin: 20px 0;
+  font-size: 14px;
+  color: #f0f0f0;
+}
 //đăng nhâp google
 #google-login {
   background: white;
@@ -212,4 +221,15 @@ button:hover {
   justify-content: center;
   align-items: center;
   gap: 5px;
+}
+.back{
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  color: #000;
+  text-decoration: none;
+  margin: 20%  auto;
+}
+.back:hover{
+  color: var(--base-color);
 }

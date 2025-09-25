@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-flight-card',
-  imports: [MatButtonModule],
+  imports: [MatButtonModule,RouterLink],
   templateUrl: './flight-card.html',
   styleUrl: './flight-card.scss'
 })
