@@ -1,0 +1,74 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+  background-color: #f4f7fa;
+  color: #333;
+  line-height: 1.6;
+}
+ /* Main */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.flight-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flight-detail .price {
+  text-align: right;
+}
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 0 80px;
+  font-family: Arial, sans-serif;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.card h3 {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.row > div {
+  flex: 1;
+  min-width: 150px;
+}
+
+.label {
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 4px;
+}
+
+.price {
+  font-weight: bold;
+  color: var(--base-color);
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+

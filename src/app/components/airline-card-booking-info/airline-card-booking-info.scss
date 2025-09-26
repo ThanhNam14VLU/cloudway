@@ -1,0 +1,130 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Body Styling */
+body {
+  background-color: #f4f7fa;
+  color: #333;
+  line-height: 1.6;
+}
+/* Container Styling */
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px 80px;
+  font-family: Arial, sans-serif;
+}
+
+/* Sidebar */
+.sidebar {
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  height: fit-content;
+  background: #f9f9f9;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.sidebar h3 {
+  width: 100%;
+  text-align: center;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+  border-bottom: 1px var(--line-color) solid;
+}
+.ticket-summary p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #555;
+  width: 100%;
+  
+}
+.total {
+  width: 100%;
+  border-top: 1px var(--line-color) solid;
+  margin-top: 20px;
+  padding-top: 8px;
+}
+.total h2 {
+  color: var(--base-color);
+}
+
+/* Main */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.note {
+  font-size: 13px;
+  color: var(--note-color);
+  margin-bottom: 8px;
+}
+.flight-detail {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.flight-detail .price {
+  text-align: right;
+  padding: 8px;
+}
+.price h3{
+  padding: 5px;
+  color: var(--base-color);
+}
+/* Form */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+label {
+  font-size: 13px;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 4px;
+}
+input, select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Buttons */
+button {
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: none;
+  opacity: 0.8;
+}
+.btn-outline {
+  border: 1px solid var(--base-color);
+  background: white;
+  color: var(--base-color);
+}
+.btn-outline:hover {
+  background: var(--base-color);
+  color: white;
+  transition: all .2s ease-in;
+}
+

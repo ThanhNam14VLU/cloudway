@@ -136,14 +136,18 @@
   justify-content: space-around;
 
 }
-  .gr-1, .gr-2 {
+  .gr-1 {
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-around;
+    gap: 6px;
+   
+  }.gr-2 {
     display: flex;
     flex-direction: column; 
     gap: 6px;
    
   }
-
-
  li {
       text-align: left;
       list-style: none;
@@ -153,3 +157,16 @@
       display: flex;
       gap: 5px;
     }
+.jouney_node {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 10px;
+}
+.jouney_node li {
+  width: 5px;
+  height: 5px;
+  background-color: none;
+  border: #000 solid 1px;
+  border-radius: 50%;
+}

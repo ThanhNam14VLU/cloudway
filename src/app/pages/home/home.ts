@@ -6,11 +6,12 @@ import { Footer } from '../../components/footer/footer';
 import { Header } from '../../components/header/header';
 import { Airline } from '../airline/airline';
 import { AirlineCardDetail } from '../airline-card-detail/airline-card-detail';
+import { Stepper } from '../../components/stepper/stepper';
 
 
 @Component({
   selector: 'app-home',
-  imports: [FlightSearch, FlightCard, Feature, Header, Footer, Airline,AirlineCardDetail],
+  imports: [FlightSearch, FlightCard, Feature, Header, Footer, Airline,AirlineCardDetail,Stepper],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
