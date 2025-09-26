@@ -8,5 +8,9 @@ import { Component, EventEmitter, Output, output } from '@angular/core';
   styleUrl: './airline-add-flight-form.scss'
 })
 export class AirlineAddFlightForm {
- 
+ @Output() close = new EventEmitter<void>();//con tạo sự kiện để phát ra ngoài
+
+  handle() {
+    this.close.emit();//phát sự kiện ra ngoài
+  }
 }

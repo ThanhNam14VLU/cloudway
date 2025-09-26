@@ -1,7 +1,7 @@
 <div class="settings-container">
   <div class="header">
     <h1>Cài đặt hãng bay</h1>
-    <button class="btn-primary">Chỉnh sửa</button>
+    <button class="btn-primary"(click)="edit()">{{ state  }}</button>
     <!-- <button class="btn-primary">Lưu thay đổi</button>   -->
   </div>
 
@@ -11,30 +11,30 @@
       <h2>Thông tin công ty</h2>
       <form>
         <label>Tên hãng bay</label>
-        <input type="text" value="Vietnam Airlines" />
+        <input type="text" value="Vietnam Airlines" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <label>Mã hãng</label>
-        <input type="text" value="VJ" />
+        <input type="text" value="VJ" [readonly]="!isMotify" [class.edit-active]="isMotify" />
 
         <label>Mô tả</label>
-        <textarea rows="3">Hãng hàng không hàng đầu Việt Nam với dịch vụ chất lượng cao</textarea>
+        <textarea rows="3" [readonly]="!isMotify" [class.edit-active]="isMotify">Hãng hàng không hàng đầu Việt Nam với dịch vụ chất lượng cao</textarea>
 
         <label>Địa chỉ</label>
-        <input type="text" value="12 Lê Duẩn, Quận 1, TP.HCM" />
+        <input type="text" value="12 Lê Duẩn, Quận 1, TP.HCM" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <div class="row">
           <div class="col">
             <label>Số điện thoại</label>
-            <input type="text" value="+84 28 1234 5678" />
+            <input type="text" value="+84 28 1234 5678" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
           </div>
           <div class="col">
             <label>Email</label>
-            <input type="text" value="contact@vietnamairline.com" />
+            <input type="text" value="contact@vietnamairline.com" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
           </div>
         </div>
 
         <label>Website</label>
-        <input type="text" value="http://vietnamairline.com" />
+        <input type="text" value="http://vietnamairline.com" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
       </form>
     </div>
 
@@ -43,23 +43,24 @@
       <h2>Cài đặt thông báo</h2>
       <div class="toggle-item">
         <span>Email booking mới</span>
-        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+        <label class="switch">
+          <input type="checkbox" [disabled]="!isMotify" /><span class="slider"></span></label>
       </div>
       <div class="toggle-item">
         <span>Khách hủy vé</span>
-        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+        <label class="switch"><input type="checkbox" [disabled]="!isMotify" /><span class="slider"></span></label>
       </div>
       <div class="toggle-item">
         <span>Chậm trễ chuyến bay</span>
-        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+        <label class="switch"><input type="checkbox" [disabled]="!isMotify"  /><span class="slider"></span></label>
       </div>
       <div class="toggle-item">
         <span>SMS cảnh báo</span>
-        <label class="switch"><input type="checkbox" /><span class="slider"></span></label>
+        <label class="switch"><input type="checkbox" [disabled]="!isMotify" /><span class="slider"></span></label>
       </div>
       <div class="toggle-item">
         <span>Push notifications</span>
-        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+        <label class="switch"><input type="checkbox" [disabled]="!isMotify"  /><span class="slider"></span></label>
       </div>
     </div>
 
@@ -68,16 +69,16 @@
       <h2>Cài đặt giá vé</h2>
       <form>
         <label>Đơn vị tiền tệ</label>
-        <input type="text" value="VND – Việt Nam Đồng" />
+        <input type="text" value="VND Việt Nam Đồng" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <label>Thuế (%)</label>
-        <input type="number" value="10" />
+        <input type="number" value="10" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <label>Phí hành lý (VND)</label>
-        <input type="number" value="300000" />
+        <input type="number" value="300000" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <label>Phí đổi vé (VND)</label>
-        <input type="number" value="300000" />
+        <input type="number" value="300000" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
       </form>
     </div>
 
@@ -86,18 +87,18 @@
       <h2>Cài đặt vận hành</h2>
       <div class="toggle-item">
         <span>Tự động xác nhận booking</span>
-        <label class="switch"><input type="checkbox" checked /><span class="slider"></span></label>
+        <label class="switch"><input type="checkbox" [disabled]="!isMotify" checked /><span class="slider"></span></label>
       </div>
 
       <form>
         <label>Giới hạn overbooking (%)</label>
-        <input type="number" value="5" />
+        <input type="number" value="5" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <label>Thời gian check-in (giờ)</label>
-        <input type="number" value="24" />
+        <input type="number" value="24" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
 
         <label>Thời gian boarding (phút)</label>
-        <input type="number" value="30" />
+        <input type="number" value="30" [readonly]="!isMotify" [class.edit-active]="isMotify"/>
       </form>
     </div>
   </div>

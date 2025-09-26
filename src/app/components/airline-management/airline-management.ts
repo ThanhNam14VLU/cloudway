@@ -15,5 +15,8 @@ export class AirlineManagement {
   ShowForm() {
     this.isShowForm = !this.isShowForm;
   }
+  CloseForm() {
+    this.isShowForm = false;
+  }
 
 }

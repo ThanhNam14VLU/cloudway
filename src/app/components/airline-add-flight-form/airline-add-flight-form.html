@@ -2,17 +2,17 @@
 <div class="modal">
   <div class="modal-header">
     <h2>Thêm chuyến bay mới</h2>
-    <button class="close-btn">&times;</button>
+    <button class="close-btn" (click)="handle()">&times;</button>
   </div>
   <form class="modal-body">
     <div class="form-row">
       <div class="form-group">
         <label for="flightNumber">Số hiệu chuyến bay</label>
-        <input type="text" id="flightNumber" placeholder="VN123">
+        <input type="text" id="flightNumber" placeholder="VN123" required>
       </div>
       <div class="form-group">
         <label for="arrivalTime">Giờ đến</label>
-        <input type="time" id="arrivalTime">
+        <input type="time" id="arrivalTime" required>
       </div>
     </div>
 
@@ -40,23 +40,23 @@
       </div>
       <div class="form-group">
         <label for="price">Giá vé (VND)</label>
-        <input type="number" id="price" value="1200000">
+        <input type="number" id="price" value="1200000" required>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="departureTime">Giờ khởi hành</label>
-        <input type="time" id="departureTime">
+        <input type="time" id="departureTime" required>
       </div>
       <div class="form-group">
         <label for="capacity">Sức chứa</label>
-        <input type="number" id="capacity" value="180">
+        <input type="number" id="capacity" value="180" required>
       </div>
     </div>
 
     <div class="form-actions">
-      <button type="button"class="btn cancel">Hủy</button>
+      <button type="button"class="btn cancel" (click)="handle()">Hủy</button>
       <button type="submit" class="btn submit">Thêm chuyến bay</button>
     </div>
   </form>
