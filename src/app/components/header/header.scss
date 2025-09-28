@@ -1,123 +1,54 @@
-
-/* TOP BAR */
-.top-bar {
+.wrapper {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* logo bên trái, login bên phải */
   align-items: center;
-  padding: 6px 80px;
+  padding: 10px 30px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+  font-family: Arial, sans-serif;
+  margin-bottom: 15px;
+}
+
+.top-actions .login {
   font-size: 14px;
-  color: #475569;
-}
-
-.top-bar .contact-info span {
-  margin-right: 20px;
-}
-
-.top-bar .contact-info span i {
-  margin-right: 6px;
-}
-
-.top-bar .top-actions {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.top-bar .top-actions .special-offer {
-  border: 1px solid #38bdf8;
-  background: transparent;
-  color: #0ea5e9;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 14px;
+  color: #333;
   cursor: pointer;
-  transition: all 0.3s;
-}
-
-.top-bar .top-actions .special-offer:hover {
-  background: #0ea5e9;
-  color: #fff;
-}
-
-.top-bar .top-actions span {
-  cursor: pointer;
-  padding: 4px;
-}
-.top-bar .top-actions span:hover {
-  background-color: #e6e6e6;
-  // border: .5px solid #ccc;
-  font-weight: bold;
-  color: #000;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-  border-radius: 5px;
-  transition: all .3s ease-in-out;
-}
-.top-bar .top-actions span i {
-  margin-right: 6px;
-}
-.line{
-  border-top: 1px solid #d4d5d7;
-  margin: 5px 0 0 80px;
-}
-/* NAVBAR */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 80px;
-  border-bottom: 1px solid #d4d5d7;
-  margin-bottom: 12px;
-}
-
-.navbar .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-.navbar .brand {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  line-height: 1;
-  margin-top: 5px;
   gap: 5px;
-}
-.navbar .logo img {
-  width: 40px;
-  height: 40px;
+  padding: 5px;
+  transition: color 0.3s ease;
 }
 
-.navbar .logo .brand h2 {
-  font-size: 18px;
-  color: #0ea5e9;
-  display: inline-block;
-  font-weight: bold;
+.top-actions .login:hover {
+  color: var(--base-color);
+  border: 1px solid var(--base-color);
+  transition: all 0.3s ease-in-out;
+  
 }
 
-.navbar .logo  p {
-  font-size: 13px;
-  margin: 0;
-  color: var(--sub-color-1);
-}
-
-.navbar .menu {
-  list-style: none;
+.logo {
   display: flex;
-  gap: 25px;
+  flex-direction: column;
+  align-items: center;
 }
 
-.navbar .menu li a {
-  text-decoration: none;
-  color: #111;
-  font-size: 15px;
-  transition: color 0.3s;
+.logo .brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.navbar .menu li a:hover {
-  color: #0ea5e9;
+.logo .brand h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #222;
 }
 
-.navbar .menu li a.highlight {
-  font-weight: 600;
+.logo p {
+  margin: 0;
+  font-size: 12px;
+  color: #777;
+  letter-spacing: 0.5px;
 }
