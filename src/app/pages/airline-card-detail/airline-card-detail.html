@@ -1,5 +1,5 @@
 <header>
-    <div class="back" routerLink="">Quay lại</div>
+    <div class="back" routerLink="">Quay lại trang chủ</div>
     <div class="title">✈ Chi tiết chuyến bay</div>
         <div class="logo">
             <div class="brand">
@@ -9,41 +9,12 @@
             <p>bay khắp Việt Nam</p>
         </div>
 </header>
+<app-stepper></app-stepper>
 
-<div class="container">
-    <!-- Thông tin chuyến bay -->
-    <div class="section flight-info">
-        <h3>Thông tin chuyến bay</h3>
-        <p><strong>Hãng:</strong> Vietnam Airlines</p>
-        <p><strong>Điểm đi:</strong> Hà Nội (HAN)</p>
-        <p><strong>Điểm đến:</strong> TP.HCM (SGN)</p>
-        <p><strong>Thời gian khởi hành:</strong> 08:30 - 25/09/2025</p>
-        <p><strong>Thời gian đến:</strong> 10:45 - 25/09/2025</p>
-    </div>
-
-    <!-- Điều kiện vé -->
-    <div class="section col-2">
-        <h4>Điều kiện vé</h4>
-        <ul>
-            <li>Hành lý xách tay: 7kg (01 kiện)</li>
-            <li>Hành lý ký gửi: Mua thêm (tùy chọn)</li>
-            <li>Đổi tên: 350.000 VND/lần</li>
-            <li>Đổi ngày/giờ bay: 500.000 VND + chênh lệch giá vé</li>
-            <li>Hoàn vé: Không áp dụng</li>
-            <li>Check-in: Có mặt trước giờ khởi hành 120 phút</li>
-        </ul>
-    </div>
-
-    <!-- Giá vé -->
-    <div class="section price-info">
-        <h3>Chi tiết giá vé</h3>
-        <p><strong>Giá vé cơ bản:</strong> 1,200,000 VND</p>
-        <p><strong>Thuế & phí:</strong> 300,000 VND</p>
-        <p class="total"><strong>Tổng cộng:</strong> 1,500,000 VND</p>
-    </div>
-
-    <!-- Nút chọn -->
-    <div class="actions">
-        <button class="btn-select">Đặt vé</button>
-    </div>
+<!-- <app-airline-card-booking-info></app-airline-card-booking-info> -->
+  <app-airline-card-booking-summary></app-airline-card-booking-summary> 
+<!-- Navigation -->
+<div class="actions">
+  <button class="btn-secondary">← Quay lại </button>
+  <button class="btn-primary">Tiếp →</button>
 </div>

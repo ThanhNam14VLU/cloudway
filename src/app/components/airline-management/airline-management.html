@@ -110,5 +110,5 @@
   </div>
 </div>
 @if(isShowForm){
-  <app-airline-add-flight-form></app-airline-add-flight-form>
+  <app-airline-add-flight-form (close)="CloseForm()"></app-airline-add-flight-form><!--khi nhận được sự kiện từ con thì gọi CloseForm-->
 }
