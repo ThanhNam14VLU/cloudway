@@ -14,10 +14,9 @@ body {
 
 h2 {
   text-align: center;
-
   font-size: 24px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   text-align: center;
 }
 
@@ -25,7 +24,7 @@ h2 {
   position: relative;
   width: 800px;
   max-width: 100%;
-  min-height: 500px;
+  min-height: 550px;
   background: #fff;
   overflow: hidden;
   border-radius: 20px;
@@ -53,12 +52,12 @@ h2 {
   pointer-events: auto;
 }
 
-.login-box span {
+.login-box span,.register-box span {
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  padding: 10px;
+  padding: 5px;
 }
 
 .register-box {
@@ -66,7 +65,7 @@ h2 {
   opacity: 0;
   z-index: 0;
   pointer-events: none;
-  
+
 }
 
 .container.active .login-box {
@@ -74,7 +73,7 @@ h2 {
   z-index: 0;
   opacity: 0;
   pointer-events: nono;
-  
+
 }
 
 .container.active .register-box {
@@ -96,7 +95,7 @@ form {
 .input-group input{
   width: 100%;
   padding-left: 40px; /* Đảm bảo có khoảng trống cho icon */
-  
+
 }
 .icon-info{
   position: absolute;

@@ -138,7 +138,7 @@
 }
 
 .form-group input {
-  width: 100%;
+  width: 90%;
 }
 
 .form-group select {
@@ -170,7 +170,7 @@
   padding-left: 36px;
   appearance: none;
   background-color: #fff;
-  
+
   /* custom arrow */
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' fill='black'><path d='M7 10l5 5 5-5z'/></svg>");
   background-repeat: no-repeat;
@@ -368,35 +368,35 @@
     flex-direction: column;
     padding: 0 1rem;
   }
-  
+
   .sidebar {
     width: 100%;
   }
-  
+
   .search-form {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }
-  
+
   .search-btn {
     width: 100%;
   }
-  
+
   .top-controls {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
-  
+
   .cheapest-month {
     margin-left: 0;
   }
-  
+
   .date-selector {
     overflow-x: auto;
     padding-bottom: 0.5rem;
   }
-  
+
   .date-item {
     flex-shrink: 0;
   }
