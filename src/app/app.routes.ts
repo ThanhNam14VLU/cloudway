@@ -74,6 +74,13 @@ export const routes: Routes = [
     loadComponent() {
        return import('./pages/airline-card-detail/airline-card-detail').then(m => m.AirlineCardDetail)
     },
-  }
+  },
+  {
+    path: "ticket-list",
+    loadComponent: () => {
+      return import('./pages/ticket-list/ticket-list').then(m => m.TicketList)
+    }
+  },
+
 
 ];

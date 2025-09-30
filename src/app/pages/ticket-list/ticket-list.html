@@ -1,1 +1,109 @@
-<p>ticket-list works!</p>
+<div class="ticket-list-container">
+  <!-- Header with search parameters -->
+  <div class="search-header">
+    <div class="search-params">
+      <div class="trip-type">
+        <label>
+          <input type="radio" name="trip" value="oneway" [(ngModel)]="tripType" checked />
+          Một chiều
+        </label>
+        <div class="passenger-selector">
+          <input type="number" value="1" min="1" max="9" />
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </div>
+        <label class="cheapest-month">
+          <input type="checkbox" />
+          Vé rẻ nhất tháng
+        </label>
+      </div>
+      
+      <div class="search-form">
+        <div class="form-group">
+          <label>Điểm đi</label>
+          <select [(ngModel)]="searchParams.departure">
+            <option value="SGN">Sân bay Tân Sơn Nhất (SGN)</option>
+            <option value="HAN">Sân bay Nội Bài (HAN)</option>
+            <option value="DAD">Sân bay Đà Nẵng (DAD)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Điểm đến</label>
+          <select [(ngModel)]="searchParams.destination">
+            <option value="HAN">Sân bay Nội Bài (HAN)</option>
+            <option value="SGN">Sân bay Tân Sơn Nhất (SGN)</option>
+            <option value="DAD">Sân bay Đà Nẵng (DAD)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label>Ngày đi</label>
+          <input type="date" [(ngModel)]="searchParams.departureDate" />
+        </div>
+        
+        <button class="search-btn" (click)="searchFlights()">Tìm kiếm</button>
+      </div>
+    </div>
+    
+    <!-- Progress bar -->
+    <div class="progress-bar">
+      <div class="progress-step active">
+        <span class="step-number">1</span>
+        <span class="step-label">Chọn chuyến bay</span>
+      </div>
+      <div class="progress-step">
+        <span class="step-number">2</span>
+        <span class="step-label">Đặt chỗ</span>
+      </div>
+      <div class="progress-step">
+        <span class="step-number">3</span>
+        <span class="step-label">Thanh toán</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <!-- Left sidebar - Filters -->
+    <div class="sidebar">
+      <div class="filter-section">
+        <h3>Lọc kết quả</h3>
+        <div class="filter-group">
+          <h4>Hiển thị theo</h4>
+          <div class="airline-filters">
+            <label *ngFor="let airline of airlines">
+              <input type="checkbox" [(ngModel)]="airline.selected" (change)="filterFlights()" />
+              {{ airline.name }}
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flight results -->
+    <div class="flight-results">
+      <div class="results-header">
+        <h2>{{ getRouteTitle() }}</h2>
+        <p>{{ getFormattedDate() }}</p>
+        
+        <!-- Date selector -->
+        <div class="date-selector">
+          <div class="date-item" *ngFor="let date of availableDates" 
+               [class.active]="date.isSelected" 
+               (click)="selectDate(date)">
+            <span class="day">{{ date.dayName }}</span>
+            <span class="date">{{ date.dayNumber }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flight cards -->
+      <div class="flights-list">
+        <app-flight-card 
+          *ngFor="let flight of filteredFlights" 
+          [flight]="flight">
+        </app-flight-card>
+      </div>
+    </div>
+  </div>
+</div>

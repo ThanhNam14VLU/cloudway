@@ -1,6 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {MatButtonModule} from '@angular/material/button';
 import { RouterLink } from '@angular/router';
+
+interface Flight {
+  code: string;
+  airline: string;
+  logo: string;
+  departTime: string;
+  departAirport: string;
+  arriveTime: string;
+  arriveAirport: string;
+  price: number;
+  duration?: string;
+  aircraft?: string;
+  class?: string;
+  carryOn?: string;
+  checkedBaggage?: string;
+}
 
 @Component({
   selector: 'app-flight-card',
@@ -9,19 +25,15 @@ import { RouterLink } from '@angular/router';
   styleUrl: './flight-card.scss'
 })
 export class FlightCard {
+  @Input() flight!: Flight;
+  
   isDropped: boolean = false;//check xem chi tiết vé
+  
   Dropdown() {
     this.isDropped = !this.isDropped;
   }
 
-flight = {
-    code: 'QH290',
-    airline: 'Vietravel Airlines',
-    logo: './assets/images/vietravel.webp',
-    departTime: '23:25',
-    departAirport: 'SGN',
-    arriveTime: '01:35',
-    arriveAirport: 'HAN',
-    price: 1420000
-  };
+  formatPrice(price: number): string {
+    return price.toLocaleString('vi-VN');
+  }
 }

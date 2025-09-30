@@ -31,7 +31,7 @@
   max-width: 950px;
   background: #fff;
   border-radius: 20px;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
 
   padding: 2rem;
   text-align: center;
@@ -40,7 +40,8 @@
 
 .flight-search h2 {
   font-size: 26px;
-  margin-bottom: 6px;
+  line-height: 26px;
+  margin-bottom: 12px;
   font-weight: bold;
 }
 
@@ -53,7 +54,6 @@
 /* Trip type */
 .trip-type {
   display: flex;
-  justify-content: center;
   gap: 25px;
   margin-bottom: 24px;
 }
@@ -61,6 +61,42 @@
 .trip-type label {
   font-size: 15px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trip-type input[type="radio"] {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 2px solid #ddd;
+  border-radius: 50%;
+  background-color: #fff;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.trip-type input[type="radio"]:checked {
+  border-color: #03a9f4;
+  background-color: #03a9f4;
+}
+
+.trip-type input[type="radio"]:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.trip-type input[type="radio"]:hover {
+  border-color: #03a9f4;
 }
 
 /* Form layout */
@@ -105,7 +141,7 @@
 }
 
 .form-group input {
-  width: calc(100% - 32px);
+  width: 100%;
 }
 
 .form-group select {

@@ -20,39 +20,93 @@
 
     <div class="price">
       <div class="amount">
-        {{ flight.price }}
+        {{ formatPrice(flight.price) }}
       </div>
       <div class="currency">VND</div>
     </div>
 
     <div class="action">
       <button matButton="filled" routerLink="airline-card-detail/1">Chọn</button>
-      <span class="chevron" (click)="Dropdown()"><span
-          class="material-symbols-outlined">keyboard_arrow_down</span></span>
-      <div class="flight-rules dropped">
-      </div>
+      <span class="chevron" (click)="Dropdown()">
+        <span class="material-symbols-outlined">keyboard_arrow_down</span>
+      </span>
     </div>
   </div>
-  @if (isDropped){
-  <div class="line"></div>
-  <div class="col-2">
-    <h4>Điều kiện vé</h4>
-    <ul class="ticket-rules">
-      <div class="gr-1">
-        <li><span class="material-symbols-outlined">luggage </span><b>Hành lý xách tay:</b>7kg (01 kiện)</li>
-        <li><span class="material-symbols-outlined">luggage </span><b>Hành lý ký gửi:</b>Mua thêm (tùy chọn)</li>
-        <li><span class="material-symbols-outlined">id_card</span><b>Đổi tên:</b>350.000 VND/lần</li>
+  
+  @if (isDropped) {
+    <div class="line"></div>
+    <div class="col-2">
+      <div class="flight-details">
+        <div class="detail-left">
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-radio"></div>
+              <div class="timeline-content">
+                <span class="timeline-text">16/09/2025 {{ flight.departTime }} {{ flight.departAirport }}</span>
+              </div>
+            </div>
+            
+            <div class="timeline-connector">
+              <div class="connector-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+            </div>
+            
+            <div class="timeline-duration">
+              <div class="dot"></div>
+              <span class="duration-text">Thời gian chuyến đi: {{ flight.duration || '130 phút' }}</span>
+            </div>
+            
+            <div class="timeline-connector">
+              <div class="connector-dots">
+                <div class="dot"></div>
+                <div class="dot"></div>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-radio"></div>
+              <div class="timeline-content">
+                <span class="timeline-text">16/09/2025 {{ flight.arriveTime }} {{ flight.arriveAirport }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="detail-right">
+          <div class="airline-logo-small">
+            <img [src]="flight.logo" [alt]="flight.airline" />
+          </div>
+          
+          <div class="flight-info">
+            <div class="info-item">
+              <span class="info-label">Hãng:</span>
+              <span class="info-value">{{ flight.airline }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Chuyến bay:</span>
+              <span class="info-value">{{ flight.code }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Hạng chỗ:</span>
+              <span class="info-value">{{ flight.class || 'Economy' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Máy bay:</span>
+              <span class="info-value">{{ flight.aircraft || '321B' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Hành lý xách tay:</span>
+              <span class="info-value">{{ flight.carryOn || '7kg' }}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Hành lý ký gửi:</span>
+              <span class="info-value">{{ flight.checkedBaggage || 'Vui lòng chọn ở bước tiếp theo' }}</span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="gr-2">
-        <li><span class="material-symbols-outlined">calendar_clock</span><b>Đổi ngày/giờ bay:</b>500.000 VND + chênh lệch giá vé</li>
-        <li><span class="material-symbols-outlined">airplane_ticket</span><b>Hoàn vé:</b>Không áp dụng</li>
-        <li><span class="material-symbols-outlined">check</span><b>Check-in:</b>Có mặt trước giờ khởi hành 120 phút</li>
-      </div>
-
-    </ul>
-  </div>
+    </div>
   }
-
-
-
 </div>

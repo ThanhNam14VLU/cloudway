@@ -120,36 +120,146 @@
 .col-2 {
   width: 100%;
   padding: 20px;
-  background: #fafafa;
-  border: 1px solid #e5e5e5;
   border-radius: 10px;
 }
 
-.col-2 h4 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #222;
-}
-.col-2 .ticket-rules {
+.flight-details {
   display: flex;
-  justify-content: space-around;
-
+  gap: 2rem;
+  align-items: flex-start;
 }
-  .gr-1, .gr-2 {
-    display: flex;
-    flex-direction: column; 
-    gap: 6px;
-   
+
+.detail-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Timeline Styles */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.timeline-radio {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #666;
+  border-radius: 50%;
+  background: #fff;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-text {
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+}
+
+.timeline-connector {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+  height: 30px;
+}
+
+.connector-dots {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  margin-left: 5px;
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  background: #ccc;
+  border-radius: 50%;
+}
+
+.timeline-duration {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 5px;
+}
+
+.duration-text {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Right side styles */
+.airline-logo-small {
+  
+  img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
   }
+}
 
+.flight-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
- li {
-      text-align: left;
-      list-style: none;
-      font-size: 14px;
-      color: #000;
-      list-style: none;
-      display: flex;
-      gap: 5px;
-    }
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.info-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+  min-width: 80px;
+}
+
+.info-value {
+  font-size: 13px;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Responsive for flight details */
+@media (max-width: 768px) {
+  .flight-details {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .timeline {
+    gap: 0.75rem;
+  }
+  
+  .timeline-connector {
+    margin: 0.75rem 0;
+  }
+  
+  .timeline-duration {
+    margin: 0.75rem 0 0.75rem 1.5rem;
+  }
+}
