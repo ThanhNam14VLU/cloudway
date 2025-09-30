@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto 420px auto;
+  margin: 0 auto 375px auto;
 }
 
 /* Hero: nửa trên */
@@ -141,7 +141,7 @@
 }
 
 .form-group input {
-  width: 100%;
+  width: calc(100% - 32px);
 }
 
 .form-group select {
@@ -232,20 +232,6 @@
   color: #03a9f4;
 }
 
-/* Search button */
 .btn-search {
-  padding: 14px;
-  font-size: 16px;
-  font-weight: bold;
-  background: linear-gradient(90deg, #03a9f4, #0288d1);
-  color: #fff;
-  border: none;
-  border-radius: 100px;
-  cursor: pointer;
-  transition: 0.3s;
-  width: 100%;
-}
-
-.btn-search:hover {
-  background: linear-gradient(90deg, #0288d1, #0277bd);
+  height: 45px;
 }

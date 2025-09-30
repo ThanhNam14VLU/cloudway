@@ -3,13 +3,15 @@ import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-flight-search',
   imports: [
     MatIcon,
     FormsModule,
-    NgClass
+    NgClass,
+    MatButtonModule
   ],
   templateUrl: './flight-search.html',
   styleUrl: './flight-search.scss'

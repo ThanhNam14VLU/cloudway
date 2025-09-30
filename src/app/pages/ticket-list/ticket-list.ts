@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
+import { MatCheckbox } from '@angular/material/checkbox';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FlightCard } from '../../components/flight-card/flight-card';
@@ -41,7 +42,13 @@ interface DateOption {
 
 @Component({
   selector: 'app-ticket-list',
-  imports: [FormsModule, MatIcon, CommonModule, FlightCard],
+  imports: [
+    FormsModule, 
+    MatIcon, 
+    MatCheckbox, 
+    CommonModule, 
+    FlightCard
+  ],
   templateUrl: './ticket-list.html',
   styleUrl: './ticket-list.scss'
 })

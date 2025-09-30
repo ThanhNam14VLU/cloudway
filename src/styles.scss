@@ -12,7 +12,6 @@ html {
       primary: mat.$azure-palette,
       tertiary: mat.$blue-palette,
     ),
-    typography: Roboto,
     density: 0,
   ));
 }
@@ -56,8 +55,16 @@ body {
   --note-color:red;
 }
 
-body {
-    font-family: "Archivo", sans-serif;
+html, body { 
+  height: 100%; 
+  font-family: "Archivo", sans-serif;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body { 
+  margin: 0; 
+  font-family: "Archivo", sans-serif;
+}
+
+* {
+  font-family: "Archivo", sans-serif;
+}
