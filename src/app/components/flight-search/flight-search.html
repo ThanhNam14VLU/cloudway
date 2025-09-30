@@ -39,8 +39,8 @@
         <div class="form-group input-wrapper">
           <label>Điểm đi</label>
           <mat-icon>flight_takeoff</mat-icon>
-          <select>
-            <option selected disabled>Vui lòng chọn điểm đi</option>
+          <select [(ngModel)]="departure">
+            <option value="" selected disabled>Vui lòng chọn điểm đi</option>
             <option value="SGN">TP Hồ Chí Minh (SGN)</option>
             <option value="HAN">Hà Nội (HAN)</option>
             <option value="DAD">Đà Nẵng (DAD)</option>
@@ -50,8 +50,8 @@
         <div class="form-group input-wrapper">
           <label>Điểm đến</label>
           <mat-icon>flight_land</mat-icon>
-          <select>
-            <option selected disabled>Vui lòng chọn điểm đến</option>
+          <select [(ngModel)]="destination">
+            <option value="" selected disabled>Vui lòng chọn điểm đến</option>
             <option value="SGN">TP Hồ Chí Minh (SGN)</option>
             <option value="HAN">Hà Nội (HAN)</option>
             <option value="DAD">Đà Nẵng (DAD)</option>
@@ -63,13 +63,13 @@
       <div class="form-row" [ngClass]="{ 'single': tripType === 'oneway' }">
         <div class="form-group">
           <label>Ngày đi</label>
-          <input type="date" />
+          <input type="date" [(ngModel)]="departureDate" />
         </div>
 
         @if(isRoundTrip){
         <div class="form-group">
           <label>Ngày về</label>
-          <input type="date" />
+          <input type="date" [(ngModel)]="returnDate" />
         </div>
         }
       </div>
@@ -79,32 +79,32 @@
         <div class="counter">
           <label>Người lớn</label>
           <div class="counter-box">
-            <button type="button" class="btn-counter">-</button>
-            <span><mat-icon>person</mat-icon> 1</span>
-            <button type="button" class="btn-counter">+</button>
+            <button type="button" class="btn-counter" (click)="decreaseAdults()">-</button>
+            <span><mat-icon>person</mat-icon> {{ adults }}</span>
+            <button type="button" class="btn-counter" (click)="increaseAdults()">+</button>
           </div>
         </div>
         <div class="counter">
           <label>Trẻ em</label>
           <div class="counter-box">
-            <button type="button" class="btn-counter">-</button>
-            <span><mat-icon>person</mat-icon> 0</span>
-            <button type="button" class="btn-counter">+</button>
+            <button type="button" class="btn-counter" (click)="decreaseChildren()">-</button>
+            <span><mat-icon>person</mat-icon> {{ children }}</span>
+            <button type="button" class="btn-counter" (click)="increaseChildren()">+</button>
           </div>
         </div>
         <div class="counter">
           <label>Em bé</label>
           <div class="counter-box">
-            <button type="button" class="btn-counter">-</button>
-            <span><mat-icon>person</mat-icon> 0</span>
-            <button type="button" class="btn-counter">+</button>
+            <button type="button" class="btn-counter" (click)="decreaseInfants()">-</button>
+            <span><mat-icon>person</mat-icon> {{ infants }}</span>
+            <button type="button" class="btn-counter" (click)="increaseInfants()">+</button>
           </div>
         </div>
       </div>
 
 
       <!-- Button -->
-      <button class="btn-search">Tìm chuyến bay</button>
+      <button matButton="filled" class="btn-search" (click)="searchFlights()">Tìm chuyến bay</button>
     </div>
   </div>
 </div>

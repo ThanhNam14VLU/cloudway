@@ -6,8 +6,15 @@
     </div>
     <p>bay khắp Việt Nam</p>
   </div>
-  <div class="top-actions">
-    <span class="login" routerLink="login"><i class="fa-regular fa-user"></i> Đăng nhập</span>
+
+  <div class="actions">
+    <button matButton="outlined" [routerLink]="['/login']" [queryParams]="{mode: 'register'}">
+      Đăng ký
+    </button>
+  
+    <button matButton="filled" [routerLink]="['/login']" [queryParams]="{mode: 'login'}">
+      Đăng nhập
+    </button>
   </div>
 
 </div>

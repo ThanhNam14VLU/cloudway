@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -7,11 +8,25 @@ import { Component } from '@angular/core';
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
-export class Login {
+export class Login implements OnInit {
 
   isActive: boolean = false;   
   isPassWordVisible: boolean = false;
   isPassWordVisibleconfirm: boolean = false;
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      const mode = params['mode'];
+      if (mode === 'register') {
+        this.isActive = true;
+      } else {
+        this.isActive = false;
+      }
+    });
+  }
+
   togglePasswordVisibility() {
     this.isPassWordVisible = !this.isPassWordVisible;
   }

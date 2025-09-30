@@ -20,17 +20,16 @@
 
     <div class="price">
       <div class="amount">
-        {{ flight.price }}
+        {{ formatPrice(flight.price) }}
       </div>
       <div class="currency">VND</div>
     </div>
 
     <div class="action">
       <button matButton="filled" routerLink="airline-card-detail/1">Chọn</button>
-      <span class="chevron" (click)="Dropdown()"><span
-          class="material-symbols-outlined">keyboard_arrow_down</span></span>
-      <div class="flight-rules dropped">
-      </div>
+      <span class="chevron" (click)="Dropdown()">
+        <span class="material-symbols-outlined">keyboard_arrow_down</span>
+      </span>
     </div>
   </div>
   @if (isDropped){
@@ -62,7 +61,4 @@
     </ul>
   </div>
   }
-
-
-
 </div>

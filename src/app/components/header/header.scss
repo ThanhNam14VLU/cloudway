@@ -52,3 +52,12 @@
   color: #777;
   letter-spacing: 0.5px;
 }
+
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  font-size: 14px;
+}
