@@ -4,27 +4,63 @@
     <div class="search-params">
       <!-- Top control bar -->
       <div class="top-controls">
-        <div class="trip-type">
-          <mat-icon>swap_horiz</mat-icon>
-          <label>
-            <input type="radio" name="trip" value="oneway" [(ngModel)]="tripType" checked />
-            Một chiều
-          </label>
+        <div class="trip-type" (click)="toggleTripType()">
+          <mat-icon>{{ tripType === 'oneway' ? 'swap_horiz' : 'swap_horiz' }}</mat-icon>
+          <span>{{ tripType === 'oneway' ? 'Một chiều' : 'Khứ hồi' }}</span>
         </div>
         
-        <div class="passenger-selector">
+        <div class="passenger-selector" (click)="onPassengerSelectorClick($event)">
           <mat-icon>person</mat-icon>
-          <span>1</span>
-          <mat-icon>keyboard_arrow_down</mat-icon>
+          <span>{{ getTotalPassengers() }}</span>
+          <mat-icon [class.rotated]="showPassengerDropdown">keyboard_arrow_down</mat-icon>
+          
+          <!-- Passenger Dropdown -->
+          <div class="passenger-dropdown" [class.show]="showPassengerDropdown" (click)="$event.stopPropagation()">
+            <div class="passenger-option">
+              <div class="passenger-info">
+                <mat-icon>person</mat-icon>
+                <span>Người lớn</span>
+              </div>
+              <div class="passenger-controls">
+                <button type="button" (click)="decrementAdults(); $event.stopPropagation()" [disabled]="passengers.adults <= 1">-</button>
+                <span>{{ passengers.adults }}</span>
+                <button type="button" (click)="incrementAdults(); $event.stopPropagation()">+</button>
+              </div>
+            </div>
+            
+            <div class="passenger-option">
+              <div class="passenger-info">
+                <mat-icon>person</mat-icon>
+                <span>Trẻ em</span>
+              </div>
+              <div class="passenger-controls">
+                <button type="button" (click)="decrementChildren(); $event.stopPropagation()" [disabled]="passengers.children <= 0">-</button>
+                <span>{{ passengers.children }}</span>
+                <button type="button" (click)="incrementChildren(); $event.stopPropagation()">+</button>
+              </div>
+            </div>
+            
+            <div class="passenger-option">
+              <div class="passenger-info">
+                <mat-icon>person</mat-icon>
+                <span>Em bé</span>
+              </div>
+              <div class="passenger-controls">
+                <button type="button" (click)="decrementInfants(); $event.stopPropagation()" [disabled]="passengers.infants <= 0">-</button>
+                <span>{{ passengers.infants }}</span>
+                <button type="button" (click)="incrementInfants(); $event.stopPropagation()">+</button>
+              </div>
+            </div>
+          </div>
         </div>
         
-        <mat-checkbox class="cheapest-month">
+        <!-- <mat-checkbox class="cheapest-month">
           Vé rẻ nhất tháng
-        </mat-checkbox>
+        </mat-checkbox> -->
       </div>
       
       <!-- Search form -->
-      <div class="search-form">
+      <div class="search-form" [class.roundtrip]="tripType === 'roundtrip'">
         <div class="form-group input-wrapper">
           <label>Điểm đi</label>
           <mat-icon>flight_takeoff</mat-icon>
@@ -50,25 +86,14 @@
           <input type="date" [(ngModel)]="searchParams.departureDate" />
         </div>
         
-        <button class="search-btn" (click)="searchFlights()">
+        <div class="form-group" *ngIf="tripType === 'roundtrip'">
+          <label>Ngày về</label>
+          <input type="date" [(ngModel)]="searchParams.returnDate" />
+        </div>
+        
+        <button matButton="filled" (click)="searchFlights()">
           Tìm kiếm
         </button>
-      </div>
-    </div>
-    
-    <!-- Progress bar -->
-    <div class="progress-bar">
-      <div class="progress-step active">
-        <span class="step-number">1</span>
-        <span class="step-label">Chọn chuyến bay</span>
-      </div>
-      <div class="progress-step">
-        <span class="step-number">2</span>
-        <span class="step-label">Đặt chỗ</span>
-      </div>
-      <div class="progress-step">
-        <span class="step-number">3</span>
-        <span class="step-label">Thanh toán</span>
       </div>
     </div>
   </div>
@@ -93,27 +118,92 @@
 
     <!-- Flight results -->
     <div class="flight-results">
-      <div class="results-header">
-        <h2>{{ getRouteTitle() }}</h2>
-        <p>{{ getFormattedDate() }}</p>
-        
-        <!-- Date selector -->
-        <div class="date-selector">
-          <div class="date-item" *ngFor="let date of availableDates" 
-               [class.active]="date.isSelected" 
-               (click)="selectDate(date)">
-            <span class="day">{{ date.dayName }}</span>
-            <span class="date">{{ date.dayNumber }}</span>
+      <!-- Flight Info Card -->
+      <div class="flight-info-card">
+        <!-- Flight Route Section -->
+        <div class="flight-route-section">
+          <div class="flight-info">
+            <mat-icon class="flight-icon">flight_takeoff</mat-icon>
+            <div class="route-info">
+              <div class="route">
+                <span class="airport">{{ getAirportName(searchParams.departure) }} ({{ searchParams.departure }})</span>
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                <span class="airport">{{ getAirportName(searchParams.destination) }} ({{ searchParams.destination }})</span>
+              </div>
+              <div class="selected-date">{{ getFormattedDate() }}</div>
+            </div>
           </div>
+          <div class="collapse-toggle" (click)="toggleFlightsCollapse()">
+            <mat-icon>{{ isFlightsCollapsed ? 'add' : 'remove' }}</mat-icon>
+          </div>
+        </div>
+        
+        <!-- Separator Line -->
+        <div class="separator-line"></div>
+        
+        <!-- Date Selector Section -->
+        <div class="date-selector-section">
+          <div class="date-selector">
+            <div class="date-item" *ngFor="let date of availableDates" 
+                 [class.active]="date.isSelected" 
+                 (click)="selectDate(date)">
+              <span class="day">{{ date.dayName }}</span>
+              <span class="date">{{ date.dayNumber }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Flight cards -->
+        <div class="flights-list" *ngIf="!isFlightsCollapsed">
+          <app-flight-card 
+            *ngFor="let flight of filteredFlights" 
+            [flight]="flight">
+          </app-flight-card>
         </div>
       </div>
 
-      <!-- Flight cards -->
-      <div class="flights-list">
-        <app-flight-card 
-          *ngFor="let flight of filteredFlights" 
-          [flight]="flight">
-        </app-flight-card>
+      <!-- Return Flight Info Card (only for roundtrip) -->
+      <div class="flight-info-card return-flight" *ngIf="tripType === 'roundtrip'">
+        <!-- Return Flight Route Section -->
+        <div class="flight-route-section">
+          <div class="flight-info">
+            <mat-icon class="flight-icon">flight_land</mat-icon>
+            <div class="route-info">
+              <div class="route">
+                <span class="airport">{{ getAirportName(searchParams.destination) }} ({{ searchParams.destination }})</span>
+                <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+                <span class="airport">{{ getAirportName(searchParams.departure) }} ({{ searchParams.departure }})</span>
+              </div>
+              <div class="selected-date">{{ getFormattedReturnDate() }}</div>
+            </div>
+          </div>
+          <div class="collapse-toggle" (click)="toggleReturnFlightsCollapse()">
+            <mat-icon>{{ isReturnFlightsCollapsed ? 'add' : 'remove' }}</mat-icon>
+          </div>
+        </div>
+        
+        <!-- Separator Line -->
+        <div class="separator-line"></div>
+        
+        <!-- Date Selector Section for Return -->
+        <div class="date-selector-section">
+          <div class="date-selector">
+            <div class="date-item" *ngFor="let date of availableDates" 
+                 [class.active]="date.isSelected" 
+                 (click)="selectDate(date)">
+              <span class="day">{{ date.dayName }}</span>
+              <span class="date">{{ date.dayNumber }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Return Flight cards -->
+        <div class="flights-list" *ngIf="!isReturnFlightsCollapsed">
+          <app-flight-card 
+            *ngFor="let flight of filteredReturnFlights" 
+            [flight]="flight">
+          </app-flight-card>
+        </div>
       </div>
     </div>
   </div>
