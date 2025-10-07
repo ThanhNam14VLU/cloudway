@@ -5,15 +5,34 @@
         <!-- Phần login -->
         <div class="form-box login-box">
             <h2 class="title">Đăng nhập</h2>
-            <form>
+            
+            <!-- Error/Success Messages -->
+            @if (errorMessage) {
+                <div class="alert alert-error">{{ errorMessage }}</div>
+            }
+            @if (successMessage) {
+                <div class="alert alert-success">{{ successMessage }}</div>
+            }
+
+            <form (ngSubmit)="loginWithPassword()" #loginFormRef="ngForm">
                 <div class="input-group">
                      <i class="fa-solid fa-envelope icon-info"></i>
-                    <input type="email" placeholder="Email" required>
+                    <input 
+                        type="email" 
+                        placeholder="Email" 
+                        [(ngModel)]="loginForm.email"
+                        name="email"
+                        required>
                 </div>
 
                 <div class="passwor_group">
                     <i class="fa-solid fa-lock icon-info"></i>
-                    <input [type]="isPassWordVisible ? 'text' : 'password'" placeholder="Mật khẩu" required>
+                    <input 
+                        [type]="isPassWordVisible ? 'text' : 'password'" 
+                        placeholder="Mật khẩu" 
+                        [(ngModel)]="loginForm.password"
+                        name="password"
+                        required>
                     @if (isPassWordVisible){
                     <i class="fa-solid fa-eye icon" (click)="togglePasswordVisibility()"></i>
                     }
@@ -21,11 +40,18 @@
                     <i class="fa-solid fa-eye-slash icon" (click)="togglePasswordVisibility()"></i>
                     }
                 </div>
-                <a id="forget_pass" href="">Quên mật khẩu?</a>
-                <button type="submit">Đăng nhập</button>
+                <a id="forget_pass" href="#" (click)="resetPassword(); $event.preventDefault()">Quên mật khẩu?</a>
+                <button type="submit" [disabled]="isLoading">
+                    @if (isLoading) {
+                        <i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...
+                    } @else {
+                        Đăng nhập
+                    }
+                </button>
             </form>
             <span>HOẶC</span>
-            <button id="google-login" type="submit"><img height="20px" width="20px" src="assets/images/google-logo.png"
+            <button id="google-login" type="button" (click)="loginGoogle()" [disabled]="isLoading">
+                <img height="20px" width="20px" src="assets/images/google-logo.png"
                     alt="">Đăng nhập bằng Google
             </button>
             <a href="" class="back"><i class="fa-solid fa-arrow-left"></i> Quay lại</a>
@@ -34,29 +60,62 @@
         <!-- Phần register -->
         <div class="form-box register-box">
             <h2>Đăng ký</h2>
-            <form>
+            
+            <!-- Error/Success Messages -->
+            @if (errorMessage) {
+                <div class="alert alert-error">{{ errorMessage }}</div>
+            }
+            @if (successMessage) {
+                <div class="alert alert-success">{{ successMessage }}</div>
+            }
+
+            <form (ngSubmit)="registerWithPassword()" #registerFormRef="ngForm">
                 <div class="input-group">
                     <i class="fa-solid fa-user icon-info"></i>
-                    <input type="text" placeholder="Họ" required>
+                    <input 
+                        type="text" 
+                        placeholder="Họ" 
+                        [(ngModel)]="registerForm.firstName"
+                        name="firstName"
+                        required>
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-user icon-info"></i>
-                    <input type="text" placeholder="Tên" required>
-
+                    <input 
+                        type="text" 
+                        placeholder="Tên" 
+                        [(ngModel)]="registerForm.lastName"
+                        name="lastName"
+                        required>
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-envelope icon-info"></i>
-                    <input type="email" placeholder="Email" required>
-
+                    <input 
+                        type="email" 
+                        placeholder="Email" 
+                        [(ngModel)]="registerForm.email"
+                        name="email"
+                        required>
                 </div>
                 <div class="input-group ">
                     <i class="fa-solid fa-phone icon-info"></i>
-                    <input type="tel" placeholder="Số điện thoại" name="telphone" pattern="[0-9]{10}"
-                        title="nhập đúng số điện thoại" required />
+                    <input 
+                        type="tel" 
+                        placeholder="Số điện thoại" 
+                        [(ngModel)]="registerForm.phone"
+                        name="phone"
+                        pattern="[0-9]{10}"
+                        title="nhập đúng số điện thoại" 
+                        required />
                 </div>
                 <div class="passwor_group">
                     <i class="fa-solid fa-lock icon-info"></i>
-                    <input [type]="isPassWordVisible ? 'text' : 'password'" placeholder="Mật khẩu" required>
+                    <input 
+                        [type]="isPassWordVisible ? 'text' : 'password'" 
+                        placeholder="Mật khẩu" 
+                        [(ngModel)]="registerForm.password"
+                        name="password"
+                        required>
                     @if (isPassWordVisible){
                     <i class="fa-solid fa-eye icon" (click)="togglePasswordVisibility()"></i>
                     }
@@ -66,7 +125,11 @@
                 </div>
                 <div class="passwor_group">
                     <i class="fa-solid fa-lock icon-info"></i>
-                    <input [type]="isPassWordVisibleconfirm ? 'text' : 'password'" placeholder="Xác nhận mật khẩu"
+                    <input 
+                        [type]="isPassWordVisibleconfirm ? 'text' : 'password'" 
+                        placeholder="Xác nhận mật khẩu"
+                        [(ngModel)]="registerForm.confirmPassword"
+                        name="confirmPassword"
                         required>
                     @if (isPassWordVisibleconfirm){
                     <i class="fa-solid fa-eye icon" (click)="togglePasswordVisibilityconfirm()"></i>
@@ -75,11 +138,17 @@
                     <i class="fa-solid fa-eye-slash icon" (click)="togglePasswordVisibilityconfirm()"></i>
                     }
                 </div>
-                <button type="submit">Đăng ký</button>
+                <button type="submit" [disabled]="isLoading">
+                    @if (isLoading) {
+                        <i class="fa-solid fa-spinner fa-spin"></i> Đang xử lý...
+                    } @else {
+                        Đăng ký
+                    }
+                </button>
             </form>
           <span>HOẶC</span>
-          <button id="google-login" type="submit"><img height="20px" width="20px" src="assets/images/google-logo.png"
-                                                       alt="">Đăng nhập bằng Google
+          <button id="google-login" type="button" (click)="loginGoogle()" [disabled]="isLoading">
+            <img height="20px" width="20px" src="assets/images/google-logo.png" alt="">Đăng nhập bằng Google
           </button>
         </div>
 
