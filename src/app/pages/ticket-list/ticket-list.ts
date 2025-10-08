@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { FlightCard } from '../../components/flight-card/flight-card';
 import { MatButtonModule } from '@angular/material/button';
+import { Header } from '../../components/header/header';
 
 interface Flight {
   code: string;
@@ -48,7 +49,8 @@ interface DateOption {
     MatIcon, 
     CommonModule, 
     FlightCard,
-    MatButtonModule
+    MatButtonModule,
+    Header
   ],
   templateUrl: './ticket-list.html',
   styleUrl: './ticket-list.scss'
