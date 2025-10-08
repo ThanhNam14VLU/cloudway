@@ -41,9 +41,9 @@
           <mat-icon>flight_takeoff</mat-icon>
           <select [(ngModel)]="departure">
             <option value="" selected disabled>Vui lòng chọn điểm đi</option>
-            <option value="SGN">TP Hồ Chí Minh (SGN)</option>
-            <option value="HAN">Hà Nội (HAN)</option>
-            <option value="DAD">Đà Nẵng (DAD)</option>
+            @for (airport of airports; track $index) {
+              <option value="{{ airport.iata_code }}">{{ airport.name }} ({{ airport.iata_code }})</option>
+            }
           </select>
         </div>
 
@@ -52,9 +52,9 @@
           <mat-icon>flight_land</mat-icon>
           <select [(ngModel)]="destination">
             <option value="" selected disabled>Vui lòng chọn điểm đến</option>
-            <option value="SGN">TP Hồ Chí Minh (SGN)</option>
-            <option value="HAN">Hà Nội (HAN)</option>
-            <option value="DAD">Đà Nẵng (DAD)</option>
+            @for (airport of airports; track $index) {
+              <option value="{{ airport.iata_code }}">{{ airport.name }} ({{ airport.iata_code }})</option>
+            }
           </select>
         </div>
       </div>
