@@ -1,11 +1,16 @@
-import { Injectable } from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {supabase} from '../../supabase.client';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { supabase } from '../../supabase.client';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private http = inject(HttpClient);
+  private backendUrl = environment.apiUrl;
+  
   user$ = new BehaviorSubject<any | null>(null);
 
   constructor() {
@@ -95,6 +100,12 @@ export class AuthService {
       }
 
       console.log('✅ Password sign up successful:', data);
+
+      // 🔥 Gửi token lên backend để lưu vào DB
+      if (data.session?.access_token) {
+        await this.saveUserToBackend(data.session.access_token);
+      }
+
       return data;
     } catch (error) {
       console.error('❌ Password sign up failed:', error);
@@ -133,5 +144,21 @@ export class AuthService {
   async getAccessToken() {
     const { data } = await supabase.auth.getSession();
     return data?.session?.access_token ?? null;
+  }
+
+  /** 🔹 Lưu thông tin user vào backend DB */
+  private async saveUserToBackend(token: string) {
+    try {
+      console.log('🔄 Đang lưu thông tin người dùng vào backend DB...');
+      await firstValueFrom(
+        this.http.post(`${this.backendUrl}/auth/supabase-register`, {
+          token: token
+        })
+      );
+      console.log('✅ Đã lưu thông tin người dùng vào backend DB');
+    } catch (backendError) {
+      console.warn('⚠️ Backend không khả dụng, tiếp tục với frontend auth:', backendError);
+      // Không throw error để không làm gián đoạn flow đăng ký
+    }
   }
 }

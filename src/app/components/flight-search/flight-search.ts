@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ElementRef } from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
@@ -16,7 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './flight-search.html',
   styleUrl: './flight-search.scss'
 })
-export class FlightSearch {
+export class FlightSearch implements AfterViewInit {
   tripType: 'oneway' | 'roundtrip' = 'oneway';
   
   // Form data
@@ -28,7 +28,17 @@ export class FlightSearch {
   children: number = 0;
   infants: number = 0;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private elementRef: ElementRef) {}
+
+  ngAfterViewInit() {
+    // Đảm bảo video được tắt âm hoàn toàn
+    const video = this.elementRef.nativeElement.querySelector('video');
+    if (video) {
+      video.muted = true;
+      video.volume = 0;
+      video.defaultMuted = true;
+    }
+  }
 
   get isRoundTrip(): boolean {
     return this.tripType === 'roundtrip';
