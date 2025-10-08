@@ -44,9 +44,9 @@ interface DateOption {
 @Component({
   selector: 'app-ticket-list',
   imports: [
-    FormsModule, 
-    MatIcon, 
-    CommonModule, 
+    FormsModule,
+    MatIcon,
+    CommonModule,
     FlightCard,
     MatButtonModule
   ],
@@ -58,13 +58,13 @@ export class TicketList implements OnInit {
   showPassengerDropdown: boolean = false;
   isFlightsCollapsed: boolean = false;
   isReturnFlightsCollapsed: boolean = false;
-  
+
   passengers = {
     adults: 1,
     children: 0,
     infants: 0
   };
-  
+
   searchParams: SearchParams = {
     departure: 'SGN',
     destination: 'HAN',
@@ -236,7 +236,7 @@ export class TicketList implements OnInit {
         this.tripType = params['tripType'];
       }
     });
-    
+
     this.filteredFlights = [...this.flights];
     this.filteredReturnFlights = [...this.returnFlights];
   }
@@ -249,16 +249,16 @@ export class TicketList implements OnInit {
 
   filterFlights() {
     const selectedAirlines = this.airlines.filter(airline => airline.selected);
-    
+
     if (selectedAirlines.length === 0) {
       this.filteredFlights = [...this.flights];
       this.filteredReturnFlights = [...this.returnFlights];
     } else {
       const selectedAirlineNames = selectedAirlines.map(airline => airline.name);
-      this.filteredFlights = this.flights.filter(flight => 
+      this.filteredFlights = this.flights.filter(flight =>
         selectedAirlineNames.includes(flight.airline)
       );
-      this.filteredReturnFlights = this.returnFlights.filter(flight => 
+      this.filteredReturnFlights = this.returnFlights.filter(flight =>
         selectedAirlineNames.includes(flight.airline)
       );
     }
@@ -377,7 +377,7 @@ export class TicketList implements OnInit {
     const target = event.target as HTMLElement;
     const passengerSelector = target.closest('.passenger-selector');
     const passengerDropdown = target.closest('.passenger-dropdown');
-    
+
     // Only close dropdown if clicking outside both selector and dropdown
     if (!passengerSelector && !passengerDropdown) {
       this.showPassengerDropdown = false;

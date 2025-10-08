@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FlightSearch } from '../../components/flight-search/flight-search';
 import { FlightCard } from '../../components/flight-card/flight-card';
 import { Feature } from '../../components/feature/feature';
@@ -15,7 +15,6 @@ import { Stepper } from '../../components/stepper/stepper';
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
-export class Home {
+export class Home  {
   flights = [1, 2, 3, 4, 5];
-
 }
