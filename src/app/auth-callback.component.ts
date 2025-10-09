@@ -2,10 +2,20 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { supabase } from './supabase.client';
 import { HttpClient } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
+  imports:[MatProgressSpinnerModule],
   selector: 'app-auth-callback',
-  template: `<p>Đang xác thực, vui lòng chờ...</p>`
+  template: `
+    <div class="load">
+      <p>Đang xác thực, vui lòng chờ...</p>
+      <mat-spinner></mat-spinner>
+    </div>
+  `,
+  styles:`p { font-size: 16px; text-align: center; margin-top: 20px; }
+          .load { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; }
+          `
 })
 export class AuthCallbackComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient) {}
@@ -18,20 +28,20 @@ export class AuthCallbackComponent implements OnInit {
       // Kiểm tra xem có phải là password recovery không
       const urlParams = new URLSearchParams(window.location.search);
       const type = urlParams.get('type');
-      
+
       if (type === 'recovery') {
         console.log('🔄 Password recovery callback');
         // Đợi Supabase xử lý recovery callback
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         const { data, error } = await supabase.auth.getSession();
-        
+
         if (error || !data?.session) {
           console.error('❌ Recovery session error:', error);
           this.router.navigate(['/login']);
           return;
         }
-        
+
         // Điều hướng đến trang reset password
         this.router.navigate(['/reset-password']);
         return;

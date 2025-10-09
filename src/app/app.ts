@@ -12,7 +12,8 @@ import { Stepper } from './components/stepper/stepper';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, Header, Footer, Feature, FlightCard, RouterLink, Login, FlightSearch, AirlineLogin, Stepper],
+  imports: [RouterOutlet, Header, Footer, Feature, FlightCard, RouterLink, Login, FlightSearch, AirlineLogin, Stepper,],
+  providers: [],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })

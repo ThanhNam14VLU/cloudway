@@ -5,7 +5,7 @@
         <!-- Phần login -->
         <div class="form-box login-box">
             <h2 class="title">Đăng nhập</h2>
-            
+
             <!-- Error/Success Messages -->
             @if (errorMessage) {
                 <div class="alert alert-error">{{ errorMessage }}</div>
@@ -17,9 +17,9 @@
             <form (ngSubmit)="loginWithPassword()" #loginFormRef="ngForm">
                 <div class="input-group">
                      <i class="fa-solid fa-envelope icon-info"></i>
-                    <input 
-                        type="email" 
-                        placeholder="Email" 
+                    <input
+                        type="email"
+                        placeholder="Email"
                         [(ngModel)]="loginForm.email"
                         name="email"
                         required>
@@ -27,9 +27,9 @@
 
                 <div class="passwor_group">
                     <i class="fa-solid fa-lock icon-info"></i>
-                    <input 
-                        [type]="isPassWordVisible ? 'text' : 'password'" 
-                        placeholder="Mật khẩu" 
+                    <input
+                        [type]="isPassWordVisible ? 'text' : 'password'"
+                        placeholder="Mật khẩu"
                         [(ngModel)]="loginForm.password"
                         name="password"
                         required>
@@ -60,7 +60,7 @@
         <!-- Phần register -->
         <div class="form-box register-box">
             <h2>Đăng ký</h2>
-            
+
             <!-- Error/Success Messages -->
             @if (errorMessage) {
                 <div class="alert alert-error">{{ errorMessage }}</div>
@@ -70,49 +70,51 @@
             }
 
             <form (ngSubmit)="registerWithPassword()" #registerFormRef="ngForm">
-                <div class="input-group">
+<!--                <div  class="name-group">-->
+                  <div class="input-group name-input">
                     <i class="fa-solid fa-user icon-info"></i>
-                    <input 
-                        type="text" 
-                        placeholder="Họ" 
-                        [(ngModel)]="registerForm.firstName"
-                        name="firstName"
-                        required>
-                </div>
-                <div class="input-group">
+                    <input
+                      type="text"
+                      placeholder="Họ"
+                      [(ngModel)]="registerForm.firstName"
+                      name="firstName"
+                      required>
+                  </div>
+                  <div class="input-group name-input">
                     <i class="fa-solid fa-user icon-info"></i>
-                    <input 
-                        type="text" 
-                        placeholder="Tên" 
-                        [(ngModel)]="registerForm.lastName"
-                        name="lastName"
-                        required>
+                    <input
+                      type="text"
+                      placeholder="Tên"
+                      [(ngModel)]="registerForm.lastName"
+                      name="lastName"
+                      required>
+<!--                  </div>-->
                 </div>
                 <div class="input-group">
                     <i class="fa-solid fa-envelope icon-info"></i>
-                    <input 
-                        type="email" 
-                        placeholder="Email" 
+                    <input
+                        type="email"
+                        placeholder="Email"
                         [(ngModel)]="registerForm.email"
                         name="email"
                         required>
                 </div>
                 <div class="input-group ">
                     <i class="fa-solid fa-phone icon-info"></i>
-                    <input 
-                        type="tel" 
-                        placeholder="Số điện thoại" 
+                    <input
+                        type="tel"
+                        placeholder="Số điện thoại"
                         [(ngModel)]="registerForm.phone"
                         name="phone"
                         pattern="[0-9]{10}"
-                        title="nhập đúng số điện thoại" 
+                        title="nhập đúng số điện thoại"
                         required />
                 </div>
                 <div class="passwor_group">
                     <i class="fa-solid fa-lock icon-info"></i>
-                    <input 
-                        [type]="isPassWordVisible ? 'text' : 'password'" 
-                        placeholder="Mật khẩu" 
+                    <input
+                        [type]="isPassWordVisible ? 'text' : 'password'"
+                        placeholder="Mật khẩu"
                         [(ngModel)]="registerForm.password"
                         name="password"
                         required>
@@ -125,8 +127,8 @@
                 </div>
                 <div class="passwor_group">
                     <i class="fa-solid fa-lock icon-info"></i>
-                    <input 
-                        [type]="isPassWordVisibleconfirm ? 'text' : 'password'" 
+                    <input
+                        [type]="isPassWordVisibleconfirm ? 'text' : 'password'"
                         placeholder="Xác nhận mật khẩu"
                         [(ngModel)]="registerForm.confirmPassword"
                         name="confirmPassword"

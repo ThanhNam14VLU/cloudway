@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { FlightSearch } from '../../components/flight-search/flight-search';
 import { Feature } from '../../components/feature/feature';
 import { Footer } from '../../components/footer/footer';

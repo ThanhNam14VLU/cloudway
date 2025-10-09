@@ -24,7 +24,7 @@
   color: var(--base-color);
   border: 1px solid var(--base-color);
   transition: all 0.3s ease-in-out;
-  
+
 }
 
 .logo {
@@ -37,6 +37,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
 }
 
 .logo .brand h2 {
@@ -106,7 +107,7 @@ button {
   .user-details {
     display: none;
   }
-  
+
   .user-profile {
     gap: 8px;
   }

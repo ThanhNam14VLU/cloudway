@@ -92,10 +92,33 @@ form {
   position: relative;
   width: 100%;
 }
+
 .input-group input{
   width: 100%;
   padding-left: 40px; /* Đảm bảo có khoảng trống cho icon */
+}
+.name-group{
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.name-group div:first-child{
+  flex: 1;
+}
+.name-group div:last-child{
+  flex: 2;
+}
+.name-group div:first-child input{
+  padding-right: 10px;
+}
+.name-group div:last-child input{
+  padding-left: 35px;
+  padding-right: 5px;
+}
 
+.name-group input {
+  width: 100%;
+  padding-left: 40px; /* Đảm bảo có khoảng trống cho icon */
 }
 .icon-info{
   position: absolute;

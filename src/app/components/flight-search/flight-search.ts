@@ -8,6 +8,8 @@ import { AirportModel } from '../../models/airport.model';
 import { AirportService } from '../../services/airport/airport.service';
 import { FlightService } from '../../services/flight/flight.service';
 import { FlightSearchRequest } from '../../models/flight.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-flight-search',
@@ -16,7 +18,9 @@ import { FlightSearchRequest } from '../../models/flight.model';
     FormsModule,
     NgClass,
     CommonModule,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   templateUrl: './flight-search.html',
   styleUrl: './flight-search.scss'
