@@ -1,9 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ElementRef } from '@angular/core';
 import {MatIcon} from '@angular/material/icon';
 import {FormsModule} from '@angular/forms';
 import {NgClass} from '@angular/common';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
+import { AirportModel } from '../../models/airport.model';
+import { AirportService } from '../../services/airport/airport.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-flight-search',
@@ -11,14 +15,17 @@ import { MatButtonModule } from '@angular/material/button';
     MatIcon,
     FormsModule,
     NgClass,
-    MatButtonModule
+    MatButtonModule,
+    MatFormFieldModule,
+    MatSelectModule
   ],
   templateUrl: './flight-search.html',
   styleUrl: './flight-search.scss'
 })
-export class FlightSearch {
+export class FlightSearch implements AfterViewInit {
   tripType: 'oneway' | 'roundtrip' = 'oneway';
-  
+  airports!: AirportModel[];
+
   // Form data
   departure: string = '';
   destination: string = '';
@@ -28,7 +35,22 @@ export class FlightSearch {
   children: number = 0;
   infants: number = 0;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private elementRef: ElementRef, private airportService: AirportService) {
+    this.airportService.getAirports().subscribe((airports) => {
+      this.airports = airports;
+      console.log(this.airports);
+    });
+  }
+
+  ngAfterViewInit() {
+    // Đảm bảo video được tắt âm hoàn toàn
+    const video = this.elementRef.nativeElement.querySelector('video');
+    if (video) {
+      video.muted = true;
+      video.volume = 0;
+      video.defaultMuted = true;
+    }
+  }
 
   get isRoundTrip(): boolean {
     return this.tripType === 'roundtrip';
@@ -46,7 +68,7 @@ export class FlightSearch {
       infants: this.infants,
       tripType: this.tripType
     };
-    
+
     this.router.navigate(['/ticket-list'], { queryParams });
   }
 

@@ -1,20 +1,62 @@
 <div class="wrapper">
   <div class="logo">
-    <div class="brand">
-      <img src="assets/images/logo.png" alt="logo" width="20px" height="20px"/>
+    <div class="brand" [routerLink]="['/home']">
+      <img  src="assets/images/logo.png" alt="logo" width="20px" height="20px"/>
       <h2>CloudWay</h2>
     </div>
     <p>bay khắp Việt Nam</p>
   </div>
 
-  <div class="actions">
-    <button matButton="outlined" [routerLink]="['/login']" [queryParams]="{mode: 'register'}">
-      Đăng ký
-    </button>
-  
-    <button matButton="filled" [routerLink]="['/login']" [queryParams]="{mode: 'login'}">
-      Đăng nhập
-    </button>
+  <!-- User Profile Section -->
+  <div class="actions" *ngIf="isLoggedIn && userProfile; else loginButtons">
+    <div class="user-profile">
+      <div class="user-info">
+        <img
+          [src]="userProfile.avatar_url || 'https://via.placeholder.com/32x32/cccccc/666666?text=' + (userProfile.full_name?.charAt(0) || 'U')"
+          [alt]="userProfile.full_name"
+          class="user-avatar"
+          width="32"
+          height="32"
+          referrerpolicy="no-referrer"
+        />
+        <div class="user-details">
+          <span class="user-name">{{ userProfile.full_name || userProfile.email }}</span>
+          <span class="user-role">{{ userProfile.role }}</span>
+        </div>
+      </div>
+      <button mat-icon-button [matMenuTriggerFor]="userMenu">
+        <mat-icon>more_vert</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Hồ sơ</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Cài đặt</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Đăng xuất</span>
+        </button>
+      </mat-menu>
+    </div>
   </div>
+
+  <!-- Login Buttons (when not logged in) -->
+  <ng-template #loginButtons>
+    <div class="actions">
+      <button mat-button [routerLink]="['/login']" [queryParams]="{mode: 'register'}">
+        Đăng ký
+      </button>
+
+      <button matButton="filled" [routerLink]="['/login']" [queryParams]="{mode: 'login'}">
+        Đăng nhập
+      </button>
+    </div>
+  </ng-template>
 
 </div>

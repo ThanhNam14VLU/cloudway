@@ -8,6 +8,8 @@ import { AirlineReport } from './components/airline-report/airline-report';
 import { AirlineSetting } from './components/airline-setting/airline-setting';
 import { AirlineLogin } from './components/airline-login/airline-login';
 import { AirlineCardDetail } from './pages/airline-card-detail/airline-card-detail';
+import { AuthCallbackComponent } from './auth-callback.component';
+
 export const routes: Routes = [
   {
     path: '',
@@ -81,6 +83,16 @@ export const routes: Routes = [
       return import('./pages/ticket-list/ticket-list').then(m => m.TicketList)
     }
   },
-
-
+  {
+    path: "auth/callback",
+    loadComponent: () => {
+      return import('./auth-callback.component').then(m => m.AuthCallbackComponent)
+    }
+  },
+  {
+    path: "reset-password",
+    loadComponent: () => {
+      return import('./pages/reset-password/reset-password').then(m => m.ResetPasswordComponent)
+    }
+  }
 ];
