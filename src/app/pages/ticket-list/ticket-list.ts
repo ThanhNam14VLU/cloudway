@@ -112,7 +112,7 @@ export class TicketList implements OnInit {
     {
       code: 'VJ146',
       airline: 'Vietjet Air',
-      logo: './assets/images/vietjet-logo.png',
+      logo: './assets/images/VJ.png',
       departTime: '15:25',
       departAirport: 'SGN',
       arriveTime: '17:35',
@@ -127,7 +127,7 @@ export class TicketList implements OnInit {
     {
       code: 'VJ150',
       airline: 'Vietjet Air',
-      logo: './assets/images/vietjet-logo.png',
+      logo: './assets/images/VJ.png',
       departTime: '16:05',
       departAirport: 'SGN',
       arriveTime: '18:15',
@@ -142,7 +142,7 @@ export class TicketList implements OnInit {
     {
       code: 'VJ1162',
       airline: 'Vietjet Air',
-      logo: './assets/images/vietjet-logo.png',
+      logo: './assets/images/VJ.png',
       departTime: '16:50',
       departAirport: 'SGN',
       arriveTime: '19:00',
@@ -160,7 +160,7 @@ export class TicketList implements OnInit {
     {
       code: 'VJ147',
       airline: 'Vietjet Air',
-      logo: './assets/images/vietjet-logo.png',
+      logo: './assets/images/VJ.png',
       departTime: '18:25',
       departAirport: 'HAN',
       arriveTime: '20:35',
@@ -190,7 +190,7 @@ export class TicketList implements OnInit {
     {
       code: 'VJ151',
       airline: 'Vietjet Air',
-      logo: './assets/images/vietjet-logo.png',
+      logo: './assets/images/VJ.png',
       departTime: '20:05',
       departAirport: 'HAN',
       arriveTime: '22:15',
@@ -205,7 +205,7 @@ export class TicketList implements OnInit {
     {
       code: 'VJ1163',
       airline: 'Vietjet Air',
-      logo: './assets/images/vietjet-logo.png',
+      logo: './assets/images/VJ.png',
       departTime: '21:50',
       departAirport: 'HAN',
       arriveTime: '00:00',
