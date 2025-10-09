@@ -10,6 +10,18 @@
     <h2>Bay nội địa dễ dàng cùng CloudWay</h2>
     <p class="sub-title">CloudWay - Chạm tay dễ dàng, chuyến bay sẵn sàng</p>
 
+    <!-- Error Messages -->
+    @if (errorMessages.length > 0) {
+      <div class="error-messages">
+        @for (error of errorMessages; track error) {
+          <div class="error-message">
+            <mat-icon>error</mat-icon>
+            <span>{{ error }}</span>
+          </div>
+        }
+      </div>
+    }
+
     <!-- Trip type -->
     <div class="trip-type">
       <label>
@@ -18,6 +30,7 @@
           name="trip"
           value="oneway"
           [(ngModel)]="tripType"
+          (change)="onTripTypeChange()"
         />
         Một chiều
       </label>
@@ -27,6 +40,7 @@
           name="trip"
           value="roundtrip"
           [(ngModel)]="tripType"
+          (change)="onTripTypeChange()"
         />
         Khứ hồi
       </label>
@@ -39,10 +53,10 @@
         <div class="form-group input-wrapper">
           <label>Điểm đi</label>
           <mat-icon>flight_takeoff</mat-icon>
-          <select [(ngModel)]="departure">
+          <select [(ngModel)]="departureAirportId" (change)="clearErrors()" required>
             <option value="" selected disabled>Vui lòng chọn điểm đi</option>
-            @for (airport of airports; track $index) {
-              <option value="{{ airport.iata_code }}">{{ airport.name }} ({{ airport.iata_code }})</option>
+            @for (airport of airports; track airport.id) {
+              <option [value]="airport.id">{{ airport.city }} - {{ airport.name }} ({{ airport.iata_code }})</option>
             }
           </select>
         </div>
@@ -50,10 +64,10 @@
         <div class="form-group input-wrapper">
           <label>Điểm đến</label>
           <mat-icon>flight_land</mat-icon>
-          <select [(ngModel)]="destination">
+          <select [(ngModel)]="destinationAirportId" (change)="clearErrors()" required>
             <option value="" selected disabled>Vui lòng chọn điểm đến</option>
-            @for (airport of airports; track $index) {
-              <option value="{{ airport.iata_code }}">{{ airport.name }} ({{ airport.iata_code }})</option>
+            @for (airport of airports; track airport.id) {
+              <option [value]="airport.id">{{ airport.city }} - {{ airport.name }} ({{ airport.iata_code }})</option>
             }
           </select>
         </div>
@@ -63,13 +77,23 @@
       <div class="form-row" [ngClass]="{ 'single': tripType === 'oneway' }">
         <div class="form-group">
           <label>Ngày đi</label>
-          <input type="date" [(ngModel)]="departureDate" />
+          <input 
+            type="date" 
+            [(ngModel)]="departureDate" 
+            [min]="minDate"
+            (change)="clearErrors()"
+            required />
         </div>
 
         @if(isRoundTrip){
         <div class="form-group">
           <label>Ngày về</label>
-          <input type="date" [(ngModel)]="returnDate" />
+          <input 
+            type="date" 
+            [(ngModel)]="returnDate" 
+            [min]="minReturnDate"
+            (change)="clearErrors()"
+            required />
         </div>
         }
       </div>
@@ -104,7 +128,17 @@
 
 
       <!-- Button -->
-      <button matButton="filled" class="btn-search" (click)="searchFlights()">Tìm chuyến bay</button>
+      <button 
+        matButton="filled" 
+        class="btn-search" 
+        (click)="searchFlights()"
+        [disabled]="isLoading">
+        @if (isLoading) {
+          Đang tìm kiếm...
+        } @else {
+          Tìm chuyến bay
+        }
+      </button>
     </div>
   </div>
 </div>
