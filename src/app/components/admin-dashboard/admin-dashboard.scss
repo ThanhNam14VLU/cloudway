@@ -1,0 +1,169 @@
+/* Container chính cho nội dung dashboard */
+.main-content {
+  /* Quan trọng: Đẩy nội dung sang phải để không bị sidebar che mất */
+  margin-left: 260px;
+  padding: 30px;
+  background-color: #f4f6f9; /* Màu nền xám nhạt cho khu vực nội dung */
+  min-height: 100vh;
+}
+
+/* Phần header */
+.dashboard-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 5px 0;
+}
+
+.dashboard-header p {
+  font-size: 16px;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+/* Khu vực các thẻ thống kê */
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+  font-size: 24px;
+  padding: 15px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Màu sắc riêng cho từng icon */
+.icon-flights { background-color: #3498db; } /* Blue */
+.icon-tickets { background-color: #2ecc71; } /* Green */
+.icon-revenue { background-color: #f1c40f; } /* Yellow */
+.icon-users { background-color: #e74c3c; }   /* Red */
+
+.card-info h3 {
+  font-size: 24px;
+  margin: 0;
+  color: #2c3e50;
+}
+
+.card-info p {
+  margin: 0;
+  color: #7f8c8d;
+}
+
+/* Phần nội dung chính (biểu đồ và bảng) */
+.dashboard-main {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 25px;
+}
+
+/* Styling chung cho các box nội dung */
+.chart-container,
+.recent-bookings {
+  background-color: #fff;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h2,
+.recent-bookings h2 {
+  font-size: 18px;
+  margin: 0 0 20px 0;
+  color: #34495e;
+}
+
+/* Placeholder cho biểu đồ */
+.chart-placeholder {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f9f9f9;
+  border: 1px dashed #ddd;
+  border-radius: 5px;
+  color: #aaa;
+}
+
+
+/* Bảng */
+.recent-bookings table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.recent-bookings th,
+.recent-bookings td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.recent-bookings thead th {
+  font-weight: 600;
+  color: #7f8c8d;
+  font-size: 14px;
+}
+
+.recent-bookings tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Trạng thái */
+.status {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status.completed {
+  background-color: #eaf8f1;
+  color: #2ecc71;
+}
+
+.status.pending {
+  background-color: #fef5e7;
+  color: #f39c12;
+}
+
+.status.cancelled {
+  background-color: #fdeded;
+  color: #e74c3c;
+}
+
+/* Responsive cho màn hình nhỏ */
+@media (max-width: 992px) {
+  .dashboard-main {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0; /* Sidebar có thể sẽ ẩn đi trên mobile */
+  }
+}

@@ -1,0 +1,150 @@
+/* Kế thừa từ các component trước */
+.main-content {
+  margin-left: 260px;
+  padding: 30px;
+  background-color: #f4f6f9;
+  min-height: 100vh;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.page-header h1 {
+  font-size: 28px;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.add-new-btn {
+  background-color: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.add-new-btn:hover {
+  background-color: #2980b9;
+}
+
+.content-container {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-container .fa-search {
+  position: absolute;
+  left: 15px;
+  color: #95a5a6;
+}
+
+.search-container input,
+.filter-container select {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.search-container input {
+  padding-left: 40px;
+  min-width: 300px;
+}
+
+/* Bảng dữ liệu */
+.table-responsive {
+  overflow-x: auto; /* Giúp bảng cuộn ngang trên màn hình nhỏ */
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  white-space: nowrap; /* Ngăn text xuống dòng */
+}
+
+th, td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #34495e;
+  font-size: 14px;
+}
+
+tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.text-muted {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+/* Huy hiệu cho Loại khách */
+.badge {
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.adult-badge { background-color: #eaf8f1; color: #2ecc71; }
+.child-badge { background-color: #fef5e7; color: #f39c12; }
+
+/* Cột hành động */
+.actions {
+  display: flex;
+  gap: 10px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  font-size: 16px;
+  color: #7f8c8d;
+  transition: color 0.2s ease;
+}
+
+.action-btn.edit-btn:hover { color: #3498db; }
+.action-btn.delete-btn:hover { color: #e74c3c; }
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}

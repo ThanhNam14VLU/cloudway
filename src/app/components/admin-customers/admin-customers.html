@@ -1,0 +1,81 @@
+<main class="main-content">
+  <header class="page-header">
+    <h1>Quản lý Khách hàng</h1>
+    <button class="add-new-btn">
+      <i class="fa-solid fa-plus"></i> Thêm Mới
+    </button>
+  </header>
+
+  <div class="content-container">
+    <div class="table-toolbar">
+      <div class="search-container">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="Tìm kiếm theo Tên, Email, SĐT...">
+      </div>
+      <div class="filter-container">
+        <select name="passenger-type-filter">
+          <option value="">Tất cả Loại khách</option>
+          <option value="ADULT">Người lớn (ADULT)</option>
+          <option value="CHILD">Trẻ em (CHILD)</option>
+          <option value="INFANT">Em bé (INFANT)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+        <tr>
+          <th></th>
+          <th>Họ và Tên</th>
+          <th>Ngày Sinh</th>
+          <th>Số ID/CCCD</th>
+          <th>Số Điện Thoại</th>
+          <th>Email</th>
+          <th>Loại Khách</th>
+          <th>Ngày Tạo</th>
+          <th>Hành Động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>Phạm Minh C</td>
+          <td>1998-05-12</td>
+          <td><span class="text-muted">NULL</span></td>
+          <td>0903030303</td>
+          <td>customer@gmail.com</td>
+          <td><span class="badge adult-badge">ADULT</span></td>
+          <td>2025-10-09</td>
+          <td class="actions">
+            <button class="action-btn edit-btn" title="Chỉnh sửa">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>Nguyễn Thị Lan</td>
+          <td>2018-11-20</td>
+          <td><span class="text-muted">NULL</span></td>
+          <td>0912345678</td>
+          <td>lan.nguyen@email.com</td>
+          <td><span class="badge child-badge">CHILD</span></td>
+          <td>2025-10-08</td>
+          <td class="actions">
+            <button class="action-btn edit-btn" title="Chỉnh sửa">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>

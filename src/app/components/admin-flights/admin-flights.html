@@ -1,0 +1,106 @@
+<main class="main-content">
+  <header class="page-header">
+    <h1>Quản lý Chuyến bay</h1>
+    <button class="add-new-btn">
+      <i class="fa-solid fa-plus"></i> Thêm Chuyến Bay
+    </button>
+  </header>
+
+  <div class="content-container">
+    <div class="table-toolbar">
+      <div class="search-container">
+        <i class="fa-solid fa-search"></i>
+        <input type="text" placeholder="Tìm kiếm theo mã chuyến bay...">
+      </div>
+      <div class="filter-container">
+        <label for="from-date">Từ ngày:</label>
+        <input type="date" id="from-date" name="from-date">
+        <label for="to-date">Đến ngày:</label>
+        <input type="date" id="to-date" name="to-date">
+        <button class="filter-btn">Lọc</button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+        <tr>
+          <th></th>
+          <th>Mã Chuyến Bay</th>
+          <th>Số Hiệu Máy Bay</th>
+          <th>Giờ Đi Dự Kiến</th>
+          <th>Giờ Đến Dự Kiến</th>
+          <th>Trạng Thái</th>
+          <th>Hành Động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>VN255</td>
+          <td>VN-A696</td>
+          <td>2025-10-12 01:00</td>
+          <td>2025-10-12 03:00</td>
+          <td><span class="status scheduled">Lên lịch</span></td>
+          <td class="actions">
+            <button class="action-btn edit-btn" title="Chỉnh sửa">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>VJ160</td>
+          <td>VN-A672</td>
+          <td>2025-10-12 01:30</td>
+          <td>2025-10-12 03:45</td>
+          <td><span class="status on-time">Đúng giờ</span></td>
+          <td class="actions">
+            <button class="action-btn edit-btn" title="Chỉnh sửa">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>QH1021</td>
+          <td>VN-A896</td>
+          <td>2025-10-07 01:01</td>
+          <td>2025-10-07 03:21</td>
+          <td><span class="status delayed">Bị trễ</span></td>
+          <td class="actions">
+            <button class="action-btn edit-btn" title="Chỉnh sửa">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><input type="checkbox" /></td>
+          <td>BL6028</td>
+          <td>VN-A582</td>
+          <td>2025-10-06 01:21</td>
+          <td>2025-10-06 03:21</td>
+          <td><span class="status cancelled">Đã hủy</span></td>
+          <td class="actions">
+            <button class="action-btn edit-btn" title="Chỉnh sửa">
+              <i class="fa-solid fa-pencil"></i>
+            </button>
+            <button class="action-btn delete-btn" title="Xóa">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
