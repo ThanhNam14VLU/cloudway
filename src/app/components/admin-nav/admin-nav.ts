@@ -8,5 +8,11 @@ import {RouterLink} from '@angular/router';
   styleUrl: './admin-nav.scss'
 })
 export class AdminNav {
+      isMenuOpen = 1;
+
+      toggleMenu(isMenuOpen:number) {
+        this.isMenuOpen = isMenuOpen;
+      }
+
 
 }

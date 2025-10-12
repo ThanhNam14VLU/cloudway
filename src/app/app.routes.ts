@@ -51,6 +51,12 @@ export const routes: Routes = [
     loadComponent: () =>
        import('./pages/admin/admin').then(m => m.Admin),
         children: [
+          {
+            path: '',
+            loadComponent: () =>
+              import('./components/admin-dashboard/admin-dashboard')
+                .then(m => m.AdminDashboard)
+          },
         {
           path: 'admin-dashboard',
           loadComponent: () =>
