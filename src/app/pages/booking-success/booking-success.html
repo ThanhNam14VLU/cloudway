@@ -1,0 +1,91 @@
+<app-header></app-header>
+
+<div class="success-container">
+  <!-- Main Success Card -->
+  <div class="success-card">
+    <h1>Đặt vé thành công!</h1>
+    
+    <div class="success-icon">
+      <i class="fas fa-check"></i>
+    </div>
+    
+    <p class="success-message">Chúc mừng! Chuyến bay của bạn đã được đặt thành công.</p>
+    
+    <!-- Booking Details -->
+    <div class="booking-details">
+      <div class="detail-row">
+        <span class="label">Mã đặt chỗ</span>
+        <span class="value booking-code">{{ bookingData.bookingCode }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Trạng thái thanh toán</span>
+        <span class="value payment-status">{{ bookingData.paymentStatus }}</span>
+      </div>
+      
+      <div class="detail-row">
+        <span class="label">Tổng tiền</span>
+        <span class="value total-amount">{{ bookingData.totalAmount | currency:'VND':'symbol':'1.0-0':'vi' }}</span>
+      </div>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn-secondary" (click)="viewTicketDetails()">
+        Xem chi tiết vé
+      </button>
+      <button class="btn-primary" (click)="goHome()">
+        Về trang chủ
+      </button>
+    </div>
+  </div>
+
+  <!-- Support Section -->
+  <div class="support-card">
+    <h3>Cần hỗ trợ?</h3>
+    
+    <div class="support-info">
+      <div class="support-item">
+        <i class="fas fa-phone"></i>
+        <span>Hotline: 1900 1234</span>
+      </div>
+      
+      <div class="support-item">
+        <i class="fas fa-envelope"></i>
+        <span>Email: support@vietflight.com</span>
+      </div>
+    </div>
+    
+    <p class="support-note">Hỗ trợ 24/7 - Phản hồi trong vòng 30 phút</p>
+  </div>
+
+  <!-- Additional Actions -->
+  <div class="additional-actions">
+    <button class="action-btn" (click)="printTicket()">
+      <i class="fas fa-print"></i>
+      In vé
+    </button>
+    
+    <button class="action-btn" (click)="downloadPDF()">
+      <i class="fas fa-download"></i>
+      Tải PDF
+    </button>
+    
+    <button class="action-btn primary" (click)="bookNewTicket()">
+      <i class="fas fa-home"></i>
+      Đặt vé mới
+    </button>
+  </div>
+
+  <!-- Important Information -->
+  <div class="important-info">
+    <h4>Thông tin quan trọng</h4>
+    <ul>
+      <li>Vui lòng có mặt tại sân bay trước giờ bay ít nhất 90 phút</li>
+      <li>Mang theo giấy tờ tùy thân hợp lệ (CMND/CCCD/Hộ chiếu)</li>
+      <li>Thông tin đặt chỗ đã được gửi đến email: {{ bookingData.contactEmail }}</li>
+      <li>Check-in online mở từ 24h trước giờ bay trên website hãng</li>
+      <li>Liên hệ hotline 1900 1234 nếu cần hỗ trợ</li>
+    </ul>
+  </div>
+</div>

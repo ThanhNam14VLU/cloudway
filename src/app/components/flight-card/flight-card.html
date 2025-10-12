@@ -20,13 +20,13 @@
 
     <div class="price">
       <div class="amount">
-        {{ formatPrice(flight.price) }}
+        {{ flight.price }}
       </div>
       <div class="currency">VND</div>
     </div>
 
     <div class="action">
-      <button matButton="filled" routerLink="airline-card-detail/1">Chọn</button>
+      <button matButton="filled" [routerLink]="['/airline-card-detail/1']">Chọn</button>
       <span class="chevron" (click)="Dropdown()">
         <span class="material-symbols-outlined">keyboard_arrow_down</span>
       </span>

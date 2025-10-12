@@ -94,5 +94,11 @@ export const routes: Routes = [
     loadComponent: () => {
       return import('./pages/reset-password/reset-password').then(m => m.ResetPasswordComponent)
     }
+  },
+  {
+    path: "booking-success",
+    loadComponent: () => {
+      return import('./pages/booking-success/booking-success').then(m => m.BookingSuccess)
+    }
   }
 ];
