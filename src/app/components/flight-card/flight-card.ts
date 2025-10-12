@@ -33,7 +33,7 @@ export class FlightCard {
     this.isDropped = !this.isDropped;
   }
 
-  formatPrice(price: number): string {
-    return price.toLocaleString('vi-VN');
-  }
+  // formatPrice(price: number): string {
+  //   return price.toLocaleString('vi-VN');
+  // }
 }
