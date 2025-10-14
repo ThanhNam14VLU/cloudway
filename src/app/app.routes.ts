@@ -20,13 +20,15 @@ import { AdminFlights} from './components/admin-flights/admin-flights';
 import { AdminBookings} from './components/admin-bookings/admin-bookings';
 import { AdminReports} from './components/admin-reports/admin-reports';
 import { AdminSettings} from './components/admin-settings/admin-settings';
-
+import {Profile}   from './pages/profile/profile';
 
 export const routes: Routes = [
   {
     path: '',
+    // loadComponent: () =>
+    //   import('./pages/home/home').then(m => m.Home),
     loadComponent: () =>
-      import('./pages/home/home').then(m => m.Home),
+      import('./pages/profile/profile').then(m => m.Profile),
   },
   {
     path: 'login',
@@ -115,6 +117,13 @@ export const routes: Routes = [
       import('./pages/airline/airline').then(m => m.Airline), // layout chính
     //trong ailine có các component con là dashboard, management, report, setting
     children: [
+      { path: '', redirectTo: 'airline-dashboard', pathMatch: 'full' },
+      {
+        path: '',
+        loadComponent: () =>
+          import('./components/airline-dashboard/airline-dashboard')
+            .then(m => m.AirlineDashboard)
+      },
       {
         path: 'airline-dashboard',
         loadComponent: () =>

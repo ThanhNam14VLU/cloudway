@@ -3,7 +3,7 @@ import {RouterLink, RouterLinkActive} from '@angular/router';
 
 @Component({
   selector: 'app-airline-nav',
-  imports: [RouterLink],
+  imports: [RouterLink,RouterLinkActive],
   templateUrl: './airline-nav.html',
   styleUrl: './airline-nav.scss'
 })
