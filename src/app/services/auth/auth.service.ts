@@ -75,6 +75,13 @@ export class AuthService {
       }
 
       console.log('✅ Password sign in successful:', data);
+      // 🔑 Log access token after successful login
+      const accessToken = data.session?.access_token;
+      if (accessToken) {
+        console.log('🔑 Access token:', accessToken);
+      } else {
+        console.log('ℹ️ Không tìm thấy access token trong phản hồi đăng nhập.');
+      }
       return data;
     } catch (error) {
       console.error('❌ Password sign in failed:', error);
@@ -144,6 +151,59 @@ export class AuthService {
   async getAccessToken() {
     const { data } = await supabase.auth.getSession();
     return data?.session?.access_token ?? null;
+  }
+
+  /** 🔹 Lấy role hiện tại từ session (ưu tiên app_metadata.role, sau đó user_metadata.role) */
+  async getCurrentUserRole(): Promise<string | null> {
+    const { data } = await supabase.auth.getSession();
+    const user: any = data?.session?.user;
+    if (!user) return null;
+    const tokenRole = user?.app_metadata?.role || user?.user_metadata?.role || null;
+    if (tokenRole) return tokenRole;
+
+    // Fallback: lấy role từ backend profile nếu JWT không có role
+    try {
+      const userId: string = user.id;
+      const profile: any = await firstValueFrom(
+        this.http.get(`${this.backendUrl}/user/${userId}`)
+      );
+      return profile?.role ?? null;
+    } catch (e) {
+      console.warn('⚠️ Không thể lấy role từ backend:', e);
+      return null;
+    }
+  }
+
+  /** 🔹 Lấy thông tin user đầy đủ từ backend (bao gồm airlines) */
+  async getCurrentUserProfile(): Promise<any> {
+    try {
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user;
+      if (!user) return null;
+
+      const userId = user.id;
+      const profile = await firstValueFrom(
+        this.http.get(`${this.backendUrl}/user/${userId}`)
+      );
+      return profile;
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+      return null;
+    }
+  }
+
+  /** 🔹 Lấy airline ID đầu tiên của user hiện tại */
+  async getCurrentUserAirlineId(): Promise<string | null> {
+    try {
+      const profile = await this.getCurrentUserProfile();
+      if (profile?.airlines && profile.airlines.length > 0) {
+        return profile.airlines[0].id;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting airline ID:', error);
+      return null;
+    }
   }
 
   /** 🔹 Lưu thông tin user vào backend DB */

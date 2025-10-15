@@ -382,13 +382,29 @@
     </div>
   </div>
 
+  <!-- Error Messages -->
+  @if (errorMessages.length > 0) {
+    <div class="error-messages">
+      <h4>Lỗi:</h4>
+      <ul>
+        <li *ngFor="let error of errorMessages">{{ error }}</li>
+      </ul>
+    </div>
+  }
+
   <!-- Footer Navigation -->
   <div class="booking-footer">
-    <button class="btn-secondary" (click)="previousStep()">Quay lại</button>
+    <button class="btn-secondary" (click)="previousStep()" [disabled]="isCreatingBooking">Quay lại</button>
     @if (currentStep < 3) {
-      <button class="btn-primary" (click)="nextStep()">Tiếp tục</button>
+      <button class="btn-primary" (click)="nextStep()" [disabled]="isCreatingBooking">Tiếp tục</button>
     } @else {
-      <button class="btn-primary" (click)="completeBooking()">Hoàn tất đặt chỗ</button>
+      <button class="btn-primary" (click)="completeBooking()" [disabled]="isCreatingBooking">
+        @if (isCreatingBooking) {
+          Đang tạo booking...
+        } @else {
+          Hoàn tất đặt chỗ
+        }
+      </button>
     }
   </div>
 </div>

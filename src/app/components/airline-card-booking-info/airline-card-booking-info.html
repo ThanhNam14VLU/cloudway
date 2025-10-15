@@ -38,8 +38,8 @@
     <!-- Thông tin hành khách -->
     <section class="passenger-info card">
       <h4>Thông tin hành khách</h4>
-      <p class="note"><!--nội dung ghi chú cho khách hàng-->
-        * Quy khách vui lòng nhập đầy đủ và chính xác thông tin hành khách...
+      <p class="note">
+        * Quý khách vui lòng nhập đầy đủ và chính xác thông tin hành khách...
       </p>
       <form class="form-grid">
         <div>
@@ -47,44 +47,24 @@
           <p>Hành khách 1</p>
         </div>
         <div>
-          <label>Giới tính</label>
-          <select>
-            <option>Nam</option>
-            <option>Nữ</option>
-          </select>
-        </div>
-        <div>
-          <label>Họ</label>
-          <input type="text" placeholder="Nhập họ">
-        </div>
-        <div>
-          <label>Tên đệm và tên</label>
-          <input type="text" placeholder="Nhập tên đệm và tên">
+          <label>Họ và tên</label>
+          <input type="text" [(ngModel)]="passengerInfo.fullName" placeholder="Nhập họ và tên">
         </div>
         <div>
           <label>Ngày sinh</label>
-          <input type="date">
+          <input type="date" [(ngModel)]="passengerInfo.dateOfBirth">
         </div>
         <div>
-          <label>CCCD</label>
-          <input type="text" placeholder="Nhập số CCCD">
-        </div>
-
-        <div>
-          <label>Ngày hết hạn CCCD</label>
-          <input type="date">
+          <label>CCCD/CMND</label>
+          <input type="text" [(ngModel)]="passengerInfo.idNumber" placeholder="Nhập số CCCD/CMND">
         </div>
         <div>
-          <label>Hành lý kí gửi</label>
-          <select>
-            <option value="0">Không mua hành lý (0kg)</option>
-            <option value="15">15kg</option>
-            <option value="20">20kg</option>
-            <option value="25">25kg</option>
-            <option value="30">30kg</option>
-            <option value="35">35kg</option>
-            <option value="40">40kg</option>
-          </select>
+          <label>Số điện thoại</label>
+          <input type="tel" [(ngModel)]="passengerInfo.phone" placeholder="Nhập số điện thoại">
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="email" [(ngModel)]="passengerInfo.email" placeholder="Nhập email">
         </div>
       </form>
     </section>
@@ -94,25 +74,39 @@
       <h4>Thông tin liên hệ</h4>
       <form class="form-grid">
         <div>
-          <label>Xưng hô</label>
-          <select>
-            <option>Ông</option>
-            <option>Bà</option>
-          </select>
-        </div>
-        <div>
-          <label>Họ</label>
-          <input type="text" placeholder="Nhập họ">
-        </div>
-        <div>
-          <label>Tên đệm và tên</label>
-          <input type="text" placeholder="Nhập tên đệm và tên">
+          <label>Họ và tên</label>
+          <input type="text" [(ngModel)]="contactInfo.fullname" placeholder="Nhập họ và tên">
         </div>
         <div>
           <label>Điện thoại</label>
-          <input type="tel" placeholder="Nhập số điện thoại">
+          <input type="tel" [(ngModel)]="contactInfo.phone" placeholder="Nhập số điện thoại">
+        </div>
+        <div>
+          <label>Email</label>
+          <input type="email" [(ngModel)]="contactInfo.email" placeholder="Nhập email">
         </div>
       </form>
+    </section>
+
+    <!-- Error Messages -->
+    @if (errorMessages.length > 0) {
+      <section class="error-messages card">
+        <h4>Lỗi:</h4>
+        <ul>
+          <li *ngFor="let error of errorMessages">{{ error }}</li>
+        </ul>
+      </section>
+    }
+
+    <!-- Booking Actions -->
+    <section class="booking-actions">
+      <button class="btn-primary" (click)="createBooking()" [disabled]="isCreatingBooking">
+        @if (isCreatingBooking) {
+          Đang tạo booking...
+        } @else {
+          Tạo Booking
+        }
+      </button>
     </section>
   </main>
 </div>

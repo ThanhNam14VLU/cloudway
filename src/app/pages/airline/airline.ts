@@ -7,10 +7,11 @@ import { AirlineAddFlightForm } from '../../components/airline-add-flight-form/a
 import { AirlineReport } from '../../components/airline-report/airline-report';
 import { AirlineSetting } from '../../components/airline-setting/airline-setting';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { Header } from '../../components/header/header';
 
 @Component({
   selector: 'app-airline',
-  imports: [RouterOutlet,RouterLink,AirlineHeader, AirlineNav, AirlineDashboard, AirlineManagement,AirlineReport,AirlineSetting, AirlineAddFlightForm,],
+  imports: [RouterOutlet,RouterLink,AirlineHeader, AirlineNav, AirlineDashboard, AirlineManagement,AirlineReport,AirlineSetting, AirlineAddFlightForm, Header],
   templateUrl: './airline.html',
   styleUrl: './airline.scss'
 })

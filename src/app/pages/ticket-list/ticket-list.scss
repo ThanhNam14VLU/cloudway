@@ -636,3 +636,29 @@ app-header {
     flex-shrink: 0;
   }
 }
+
+/* Message styles for flight list */
+.flights-list {
+  .loading-message, .no-flights-message {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-size: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+
+    p {
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  .loading-message {
+    color: #007bff;
+  }
+
+  .no-flights-message {
+    color: #dc3545;
+  }
+}
