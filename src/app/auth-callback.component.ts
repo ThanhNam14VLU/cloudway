@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { supabase } from './supabase.client';
 import { HttpClient } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { AuthService } from './services/auth/auth.service';
+import { environment } from '../environments/environment';
 
 @Component({
   imports:[MatProgressSpinnerModule],
@@ -18,7 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
           `
 })
 export class AuthCallbackComponent implements OnInit {
-  constructor(private router: Router, private http: HttpClient) {}
+  constructor(private router: Router, private http: HttpClient, private authService: AuthService) {}
 
   async ngOnInit() {
     try {
@@ -67,7 +69,7 @@ export class AuthCallbackComponent implements OnInit {
 
       // --- 🔥 Gửi access token sang backend để xác thực và tạo user record ---
       try {
-        await this.http.post('http://localhost:3000/auth/supabase-login', {
+        await this.http.post(`${environment.apiUrl}/auth/supabase-login`, {
           token: accessToken,
         }).toPromise();
         console.log('✅ Backend xác thực & lưu user thành công');
@@ -75,8 +77,16 @@ export class AuthCallbackComponent implements OnInit {
         console.warn('⚠️ Backend không khả dụng, tiếp tục với frontend auth');
       }
 
-      // Điều hướng sang trang chính
-      this.router.navigate(['/home']);
+      // Điều hướng theo role (dùng resolver chung để fallback về backend nếu JWT thiếu role)
+      const role = await this.authService.getCurrentUserRole();
+      console.log('🔎 Resolved role after OAuth =', role);
+      if (role === 'ADMIN' || role === 'admin') {
+        this.router.navigate(['/admin']);
+      } else if (role === 'AIRLINE' || role === 'airline') {
+        this.router.navigate(['/airline/airline-dashboard']);
+      } else {
+        this.router.navigate(['/home']);
+      }
     } catch (e) {
       console.error('❌ Auth callback error:', e);
       this.router.navigate(['/login']);

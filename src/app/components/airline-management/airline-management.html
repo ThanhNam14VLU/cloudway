@@ -15,100 +15,153 @@
   </div>
 
   <div class="flight-list">
-    <table>
-      <thead>
-        <tr>
-          <th>Số hiệu</th>
-          <th>Tuyến bay</th>
-          <th>Lịch trình</th>
-          <th>Máy bay</th>
-          <th>Giá vé</th>
-          <th>Sức chứa</th>
-          <th>Trạng thái</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>VN123</td>
-          <td>
-            Hà Nội <span class="arrow">✈</span> TP.HCM
-            <div class="airport-code">HAN → SGN</div>
-          </td>
-          <td>
-            08:30 - 10:45
-            <div class="duration">2h 15m • Hàng ngày</div>
-          </td>
-          <td>Airbus A321</td>
-          <td>1.200.000 ₫</td>
-          <td>180</td>
-          <td><span class="status active">Hoạt động</span></td>
-          <td>
-            <button class="edit">✏️</button>
-            <button class="delete">🗑️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>VN456</td>
-          <td>
-            TP.HCM <span class="arrow">✈</span> Đà Nẵng
-            <div class="airport-code">SGN → DAD</div>
-          </td>
-          <td>
-            14:15 - 16:00
-            <div class="duration">1h 45m • Thứ 2,4,6</div>
-          </td>
-          <td>Boeing 737</td>
-          <td>850.000 ₫</td>
-          <td>165</td>
-          <td><span class="status active">Hoạt động</span></td>
-          <td>
-            <button class="edit">✏️</button>
-            <button class="delete">🗑️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>VN456</td>
-          <td>
-            TP.HCM <span class="arrow">✈</span> Đà Nẵng
-            <div class="airport-code">SGN → DAD</div>
-          </td>
-          <td>
-            14:15 - 16:00
-            <div class="duration">1h 45m • Thứ 2,4,6</div>
-          </td>
-          <td>Boeing 737</td>
-          <td>850.000 ₫</td>
-          <td>165</td>
-          <td><span class="status active">Hoạt động</span></td>
-          <td>
-            <button class="edit">✏️</button>
-            <button class="delete">🗑️</button>
-          </td>
-        </tr>
-        <tr>
-          <td>VN456</td>
-          <td>
-            TP.HCM <span class="arrow">✈</span> Đà Nẵng
-            <div class="airport-code">SGN → DAD</div>
-          </td>
-          <td>
-            14:15 - 16:00
-            <div class="duration">1h 45m • Thứ 2,4,6</div>
-          </td>
-          <td>Boeing 737</td>
-          <td>850.000 ₫</td>
-          <td>165</td>
-          <td><span class="status active">Hoạt động</span></td>
-          <td>
-            <button class="edit">✏️</button>
-            <button class="delete">🗑️</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    @if (isLoading) {
+      <div class="loading">
+        <p>Đang tải danh sách chuyến bay...</p>
+      </div>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Số hiệu</th>
+            <th>Tuyến bay</th>
+            <th>Lịch trình</th>
+            <th>Máy bay</th>
+            <th>Sức chứa</th>
+            <th>Ngày tạo</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (flights.length === 0) {
+            <tr>
+              <td colspan="7" class="no-data">
+                <p>Chưa có chuyến bay nào</p>
+                <button class="add-flight-btn" (click)="ShowForm()">+ Thêm chuyến bay đầu tiên</button>
+              </td>
+            </tr>
+          } @else {
+            @for (flight of flights; track flight.id) {
+              <tr>
+                <td>{{ flight.flight_number.code }}</td>
+                <td>
+                  {{ flight.flight_number.departure_airport.city }} <span class="arrow">✈</span> {{ flight.flight_number.arrival_airport.city }}
+                  <div class="airport-code">{{ flight.flight_number.departure_airport.iata_code }} → {{ flight.flight_number.arrival_airport.iata_code }}</div>
+                </td>
+                <td>
+                  {{ formatTime(flight.scheduled_departure_local) }} - {{ formatTime(flight.scheduled_arrival_local) }}
+                  <div class="duration">{{ calculateDuration(flight.scheduled_departure_local, flight.scheduled_arrival_local) }}</div>
+                </td>
+                <td>{{ flight.aircraft.type }}</td>
+                <td>{{ flight.aircraft.seat_capacity }}</td>
+                <td>{{ formatDateTime(flight.created_at) }}</td>
+                <td>
+                  <div class="action-buttons">
+                    <button class="edit" title="Chỉnh sửa" (click)="editFlight(flight)">
+                      <span class="icon">✏️</span>
+                      <span class="text">Sửa</span>
+                    </button>
+                    <button class="cancel" title="Hủy chuyến" (click)="cancelFlight(flight)">
+                      <span class="icon">❌</span>
+                      <span class="text">Hủy</span>
+                    </button>
+                    <button class="delete" title="Xóa vĩnh viễn" (click)="deleteFlight(flight)">
+                      <span class="icon">🗑️</span>
+                      <span class="text">Xóa</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    }
   </div>
 </div>
 @if(isShowForm){
   <app-airline-add-flight-form (close)="CloseForm()"></app-airline-add-flight-form><!--khi nhận được sự kiện từ con thì gọi CloseForm-->
+}
+
+<!-- Edit Flight Modal -->
+@if(showEditModal) {
+  <div class="modal-overlay" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Chỉnh sửa chuyến bay</h3>
+        <button class="close-btn" (click)="closeEditModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="flight-info">
+          <h4>{{ selectedFlight?.flight_number?.code }}</h4>
+          <p>{{ selectedFlight?.flight_number?.departure_airport?.city }} → {{ selectedFlight?.flight_number?.arrival_airport?.city }}</p>
+          <p>{{ formatTime(selectedFlight?.scheduled_departure_local) }} - {{ formatTime(selectedFlight?.scheduled_arrival_local) }}</p>
+        </div>
+        <div class="form-group">
+          <label>Thời gian khởi hành mới:</label>
+          <input type="datetime-local" [(ngModel)]="selectedFlight.scheduled_departure_local" />
+        </div>
+        <div class="form-group">
+          <label>Thời gian đến mới:</label>
+          <input type="datetime-local" [(ngModel)]="selectedFlight.scheduled_arrival_local" />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeEditModal()">Hủy</button>
+        <button class="btn btn-primary" (click)="saveFlightChanges()">Lưu thay đổi</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Cancel Flight Modal -->
+@if(showCancelModal) {
+  <div class="modal-overlay" (click)="closeCancelModal()">
+    <div class="modal-content cancel-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Hủy chuyến bay</h3>
+        <button class="close-btn" (click)="closeCancelModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="warning-icon">⚠️</div>
+        <h4>Xác nhận hủy chuyến bay</h4>
+        <div class="flight-details">
+          <p><strong>Số hiệu:</strong> {{ selectedFlight?.flight_number?.code }}</p>
+          <p><strong>Tuyến bay:</strong> {{ selectedFlight?.flight_number?.departure_airport?.city }} → {{ selectedFlight?.flight_number?.arrival_airport?.city }}</p>
+          <p><strong>Thời gian:</strong> {{ formatDateTime(selectedFlight?.scheduled_departure_local) }}</p>
+        </div>
+        <!-- <p class="warning-text">Hành khách sẽ được thông báo về việc hủy chuyến và có thể đổi/hủy vé.</p> -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeCancelModal()">Không hủy</button>
+        <button class="btn btn-danger" (click)="confirmCancelFlight()">Xác nhận hủy</button>
+      </div>
+    </div>
+  </div>
+}
+
+<!-- Delete Flight Modal -->
+@if(showDeleteModal) {
+  <div class="modal-overlay" (click)="closeDeleteModal()">
+    <div class="modal-content delete-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Xóa chuyến bay</h3>
+        <button class="close-btn" (click)="closeDeleteModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="danger-icon">🗑️</div>
+        <h4>Xác nhận xóa vĩnh viễn</h4>
+        <div class="flight-details">
+          <p><strong>Số hiệu:</strong> {{ selectedFlight?.flight_number?.code }}</p>
+          <p><strong>Tuyến bay:</strong> {{ selectedFlight?.flight_number?.departure_airport?.city }} → {{ selectedFlight?.flight_number?.arrival_airport?.city }}</p>
+          <p><strong>Thời gian:</strong> {{ formatDateTime(selectedFlight?.scheduled_departure_local) }}</p>
+        </div>
+        <p class="danger-text">Hành động này không thể hoàn tác. Chuyến bay sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" (click)="closeDeleteModal()">Không xóa</button>
+        <button class="btn btn-danger" (click)="confirmDeleteFlight()">Xác nhận xóa</button>
+      </div>
+    </div>
+  </div>
 }

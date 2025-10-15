@@ -4,54 +4,76 @@
     <h2>Thêm chuyến bay mới</h2>
     <button class="close-btn" (click)="handle()">&times;</button>
   </div>
-  <form class="modal-body">
+  <form class="modal-body" (submit)="submit($event)">
     <div class="form-row">
       <div class="form-group">
         <label for="flightNumber">Số hiệu chuyến bay</label>
-        <input type="text" id="flightNumber" placeholder="VN123" required>
+        <input type="text" id="flightNumber" placeholder="VN123" required [(ngModel)]="flightPayload.flight_number.code" name="flightCode">
       </div>
       <div class="form-group">
-        <label for="arrivalTime">Giờ đến</label>
-        <input type="time" id="arrivalTime" required>
+        <label for="planeType">Loại máy bay</label>
+        <select id="planeType" [(ngModel)]="flightPayload.aircraft_id" name="aircraft">
+          <option value="">Chọn loại máy bay</option>
+          <option *ngFor="let ac of aircrafts" [value]="ac.id">{{ ac.name }}</option>
+        </select>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
         <label for="departure">Điểm đi</label>
-        <select id="departure">
-          <option>Chọn điểm đi</option>
+        <select id="departure" [(ngModel)]="flightPayload.flight_number.departure_airport_id" name="depAirport">
+          <option value="">Chọn điểm đi</option>
+          <option *ngFor="let a of airports" [value]="a.id">{{ a.code || a.name }}</option>
         </select>
       </div>
-      <div class="form-group">
-        <label for="planeType">Loại máy bay</label>
-        <select id="planeType">
-          <option>Chọn loại máy bay</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
       <div class="form-group">
         <label for="destination">Điểm đến</label>
-        <select id="destination">
-          <option>Chọn điểm đến</option>
+        <select id="destination" [(ngModel)]="flightPayload.flight_number.arrival_airport_id" name="arrAirport">
+          <option value="">Chọn điểm đến</option>
+          <option *ngFor="let a of airports" [value]="a.id">{{ a.code || a.name }}</option>
         </select>
-      </div>
-      <div class="form-group">
-        <label for="price">Giá vé (VND)</label>
-        <input type="number" id="price" value="1200000" required>
       </div>
     </div>
 
     <div class="form-row">
       <div class="form-group">
-        <label for="departureTime">Giờ khởi hành</label>
-        <input type="time" id="departureTime" required>
+        <label for="departureDatetime">Khởi hành (giờ địa phương)</label>
+        <input type="datetime-local" id="departureDatetime" required [(ngModel)]="flightPayload.scheduled_departure_local" name="depLocal">
       </div>
       <div class="form-group">
-        <label for="capacity">Sức chứa</label>
-        <input type="number" id="capacity" value="180" required>
+        <label for="arrivalDatetime">Đến (giờ địa phương)</label>
+        <input type="datetime-local" id="arrivalDatetime" required [(ngModel)]="flightPayload.scheduled_arrival_local" name="arrLocal">
+      </div>
+    </div>
+
+    <!-- Fare buckets -->
+    <div class="fare-section">
+      <h3>Giá vé</h3>
+      <div class="fare-group">
+        <div class="fare-card">
+          <div class="fare-title">Thương gia</div>
+          <div class="fare-row">
+            <label>Người lớn</label>
+            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[0].base_price" name="bizAdultPrice" required />
+          </div>
+          <div class="fare-row">
+            <label>Trẻ em</label>
+            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[1].base_price" name="bizChildPrice" required />
+          </div>
+        </div>
+
+        <div class="fare-card">
+          <div class="fare-title">Phổ thông</div>
+          <div class="fare-row">
+            <label>Người lớn</label>
+            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[2].base_price" name="ecoAdultPrice" required />
+          </div>
+          <div class="fare-row">
+            <label>Trẻ em</label>
+            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[3].base_price" name="ecoChildPrice" required />
+          </div>
+        </div>
       </div>
     </div>
 

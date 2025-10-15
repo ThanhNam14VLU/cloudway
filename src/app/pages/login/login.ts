@@ -46,6 +46,8 @@ export class Login implements OnInit {
     try {
       this.isLoading = true;
       this.errorMessage = '';
+      // OAuth sẽ redirect ra ngoài app, code dưới đây thường sẽ không chạy
+      // Điều hướng dựa trên role sẽ được xử lý ở AuthCallbackComponent
       await this.authService.signInWithGoogle();
     } catch (error: any) {
       this.errorMessage = error.message || 'Đăng nhập Google thất bại';
@@ -64,7 +66,15 @@ export class Login implements OnInit {
       this.isLoading = true;
       this.errorMessage = '';
       await this.authService.signInWithPassword(this.loginForm.email, this.loginForm.password);
-      this.router.navigate(['/']);
+      const role = await this.authService.getCurrentUserRole();
+      console.log('roleeeeeeee', role);
+      if (role === 'ADMIN') {
+        this.router.navigate(['/admin']);
+      } else if (role === 'AIRLINE') {
+        this.router.navigate(['/airline/airline-dashboard']);
+      } else {
+        this.router.navigate(['/home']);
+      }
     } catch (error: any) {
       this.errorMessage = error.message || 'Đăng nhập thất bại';
     } finally {

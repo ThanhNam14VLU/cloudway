@@ -1,73 +1,127 @@
 <div class="dashboard">
-  <h2>Tổng quan</h2>
-  <!-- Thống kê tổng quan -->
-  <div class="stats">
-    <div class="stat-card">
-      <div class="stat-title">✈️ Tổng chuyến bay</div>
-      <div class="stat-value">156</div>
+  <h2>Thống kê hãng bay</h2>
+
+  <!-- Stat cards in pastel style -->
+  <div class="plan-cards">
+    <div class="plan-card is-gray">
+      <div class="plan-title">Tổng chuyến bay</div>
+      <div class="plan-price">{{ statistics.total_flights | number }}</div>
+      <div class="plan-desc">Số chuyến bay đã khai thác trong kỳ.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">📅 Tuyến bay</div>
-      <div class="stat-value">24</div>
+
+    <div class="plan-card is-yellow">
+      <div class="plan-title">Tổng hành khách</div>
+      <div class="plan-price">{{ statistics.total_passengers | number }}</div>
+      <div class="plan-desc">Tổng lượt hành khách đã vận chuyển.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">👤 Booking hôm nay</div>
-      <div class="stat-value">89</div>
+
+    <div class="plan-card is-pink">
+      <div class="plan-title">Tổng doanh thu</div>
+      <div class="plan-price">{{ statistics.total_revenue | number: '1.0-0' }} ₫</div>
+      <div class="plan-desc">Doanh thu gộp theo kỳ thống kê.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Doanh thu tháng</div>
-      <div class="stat-value">2.450.000.000 ₫</div>
+
+    <div class="plan-card is-blue">
+      <div class="plan-title">Đúng giờ</div>
+      <div class="plan-price">{{ onTimeRate }}%</div>
+      <div class="plan-desc">{{ statistics.on_time_flights | number }} chuyến đúng giờ.</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-title">Tỷ lệ lấp đầy</div>
-      <div class="stat-value">78.5%</div>
+
+    <div class="plan-card is-rose">
+      <div class="plan-title">Chuyến bị hủy</div>
+      <div class="plan-price">{{ statistics.cancelled_flights | number }}</div>
+      <div class="plan-desc">Tổng số chuyến bị hủy trong kỳ.</div>
     </div>
   </div>
 
   <!-- Chi tiết chuyến bay & thông báo -->
-  <div class="details">
-    <!-- Chuyến bay gần đây -->
-    <div class="recent-flights">
-      <h3>Chuyến bay gần đây</h3>
+  <!-- <div class="details">
+    <div class="recent-flights billing-list">
+      <div class="list-header">
+        <h3>Chuyến bay gần đây</h3>
+      </div>
       <ul>
-        <li>
-          <span class="flight-code">VN123</span>
-          <span class="route">HAN → SGN</span>
-          <span class="time">08:30</span>
-          <span class="status on-time">Đúng giờ</span>
+        <li class="billing-row">
+          <div class="left">
+            <input type="checkbox" />
+            <div class="text">
+              <div class="title">
+                <span class="flight-code">VN123</span> • <span class="route">HAN → SGN</span>
+              </div>
+              <div class="sub">Ngày 2 Jan, 2025</div>
+            </div>
+          </div>
+          <div class="right">
+            <span class="badges">
+            </span>
+            <span class="pill">Đúng giờ • 08:30</span>
+          </div>
         </li>
-        <li>
-          <span class="flight-code">VN456</span>
-          <span class="route">SGN → DAD</span>
-          <span class="time">14:15</span>
-          <span class="status delayed">Chậm 15p</span>
+        <li class="billing-row">
+          <div class="left">
+            <input type="checkbox" />
+            <div class="text">
+              <div class="title">
+                <span class="flight-code">VN456</span> • <span class="route">SGN → DAD</span>
+              </div>
+              <div class="sub">Ngày 2 Jan, 2025</div>
+            </div>
+          </div>
+          <div class="right">
+            <span class="badges">
+            </span>
+            <span class="pill warn">Chậm 15p • 14:15</span>
+          </div>
         </li>
-        <li>
-          <span class="flight-code">VN789</span>
-          <span class="route">DAD → HAN</span>
-          <span class="time">19:45</span>
-          <span class="status on-time">Đúng giờ</span>
+        <li class="billing-row">
+          <div class="left">
+            <input type="checkbox" />
+            <div class="text">
+              <div class="title">
+                <span class="flight-code">VN789</span> • <span class="route">DAD → HAN</span>
+              </div>
+              <div class="sub">Ngày 2 Jan, 2025</div>
+            </div>
+          </div>
+          <div class="right">
+            <span class="badges">
+            </span>
+            <span class="pill">Đúng giờ • 19:45</span>
+          </div>
+        </li>
+        <li class="billing-row">
+          <div class="left">
+            <input type="checkbox" />
+            <div class="text">
+              <div class="title">
+                <span class="flight-code">VN456</span> • <span class="route">SGN → DAD</span>
+              </div>
+              <div class="sub">Ngày 2 Jan, 2025</div>
+            </div>
+          </div>
+          <div class="right">
+            <span class="badges">
+            </span>
+            <span class="pill warn">Chậm 15p • 14:15</span>
+          </div>
+        </li>
+        <li class="billing-row">
+          <div class="left">
+            <input type="checkbox" />
+            <div class="text">
+              <div class="title">
+                <span class="flight-code">VN789</span> • <span class="route">DAD → HAN</span>
+              </div>
+              <div class="sub">Ngày 2 Jan, 2025</div>
+            </div>
+          </div>
+          <div class="right">
+            <span class="badges">
+            </span>
+            <span class="pill">Đúng giờ • 19:45</span>
+          </div>
         </li>
       </ul>
     </div>
-
-    <!-- Thông báo -->
-    <div class="notifications">
-      <h3>Thông báo</h3>
-      <ul>
-        <li class="yellow">
-          <span>●</span> Chuyến bay VN123 có thể chậm do thời tiết
-          <span class="time">10 phút trước</span>
-        </li>
-        <li class="blue">
-          <span>●</span> Cập nhật thành công 5 chuyến bay mới
-          <span class="time">1 giờ trước</span>
-        </li>
-        <li class="green">
-          <span>●</span> Doanh thu tháng này đạt 95% mục tiêu
-          <span class="time">2 giờ trước</span>
-        </li>
-      </ul>
-    </div>
-  </div>
+  </div> -->
 </div>
