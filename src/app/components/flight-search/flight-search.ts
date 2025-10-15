@@ -159,12 +159,28 @@ export class FlightSearch implements AfterViewInit, OnInit {
         const hasOutboundFlights = response.outbound?.flights && response.outbound.flights.length > 0;
         const hasReturnFlights = response.return?.flights && response.return.flights.length > 0;
         
+        console.log('🔍 Has outbound flights:', hasOutboundFlights);
+        console.log('🔍 Outbound flights count:', response.outbound?.flights?.length || 0);
+        console.log('🔍 Has return flights:', hasReturnFlights);
+        console.log('🔍 Return flights count:', response.return?.flights?.length || 0);
+        
         if (hasOutboundFlights) {
+          console.log('🚀 Navigating to ticket-list with search result...');
+          
+          // Store result in service
+          this.flightService.setSearchResult(response);
+          console.log('💾 Search result stored in service');
+          
           // Navigate to ticket-list với kết quả
           this.router.navigate(['/ticket-list'], {
             state: { searchResult: response }
+          }).then(() => {
+            console.log('✅ Navigation completed');
+          }).catch((error) => {
+            console.error('❌ Navigation failed:', error);
           });
         } else {
+          console.log('⚠️ No outbound flights found, showing error message');
           this.errorMessages.push('Không tìm thấy chuyến bay phù hợp với yêu cầu của bạn');
         }
         

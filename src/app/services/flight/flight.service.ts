@@ -12,6 +12,10 @@ export class FlightService {
   private searchParamsSubject = new BehaviorSubject<FlightSearchRequest | null>(null);
   public searchParams$ = this.searchParamsSubject.asObservable();
 
+  // Store search result để share giữa các components
+  private searchResultSubject = new BehaviorSubject<FlightSearchResponse | null>(null);
+  public searchResult$ = this.searchResultSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -41,6 +45,27 @@ export class FlightService {
    */
   clearSearchParams(): void {
     this.searchParamsSubject.next(null);
+  }
+
+  /**
+   * Set search result
+   */
+  setSearchResult(result: FlightSearchResponse): void {
+    this.searchResultSubject.next(result);
+  }
+
+  /**
+   * Get current search result
+   */
+  getCurrentSearchResult(): FlightSearchResponse | null {
+    return this.searchResultSubject.value;
+  }
+
+  /**
+   * Clear search result
+   */
+  clearSearchResult(): void {
+    this.searchResultSubject.next(null);
   }
 
   /**

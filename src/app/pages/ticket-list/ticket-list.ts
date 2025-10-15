@@ -2,10 +2,11 @@ import { Component, OnInit, HostListener } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FlightCard } from '../../components/flight-card/flight-card';
 import { MatButtonModule } from '@angular/material/button';
 import { Header } from '../../components/header/header';
+import { FlightService } from '../../services/flight/flight.service';
 
 interface Flight {
   code: string;
@@ -61,6 +62,12 @@ export class TicketList implements OnInit {
   isFlightsCollapsed: boolean = false;
   isReturnFlightsCollapsed: boolean = false;
 
+  // API search result data
+  searchResult: any = null;
+  apiFlights: Flight[] = [];
+  apiReturnFlights: Flight[] = [];
+  isLoading: boolean = false;
+
   passengers = {
     adults: 1,
     children: 0,
@@ -74,7 +81,11 @@ export class TicketList implements OnInit {
     returnDate: '2025-09-20'
   };
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private flightService: FlightService
+  ) {}
 
   airlines: Airline[] = [
     { name: 'Bamboo Airways', selected: false },
@@ -223,6 +234,33 @@ export class TicketList implements OnInit {
   filteredReturnFlights: Flight[] = [];
 
   ngOnInit() {
+    console.log('=== TICKET LIST INIT ===');
+    
+    // Get search result from router state
+    const navigation = this.router.getCurrentNavigation();
+    console.log('🔍 Navigation object:', navigation);
+    console.log('🔍 Navigation extras:', navigation?.extras);
+    console.log('🔍 Navigation state:', navigation?.extras?.state);
+    
+    if (navigation?.extras?.state?.['searchResult']) {
+      this.searchResult = navigation.extras.state['searchResult'];
+      console.log('📋 Search result received from router state:', this.searchResult);
+      this.loadSearchResult();
+    } else {
+      console.warn('⚠️ No search result found in router state');
+      
+      // Try to get from service as fallback
+      const serviceResult = this.flightService.getCurrentSearchResult();
+      if (serviceResult) {
+        console.log('📋 Search result found in service:', serviceResult);
+        this.searchResult = serviceResult;
+        this.loadSearchResult();
+      } else {
+        console.log('🔄 No search result anywhere, using mock data as fallback');
+        this.useMockData();
+      }
+    }
+
     // Get query parameters from the route
     this.route.queryParams.subscribe(params => {
       if (params['departure']) {
@@ -239,8 +277,102 @@ export class TicketList implements OnInit {
       }
     });
 
+  }
+
+  useMockData() {
+    console.log('🔄 Loading mock data...');
     this.filteredFlights = [...this.flights];
     this.filteredReturnFlights = [...this.returnFlights];
+    console.log('✅ Mock data loaded:', this.filteredFlights.length, 'flights');
+  }
+
+  loadSearchResult() {
+    if (!this.searchResult) return;
+
+    console.log('📋 Processing search result:', this.searchResult);
+
+    // Set trip type and passengers from search result
+    this.tripType = this.searchResult.trip_type || 'oneway';
+    if (this.searchResult.passengers) {
+      this.passengers = {
+        adults: this.searchResult.passengers.adults || 1,
+        children: this.searchResult.passengers.children || 0,
+        infants: this.searchResult.passengers.infants || 0
+      };
+    }
+
+    // Process outbound flights
+    if (this.searchResult.outbound?.flights) {
+      this.apiFlights = this.searchResult.outbound.flights.map((flight: any) => 
+        this.convertApiFlightToFlight(flight)
+      );
+      console.log('🛫 API flights processed:', this.apiFlights.length);
+    }
+
+    // Process return flights (if roundtrip)
+    if (this.searchResult.return?.flights) {
+      this.apiReturnFlights = this.searchResult.return.flights.map((flight: any) => 
+        this.convertApiFlightToFlight(flight)
+      );
+      console.log('🛬 API return flights processed:', this.apiReturnFlights.length);
+    }
+
+    // Update filtered flights with API data
+    this.filteredFlights = [...this.apiFlights];
+    this.filteredReturnFlights = [...this.apiReturnFlights];
+
+    // Update search params with real data
+    if (this.apiFlights.length > 0) {
+      const firstFlight = this.searchResult.outbound.flights[0];
+      if (firstFlight.departure?.airport) {
+        this.searchParams.departure = firstFlight.departure.airport.iata_code;
+      }
+      if (firstFlight.arrival?.airport) {
+        this.searchParams.destination = firstFlight.arrival.airport.iata_code;
+      }
+      if (this.searchResult.outbound.departure_date) {
+        this.searchParams.departureDate = this.searchResult.outbound.departure_date;
+      }
+      if (this.searchResult.return?.departure_date) {
+        this.searchParams.returnDate = this.searchResult.return.departure_date;
+      }
+    }
+
+    console.log('✅ Search result loaded successfully');
+  }
+
+  convertApiFlightToFlight(apiFlight: any): Flight {
+    console.log('🔄 Converting API flight:', apiFlight);
+    
+    return {
+      code: apiFlight.flight_number || apiFlight.flight_id || 'N/A',
+      airline: apiFlight.airline?.name || 'Unknown Airline',
+      logo: apiFlight.airline?.logo || '/assets/images/logo.png',
+      departTime: this.formatTime(apiFlight.departure?.time),
+      departAirport: apiFlight.departure?.airport?.iata_code || 'N/A',
+      arriveTime: this.formatTime(apiFlight.arrival?.time),
+      arriveAirport: apiFlight.arrival?.airport?.iata_code || 'N/A',
+      price: apiFlight.pricing?.total_price || 0,
+      duration: apiFlight.duration?.formatted || 'N/A',
+      aircraft: apiFlight.aircraft?.type || 'N/A',
+      class: 'Economy', // Default
+      carryOn: '7kg', // Default
+      checkedBaggage: 'Vui lòng chọn ở bước tiếp theo' // Default
+    };
+  }
+
+  formatTime(timeString: string): string {
+    if (!timeString) return 'N/A';
+    try {
+      const date = new Date(timeString);
+      return date.toLocaleTimeString('vi-VN', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    } catch (error) {
+      console.error('Error formatting time:', timeString, error);
+      return 'N/A';
+    }
   }
 
   searchFlights() {

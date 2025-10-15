@@ -156,10 +156,25 @@
         
         <!-- Flight cards -->
         <div class="flights-list" *ngIf="!isFlightsCollapsed">
-          <app-flight-card 
-            *ngFor="let flight of filteredFlights" 
-            [flight]="flight">
-          </app-flight-card>
+          @if (isLoading) {
+            <div class="loading-message">
+              <p>Đang tải danh sách chuyến bay...</p>
+            </div>
+          } @else if (filteredFlights.length > 0) {
+            <app-flight-card 
+              *ngFor="let flight of filteredFlights" 
+              [flight]="flight">
+            </app-flight-card>
+          } @else if (searchResult && apiFlights.length === 0) {
+            <div class="no-flights-message">
+              <p>Không tìm thấy chuyến bay phù hợp với yêu cầu của bạn.</p>
+            </div>
+          } @else {
+            <app-flight-card 
+              *ngFor="let flight of filteredFlights" 
+              [flight]="flight">
+            </app-flight-card>
+          }
         </div>
       </div>
 
