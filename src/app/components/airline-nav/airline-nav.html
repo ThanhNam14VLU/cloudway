@@ -2,11 +2,11 @@
 <!-- navbar.component.html -->
 <nav class="navbar">
   <ul class="nav-list">
-      <li class="nav-item" (click)="Active(1)" [class.active]="isActive==1" routerLink="airline-dashboard" >
+      <li class="nav-item"  routerLinkActive="active" routerLink="airline-dashboard" >
       <span class="icon"><span class="material-symbols-outlined">finance</span></span>
       <span class="label">Tổng quan</span>
     </li>
-    <li class="nav-item" (click)="Active(2)"[class.active]="isActive==2" routerLink="airline-management" >
+    <li class="nav-item"  routerLinkActive="active" routerLink="airline-management" >
       <span class="icon"><span class="material-symbols-outlined">travel</span></span>
       <span class="label">Chuyến bay</span>
     </li>

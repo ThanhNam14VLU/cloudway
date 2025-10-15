@@ -1,0 +1,65 @@
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-pic">
+      <span>Ảnh</span>
+    </div>
+    <div class="profile-info">
+      <h2>Nguyễn Văn A</h2>
+      <p class="role">Người dùng</p>
+      <p class="location">TP. Hồ Chí Minh, Việt Nam</p>
+    </div>
+  </div>
+
+  <!-- Thông tin cá nhân -->
+  <form class="card">
+    <div class="card-header">
+      <h3>Thông tin cá nhân</h3>
+    </div>
+
+    <div class="card-body">
+      <div class="info-grid">
+        <div class="form-group">
+          <label>Họ và tên</label>
+          <input type="text" value="Nguyễn Văn A" [disabled]="isDisabled"/>
+        </div>
+        <div class="form-group">
+          <label>Ngày sinh</label>
+          <input type="date" value="2000-10-14" [disabled]="isDisabled"/>
+        </div>
+        <div class="form-group">
+          <label>Địa chỉ email</label>
+          <input type="email" value="namnguyen@gmail.com" [disabled]="isDisabled"/>
+        </div>
+        <div class="form-group">
+          <label>Số điện thoại</label>
+          <input type="text" value="+84 912 345 678" [disabled]="isDisabled"/>
+        </div>
+
+      </div>
+
+      <div class="btn-area">
+        <button type="button" class="save-btn" (click)="toggleEdit()" >{{str}}</button>
+        <button type="button" class="change-pass-btn">Đổi mật khẩu</button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Lịch sử đặt vé -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Lịch sử đặt vé</h3>
+    </div>
+    <div class="card-body">
+      <div class="booking-item">
+        <p><strong>Chuyến bay:</strong> VN123 — TP.HCM → Hà Nội</p>
+        <p><strong>Ngày khởi hành:</strong> 10/10/2025</p>
+        <p><strong>Trạng thái:</strong> Đã xác nhận</p>
+      </div>
+      <div class="booking-item">
+        <p><strong>Chuyến bay:</strong> VN456 — Hà Nội → Đà Nẵng</p>
+        <p><strong>Ngày khởi hành:</strong> 25/09/2025</p>
+        <p><strong>Trạng thái:</strong> Hoàn thành</p>
+      </div>
+    </div>
+  </div>
+</div>
