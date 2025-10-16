@@ -13,4 +13,17 @@ export class UserService {
   getProfile(id: string): Observable<ProfileModel> {
     return this.httpClient.get<ProfileModel>(`${environment.apiUrl}/user/${id}`);
   }
+
+  getAirlineUser(): Observable<any> {
+    return this.httpClient.get<any>(`${environment.apiUrl}/user/role/AIRLINE`);
+  }
+
+  getCustomerUser(): Observable<any> {
+    return this.httpClient.get<any>(`${environment.apiUrl}/user/role/CUSTOMER`);
+  }
+
+  updateUserRole(userId: string, role: string): Observable<any> {
+    // Try different possible endpoints
+    return this.httpClient.patch<any>(`${environment.apiUrl}/user/${userId}/role`, { role });
+  }
 }

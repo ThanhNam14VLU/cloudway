@@ -148,3 +148,102 @@ input[type="checkbox"] {
   width: 16px;
   height: 16px;
 }
+
+/* Loading indicator */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: #7f8c8d;
+}
+
+.loading-container i {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Avatar styling */
+.avatar-cell {
+  width: 60px;
+  padding: 8px !important;
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.user-avatar.no-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* Role select styling */
+.role-select {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  background-color: #fff;
+  cursor: pointer;
+  min-width: 100px;
+}
+
+.role-select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #7f8c8d;
+}
+
+.empty-state i {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding: 15px;
+  }
+  
+  .search-container input {
+    min-width: 200px;
+  }
+  
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-container {
+    width: 100%;
+  }
+  
+  .filter-container select {
+    width: 100%;
+  }
+}

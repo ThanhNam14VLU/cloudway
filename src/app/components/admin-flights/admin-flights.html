@@ -1,8 +1,8 @@
 <main class="main-content">
   <header class="page-header">
     <h1>Quản lý Chuyến bay</h1>
-    <button class="add-new-btn">
-      <i class="fa-solid fa-plus"></i> Thêm Chuyến Bay
+    <button class="add-new-btn" (click)="loadFlights()">
+      <i class="fa-solid fa-refresh"></i> Làm mới
     </button>
   </header>
 
@@ -10,97 +10,73 @@
     <div class="table-toolbar">
       <div class="search-container">
         <i class="fa-solid fa-search"></i>
-        <input type="text" placeholder="Tìm kiếm theo mã chuyến bay...">
+        <input 
+          type="text" 
+          placeholder="Tìm kiếm theo mã chuyến bay..." 
+          [(ngModel)]="searchTerm">
       </div>
       <div class="filter-container">
         <label for="from-date">Từ ngày:</label>
-        <input type="date" id="from-date" name="from-date">
+        <input 
+          type="date" 
+          id="from-date" 
+          name="from-date"
+          [(ngModel)]="fromDate">
         <label for="to-date">Đến ngày:</label>
-        <input type="date" id="to-date" name="to-date">
-        <button class="filter-btn">Lọc</button>
+        <input 
+          type="date" 
+          id="to-date" 
+          name="to-date"
+          [(ngModel)]="toDate">
       </div>
     </div>
 
-    <div class="table-responsive">
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <span>Đang tải dữ liệu...</span>
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading">
       <table>
         <thead>
         <tr>
-          <th></th>
           <th>Mã Chuyến Bay</th>
-          <th>Số Hiệu Máy Bay</th>
+          <th>Tuyến Bay</th>
           <th>Giờ Đi Dự Kiến</th>
           <th>Giờ Đến Dự Kiến</th>
           <th>Trạng Thái</th>
-          <th>Hành Động</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>VN255</td>
-          <td>VN-A696</td>
-          <td>2025-10-12 01:00</td>
-          <td>2025-10-12 03:00</td>
-          <td><span class="status scheduled">Lên lịch</span></td>
-          <td class="actions">
-            <button class="action-btn edit-btn" title="Chỉnh sửa">
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-            <button class="action-btn delete-btn" title="Xóa">
-              <i class="fa-solid fa-trash"></i>
-            </button>
+        <tr *ngFor="let flight of filteredFlights; let i = index">
+          <td>{{ flight.flight_number.code || '-' }}</td>
+          <td>
+            <div class="route-info">
+              <span class="airport-code">{{ flight.flight_number.departure_airport.iata_code }}</span>
+              <i class="fa-solid fa-plane route-arrow"></i>
+              <span class="airport-code">{{ flight.flight_number.arrival_airport.iata_code }}</span>
+              <div class="city-info">
+                {{ flight.flight_number.departure_airport.city }} → {{ flight.flight_number.arrival_airport.city }}
+              </div>
+            </div>
           </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>VJ160</td>
-          <td>VN-A672</td>
-          <td>2025-10-12 01:30</td>
-          <td>2025-10-12 03:45</td>
-          <td><span class="status on-time">Đúng giờ</span></td>
-          <td class="actions">
-            <button class="action-btn edit-btn" title="Chỉnh sửa">
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-            <button class="action-btn delete-btn" title="Xóa">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>QH1021</td>
-          <td>VN-A896</td>
-          <td>2025-10-07 01:01</td>
-          <td>2025-10-07 03:21</td>
-          <td><span class="status delayed">Bị trễ</span></td>
-          <td class="actions">
-            <button class="action-btn edit-btn" title="Chỉnh sửa">
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-            <button class="action-btn delete-btn" title="Xóa">
-              <i class="fa-solid fa-trash"></i>
-            </button>
-          </td>
-        </tr>
-        <tr>
-          <td><input type="checkbox" /></td>
-          <td>BL6028</td>
-          <td>VN-A582</td>
-          <td>2025-10-06 01:21</td>
-          <td>2025-10-06 03:21</td>
-          <td><span class="status cancelled">Đã hủy</span></td>
-          <td class="actions">
-            <button class="action-btn edit-btn" title="Chỉnh sửa">
-              <i class="fa-solid fa-pencil"></i>
-            </button>
-            <button class="action-btn delete-btn" title="Xóa">
-              <i class="fa-solid fa-trash"></i>
-            </button>
+          <td>{{ formatDateTime(flight.scheduled_departure_local) }}</td>
+          <td>{{ formatDateTime(flight.scheduled_arrival_local) }}</td>
+          <td>
+            <span class="status" [ngClass]="getStatusClass(getFlightStatus(flight))">
+              {{ getFlightStatus(flight) }}
+            </span>
           </td>
         </tr>
         </tbody>
       </table>
+      
+      <!-- Empty state -->
+      <div *ngIf="filteredFlights.length === 0 && !loading" class="empty-state">
+        <i class="fa-solid fa-plane"></i>
+        <p>Không tìm thấy chuyến bay nào</p>
+      </div>
     </div>
   </div>
 </main>

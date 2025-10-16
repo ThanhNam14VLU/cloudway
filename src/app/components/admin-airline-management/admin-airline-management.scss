@@ -13,16 +13,16 @@
   margin-bottom: 25px;
 }
 
-.header-actions {
-  display: flex;
-  gap: 10px;
-}
-
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
   color: #2c3e50;
   margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .add-new-btn {
@@ -69,7 +69,12 @@
 }
 
 .table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
 }
 
 .search-container {
@@ -84,11 +89,16 @@
   color: #95a5a6;
 }
 
-.search-container input {
+.search-container input,
+.filter-container select {
   border: 1px solid #ddd;
   border-radius: 5px;
-  padding: 10px 10px 10px 40px;
+  padding: 10px;
   font-size: 14px;
+}
+
+.search-container input {
+  padding-left: 40px;
   min-width: 300px;
 }
 
@@ -121,28 +131,28 @@ tbody tr:hover {
   background-color: #f9f9f9;
 }
 
-/* Cột hành động */
-.actions {
+/* Logo styling */
+.logo-cell {
+  width: 80px;
+  padding: 8px !important;
+}
+
+.airline-logo {
+  width: 60px;
+  height: 40px;
+  object-fit: contain;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+.airline-logo.no-logo {
   display: flex;
-  gap: 10px;
-}
-
-.action-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 5px;
-  font-size: 16px;
-  color: #7f8c8d;
-  transition: color 0.2s ease;
-}
-
-.action-btn.edit-btn:hover { color: #3498db; }
-.action-btn.delete-btn:hover { color: #e74c3c; }
-
-input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  color: #6c757d;
+  font-weight: bold;
+  font-size: 12px;
 }
 
 /* Loading indicator */
@@ -178,7 +188,7 @@ input[type="checkbox"] {
   margin: 0;
 }
 
-/* Add Airport Dialog Styles */
+/* Add Airline Dialog Styles */
 .dialog-overlay {
   position: fixed;
   top: 0;
@@ -197,7 +207,7 @@ input[type="checkbox"] {
   background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  max-width: 600px;
+  max-width: 500px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
@@ -274,10 +284,6 @@ input[type="checkbox"] {
   flex-direction: column;
 }
 
-.form-group.full-width {
-  flex: 1 1 100%;
-}
-
 .form-group label {
   font-weight: 600;
   color: #2c3e50;
@@ -301,13 +307,6 @@ input[type="checkbox"] {
 
 .form-control.error {
   border-color: #e74c3c;
-}
-
-.form-control.readonly-field {
-  background-color: #f8f9fa;
-  color: #6c757d;
-  cursor: not-allowed;
-  border-color: #e9ecef;
 }
 
 .error-message {
@@ -377,11 +376,6 @@ input[type="checkbox"] {
     align-items: stretch;
   }
   
-  .form-row {
-    flex-direction: column;
-    gap: 15px;
-  }
-  
   .header-actions {
     flex-direction: column;
     gap: 8px;
@@ -399,5 +393,10 @@ input[type="checkbox"] {
   .dialog-container {
     width: 95%;
     max-height: 95vh;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 15px;
   }
 }

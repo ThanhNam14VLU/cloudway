@@ -14,6 +14,7 @@ import { AuthCallbackComponent } from './auth-callback.component';
 import {Admin} from './pages/admin/admin';
 import { AdminDashboard} from './components/admin-dashboard/admin-dashboard';
 import { AdminAirlines } from './components/admin-airlines/admin-airlines';
+import { AdminAirlineManagement } from './components/admin-airline-management/admin-airline-management';
 import { AdminAirports} from './components/admin-airports/admin-airports';
 import { AdminCustomers}  from './components/admin-customers/admin-customers';
 import { AdminFlights} from './components/admin-flights/admin-flights';
@@ -25,10 +26,10 @@ import {Profile}   from './pages/profile/profile';
 export const routes: Routes = [
   {
     path: '',
-    // loadComponent: () =>
-    //   import('./pages/home/home').then(m => m.Home),
     loadComponent: () =>
-      import('./pages/profile/profile').then(m => m.Profile),
+      import('./pages/home/home').then(m => m.Home),
+    // loadComponent: () =>
+    //   import('./pages/profile/profile').then(m => m.Profile),
   },
   {
     path: 'login',
@@ -46,6 +47,12 @@ export const routes: Routes = [
     path: 'home',
     loadComponent: () => {
       return import('./pages/home/home').then(m => m.Home)
+    }
+  },
+  {
+    path: 'profile',
+    loadComponent: () => {
+      return import('./pages/profile/profile').then(m => m.Profile)
     }
   },
   {
@@ -88,6 +95,12 @@ export const routes: Routes = [
             loadComponent: () =>
               import('./components/admin-airlines/admin-airlines')
                 .then(m => m.AdminAirlines)
+          },
+          {
+            path: 'admin-airline-management',
+            loadComponent: () =>
+              import('./components/admin-airline-management/admin-airline-management')
+                .then(m => m.AdminAirlineManagement)
           },
 
           {
