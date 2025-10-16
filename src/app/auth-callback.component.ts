@@ -81,7 +81,7 @@ export class AuthCallbackComponent implements OnInit {
       const role = await this.authService.getCurrentUserRole();
       console.log('🔎 Resolved role after OAuth =', role);
       if (role === 'ADMIN' || role === 'admin') {
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/admin/admin-customers']);
       } else if (role === 'AIRLINE' || role === 'airline') {
         this.router.navigate(['/airline/airline-dashboard']);
       } else {

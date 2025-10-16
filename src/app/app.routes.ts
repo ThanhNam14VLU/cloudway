@@ -62,9 +62,8 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            loadComponent: () =>
-              import('./components/admin-dashboard/admin-dashboard')
-                .then(m => m.AdminDashboard)
+            redirectTo: 'admin-customers',
+            pathMatch: 'full'
           },
         {
           path: 'admin-dashboard',
