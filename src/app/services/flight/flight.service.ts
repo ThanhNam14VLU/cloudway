@@ -166,5 +166,9 @@ export class FlightService {
     }
     return `${hours} giờ ${mins} phút`;
   }
+
+  getFlights(): Observable<any> {
+    return this.http.get<any>(`${environment.apiUrl}/flights`);
+  }
 }
 

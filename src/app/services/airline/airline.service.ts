@@ -25,4 +25,12 @@ export class AirlineService {
   getFlightInstances(id: string): Observable<any> {
     return this.httpClient.get<any>(`${environment.apiUrl}/flights/airline/${id}`);
   }
+
+  getAirlines(): Observable<any> {
+    return this.httpClient.get<any>(`${environment.apiUrl}/airline`);
+  }
+
+  createAirline(airline: any): Observable<any> {
+    return this.httpClient.post<any>(`${environment.apiUrl}/airline`, airline);
+  }
 }

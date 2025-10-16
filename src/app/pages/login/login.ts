@@ -69,7 +69,7 @@ export class Login implements OnInit {
       const role = await this.authService.getCurrentUserRole();
       console.log('roleeeeeeee', role);
       if (role === 'ADMIN') {
-        this.router.navigate(['/admin']);
+        this.router.navigate(['/admin/admin-customers']);
       } else if (role === 'AIRLINE') {
         this.router.navigate(['/airline/airline-dashboard']);
       } else {

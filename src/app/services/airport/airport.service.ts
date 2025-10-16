@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AirportModel } from '../../models/airport.model';
+import { AirportModel, CreateAirportModel } from '../../models/airport.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,5 +12,9 @@ export class AirportService {
 
   getAirports(): Observable<AirportModel[]> {
     return this.httpClient.get<AirportModel[]>(`${environment.apiUrl}/airport`);
+  }
+
+  createAirport(airport: CreateAirportModel): Observable<any> {
+    return this.httpClient.post<any>(`${environment.apiUrl}/airport`, airport);
   }
 }

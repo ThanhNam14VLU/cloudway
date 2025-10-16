@@ -1,0 +1,137 @@
+<main class="main-content">
+  <header class="page-header">
+    <h1>Quản lý Hãng bay</h1>
+    <div class="header-actions">
+      <!-- <button class="add-new-btn" (click)="toggleAddForm()">
+        <i class="fa-solid fa-plus"></i> Thêm Hãng Bay
+      </button> -->
+      <button class="refresh-btn" (click)="loadAirlines()">
+        <i class="fa-solid fa-refresh"></i> Làm mới
+      </button>
+    </div>
+  </header>
+
+  <div class="content-container">
+    <!-- Add Airline Dialog -->
+    <div *ngIf="showAddForm" class="dialog-overlay" (click)="toggleAddForm()">
+      <div class="dialog-container" (click)="$event.stopPropagation()">
+        <div class="dialog-header">
+          <h3>Thêm Hãng Bay Mới</h3>
+          <button class="close-btn" (click)="toggleAddForm()">
+            <i class="fa-solid fa-times"></i>
+          </button>
+        </div>
+        
+        <form #airlineForm="ngForm" (ngSubmit)="onSubmit(airlineForm)" class="dialog-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="iata_code">Mã IATA *</label>
+              <input 
+                type="text" 
+                id="iata_code"
+                name="iata_code"
+                [(ngModel)]="newAirline.iata_code"
+                #iataCode="ngModel"
+                required
+                maxlength="3"
+                minlength="2"
+                placeholder="VD: VN"
+                class="form-control"
+                [class.error]="iataCode.invalid && iataCode.touched">
+              <div *ngIf="iataCode.invalid && iataCode.touched" class="error-message">
+                Mã IATA phải có từ 2-3 ký tự
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="name">Tên Hãng Bay *</label>
+              <input 
+                type="text" 
+                id="name"
+                name="name"
+                [(ngModel)]="newAirline.name"
+                #name="ngModel"
+                required
+                maxlength="255"
+                placeholder="VD: Vietnam Airlines"
+                class="form-control"
+                [class.error]="name.invalid && name.touched">
+              <div *ngIf="name.invalid && name.touched" class="error-message">
+                Tên hãng bay là bắt buộc
+              </div>
+            </div>
+          </div>
+          
+          <div class="dialog-actions">
+            <button type="button" class="btn btn-secondary" (click)="toggleAddForm()">
+              Hủy
+            </button>
+            <button 
+              type="submit" 
+              class="btn btn-primary"
+              [disabled]="airlineForm.invalid || submitting">
+              <i *ngIf="submitting" class="fa-solid fa-spinner fa-spin"></i>
+              <i *ngIf="!submitting" class="fa-solid fa-plus"></i>
+              {{ submitting ? 'Đang thêm...' : 'Thêm Hãng Bay' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="table-toolbar">
+      <div class="search-container">
+        <i class="fa-solid fa-search"></i>
+        <input 
+          type="text" 
+          placeholder="Tìm kiếm theo mã IATA hoặc tên hãng bay..." 
+          [(ngModel)]="searchTerm">
+      </div>
+    </div>
+
+    <!-- Loading indicator -->
+    <div *ngIf="loading" class="loading-container">
+      <i class="fa-solid fa-spinner fa-spin"></i>
+      <span>Đang tải dữ liệu...</span>
+    </div>
+
+    <div class="table-responsive" *ngIf="!loading">
+      <table>
+        <thead>
+        <tr>
+          <th>Logo</th>
+          <th>Mã IATA</th>
+          <th>Tên Hãng Bay</th>
+          <th>Ngày Tạo</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let airline of filteredAirlines; let i = index">
+          <td class="logo-cell">
+            <img 
+              *ngIf="airline.logo; else noLogo"
+              [src]="airline.logo" 
+              [alt]="airline.name"
+              class="airline-logo"
+              (error)="$event.target.src='https://via.placeholder.com/60x40?text=' + airline.iata_code">
+            <ng-template #noLogo>
+              <div class="airline-logo no-logo">
+                {{ airline.iata_code }}
+              </div>
+            </ng-template>
+          </td>
+          <td>{{ airline.iata_code || '-' }}</td>
+          <td>{{ airline.name || '-' }}</td>
+          <td>{{ formatDate(airline.created_at) }}</td>
+        </tr>
+        </tbody>
+      </table>
+      
+      <!-- Empty state -->
+      <div *ngIf="filteredAirlines.length === 0 && !loading" class="empty-state">
+        <i class="fa-solid fa-plane-circle-check"></i>
+        <p>Không tìm thấy hãng bay nào</p>
+      </div>
+    </div>
+  </div>
+</main>

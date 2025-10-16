@@ -5,6 +5,13 @@ export interface AirportModel {
   city: string;                  // city name (max 100 chars)
   country: string;               // country name (max 100 chars)
   timezone: string;              // timezone (max 50 chars)
-  create_at: Date | string;      // created_at timestamp
+  created_at: Date | string;      // created_at timestamp
 }
 
+export interface CreateAirportModel {
+  iata_code: string;
+  name: string;
+  city: string;
+  country: string;
+  timezone: string;
+}
