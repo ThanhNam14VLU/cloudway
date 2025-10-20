@@ -669,27 +669,16 @@ export class AirlineCardDetail implements OnInit {
   getTotalAmount(): number {
     let total = 0;
 
-    // Get base price from selected flight
+    // Calculate departure flight price
     if (this.selectedFlight) {
-      // Try to get price from pricing data first
-      if (this.selectedFlight.pricing && this.selectedFlight.pricing.total_price) {
-        total = this.selectedFlight.pricing.total_price;
-      } 
-      // Fallback to fare data
-      else if (this.selectedFlight.fares && this.selectedFlight.fares.length > 0) {
-        const firstFare = this.selectedFlight.fares[0];
-        total = firstFare.base_price * this.getTotalPassengerCount();
-      }
-      // Fallback to price property (from fare selection)
-      else if ((this.selectedFlight as any).price) {
-        total = (this.selectedFlight as any).price * this.getTotalPassengerCount();
-      }
-      // Default fallback
-      else {
-        total = 716100; // Default price if no pricing data available
-      }
-    } else {
-      total = 716100; // Default price if no flight selected
+      total += this.calculateFlightPrice(this.selectedFlight);
+      console.log('💰 Departure flight price:', this.calculateFlightPrice(this.selectedFlight));
+    }
+
+    // Add return flight price for roundtrip
+    if (this.tripType === 'roundtrip' && this.selectedReturnFlight) {
+      total += this.calculateFlightPrice(this.selectedReturnFlight);
+      console.log('💰 Return flight price:', this.calculateFlightPrice(this.selectedReturnFlight));
     }
 
     // Add additional services
@@ -703,7 +692,38 @@ export class AirlineCardDetail implements OnInit {
       total += 200000;
     }
 
+    console.log('💰 Final total amount:', total);
     return total;
+  }
+
+  /**
+   * Calculate price for a single flight
+   */
+  calculateFlightPrice(flight: any): number {
+    // Priority 1: Use selected fare price from dialog (most accurate)
+    if (flight && (flight as any).price && (flight as any).fare_bucket_id) {
+      const price = (flight as any).price * this.getTotalPassengerCount();
+      console.log('💰 Using selected fare price for flight:', (flight as any).price, 'for', this.getTotalPassengerCount(), 'passengers');
+      return price;
+    }
+    // Priority 2: Try to get price from pricing data
+    else if (flight && flight.pricing && flight.pricing.total_price) {
+      console.log('💰 Using pricing.total_price for flight:', flight.pricing.total_price);
+      return flight.pricing.total_price;
+    } 
+    // Priority 3: Fallback to fare data
+    else if (flight && flight.fares && flight.fares.length > 0) {
+      const firstFare = flight.fares[0];
+      const price = firstFare.base_price * this.getTotalPassengerCount();
+      console.log('💰 Using first fare base_price for flight:', firstFare.base_price, 'for', this.getTotalPassengerCount(), 'passengers');
+      return price;
+    }
+    // Priority 4: Default fallback
+    else {
+      const defaultPrice = 716100; // Default price if no pricing data available
+      console.log('💰 Using default price for flight:', defaultPrice);
+      return defaultPrice;
+    }
   }
 
   /**
@@ -1138,6 +1158,48 @@ export class AirlineCardDetail implements OnInit {
    * Debug pricing data
    */
   debugPricingData(): void {}
+
+  /**
+   * Check if flight has selected fare from dialog
+   */
+  hasSelectedFare(): boolean {
+    return !!(this.selectedFlight as any)?.price && !!(this.selectedFlight as any)?.fare_bucket_id;
+  }
+
+  /**
+   * Get selected fare price
+   */
+  getSelectedFarePrice(): number {
+    return (this.selectedFlight as any)?.price || 0;
+  }
+
+  /**
+   * Get selected fare class
+   */
+  getSelectedFareClass(): string {
+    return this.selectedFlight?.class || 'Economy';
+  }
+
+  /**
+   * Check if return flight has selected fare from dialog
+   */
+  hasSelectedReturnFare(): boolean {
+    return !!(this.selectedReturnFlight as any)?.price && !!(this.selectedReturnFlight as any)?.fare_bucket_id;
+  }
+
+  /**
+   * Get selected return fare price
+   */
+  getSelectedReturnFarePrice(): number {
+    return (this.selectedReturnFlight as any)?.price || 0;
+  }
+
+  /**
+   * Get selected return fare class
+   */
+  getSelectedReturnFareClass(): string {
+    return this.selectedReturnFlight?.class || 'Economy';
+  }
 
   /**
    * Get flight time display string

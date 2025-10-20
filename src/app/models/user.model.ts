@@ -8,4 +8,5 @@ export interface ProfileModel {
     full_name: string;
     phone: string | null;
     role: string;
+    account_status: 'ACTIVE' | 'LOCKED';
 }

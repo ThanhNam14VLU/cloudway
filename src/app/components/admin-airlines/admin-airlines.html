@@ -1,9 +1,14 @@
 <main class="main-content">
   <header class="page-header">
     <h1>Quản lý Người dùng Hãng bay</h1>
-    <button class="add-new-btn" (click)="loadUsers()">
-      <i class="fa-solid fa-refresh"></i> Làm mới
-    </button>
+    <div class="header-actions">
+      <button class="add-new-btn" (click)="openAddAirlineUserModal()">
+        <i class="fa-solid fa-plus"></i> Thêm tài khoản hãng bay
+      </button>
+      <button class="add-new-btn refresh-btn" (click)="loadUsers()">
+        <i class="fa-solid fa-refresh"></i> Làm mới
+      </button>
+    </div>
   </header>
 
   <div class="content-container">
@@ -40,6 +45,8 @@
           <th>Email</th>
           <th>Số Điện Thoại</th>
           <th>Vai trò</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
           <th>Ngày Tạo</th>
           <th>Cập nhật lần cuối</th>
         </tr>
@@ -53,11 +60,11 @@
               [src]="user.avatar_url" 
               [alt]="user.full_name || 'User'"
               class="user-avatar"
-              (error)="$event.target.src='https://via.placeholder.com/40x40?text=' + (user.full_name?.charAt(0) || 'U')"
+              (error)="$event.target.src='https://via.placeholder.com/40x40?text=' + (user.full_name.charAt(0) || 'U')"
             />
             <ng-template #noAvatar>
               <div class="user-avatar no-avatar">
-                {{ (user.full_name?.charAt(0) || 'U').toUpperCase() }}
+                {{ (user.full_name.charAt(0) || 'U').toUpperCase() }}
               </div>
             </ng-template>
           </td>
@@ -74,6 +81,17 @@
               <option value="AIRLINE">AIRLINE</option>
             </select>
           </td>
+          <td>
+            <span [ngClass]="{'status-badge active': user.account_status === 'ACTIVE', 'status-badge locked': user.account_status === 'LOCKED'}">
+              {{ user.account_status === 'LOCKED' ? 'Đã khóa' : 'Đang hoạt động' }}
+            </span>
+          </td>
+          <td class="actions-column">
+            <button class="lock-action-btn" (click)="toggleAccountStatus(user)">
+              <i class="fa-solid" [ngClass]="user.account_status === 'LOCKED' ? 'fa-lock-open' : 'fa-lock'"></i>
+              {{ user.account_status === 'LOCKED' ? 'Mở khóa' : 'Khóa' }}
+            </button>
+          </td>
           <td>{{ formatDate(user.created_at) }}</td>
           <td>{{ formatDate(user.updated_at) }}</td>
         </tr>
@@ -88,3 +106,89 @@
     </div>
   </div>
 </main>
+
+<!-- Add Airline User Modal -->
+<div *ngIf="showAddModal" class="modal-overlay" (click)="closeAddAirlineUserModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Thêm tài khoản hãng bay</h2>
+      <button class="close-btn" (click)="closeAddAirlineUserModal()">
+        <i class="fa-solid fa-times"></i>
+      </button>
+    </div>
+    
+    <form (ngSubmit)="onSubmitAddAirlineUser()" #addForm="ngForm" class="modal-body">
+      <div class="form-group">
+        <label for="full_name">Họ và tên *</label>
+        <input 
+          type="text" 
+          id="full_name" 
+          name="full_name" 
+          [(ngModel)]="newAirlineUser.full_name" 
+          required 
+          class="form-input"
+          placeholder="Nhập họ và tên">
+      </div>
+      
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input 
+          type="email" 
+          id="email" 
+          name="email" 
+          [(ngModel)]="newAirlineUser.email" 
+          required 
+          class="form-input"
+          placeholder="Nhập email">
+      </div>
+      
+      <div class="form-group">
+        <label for="phone">Số điện thoại</label>
+        <input 
+          type="tel" 
+          id="phone" 
+          name="phone" 
+          [(ngModel)]="newAirlineUser.phone" 
+          class="form-input"
+          placeholder="Nhập số điện thoại">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Mật khẩu *</label>
+        <input 
+          type="password" 
+          id="password" 
+          name="password" 
+          [(ngModel)]="newAirlineUser.password" 
+          required 
+          class="form-input"
+          placeholder="Nhập mật khẩu">
+      </div>
+      
+      <div class="form-group">
+        <label for="airline_id">Hãng bay *</label>
+        <select 
+          id="airline_id" 
+          name="airline_id" 
+          [(ngModel)]="newAirlineUser.airline_id" 
+          required 
+          class="form-select">
+          <option value="">Chọn hãng bay</option>
+          <option *ngFor="let airline of airlines" [value]="airline.id">
+            {{ airline.name }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeAddAirlineUserModal()">
+          Hủy
+        </button>
+        <button type="submit" class="btn btn-primary" [disabled]="!addForm.valid || isSubmitting">
+          <i *ngIf="isSubmitting" class="fa-solid fa-spinner fa-spin"></i>
+          {{ isSubmitting ? 'Đang tạo...' : 'Tạo tài khoản' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

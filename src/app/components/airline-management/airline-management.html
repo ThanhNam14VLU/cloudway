@@ -6,13 +6,45 @@
   </div>
 
   <div class="search-filter">
-    <input type="text" placeholder="Tìm kiếm theo số hiệu hoặc tuyến bay..." />
-    <select class="flight-state">
-      <option value="">Tất cả trạng thái</option>
-      <option value="active">Hoạt động</option>
-      <option value="inactive">Ngừng hoạt động</option>
+    <input 
+      type="text" 
+      placeholder="Tìm kiếm theo số hiệu hoặc tuyến bay..." 
+      [(ngModel)]="searchTerm"
+      (input)="onSearchChange()"
+    />
+    <select 
+      class="flight-state" 
+      [(ngModel)]="selectedStatus"
+      (change)="onStatusFilterChange()"
+    >
+      @for (option of getStatusOptions(); track option.value) {
+        <option [value]="option.value">{{ option.label }}</option>
+      }
     </select>
+    <button 
+      class="clear-filters" 
+      (click)="clearFilters()"
+      [disabled]="!selectedStatus && !searchTerm"
+      title="Xóa bộ lọc"
+    >
+      🧹 Xóa lọc
+    </button>
   </div>
+
+  <!-- Filter Results Info -->
+  @if (allFlights.length > 0 && (selectedStatus || searchTerm)) {
+    <div class="filter-info">
+      <p>
+        Hiển thị {{ flights.length }} / {{ allFlights.length }} chuyến bay
+        @if (selectedStatus) {
+          <span class="filter-tag">Trạng thái: {{ getFlightStatusText(selectedStatus) }}</span>
+        }
+        @if (searchTerm) {
+          <span class="filter-tag">Tìm kiếm: "{{ searchTerm }}"</span>
+        }
+      </p>
+    </div>
+  }
 
   <div class="flight-list">
     @if (isLoading) {
@@ -28,16 +60,22 @@
             <th>Lịch trình</th>
             <th>Máy bay</th>
             <th>Sức chứa</th>
-            <th>Ngày tạo</th>
+            <th>Ngày bay</th>
+            <th>Trạng thái</th>
             <th>Thao tác</th>
           </tr>
         </thead>
         <tbody>
           @if (flights.length === 0) {
             <tr>
-              <td colspan="7" class="no-data">
-                <p>Chưa có chuyến bay nào</p>
-                <button class="add-flight-btn" (click)="ShowForm()">+ Thêm chuyến bay đầu tiên</button>
+              <td colspan="8" class="no-data">
+                @if (allFlights.length === 0) {
+                  <p>Chưa có chuyến bay nào</p>
+                  <button class="add-flight-btn" (click)="ShowForm()">+ Thêm chuyến bay đầu tiên</button>
+                } @else {
+                  <p>Không tìm thấy chuyến bay nào phù hợp với bộ lọc</p>
+                  <button class="clear-filters-btn" (click)="clearFilters()">🧹 Xóa bộ lọc</button>
+                }
               </td>
             </tr>
           } @else {
@@ -54,21 +92,31 @@
                 </td>
                 <td>{{ flight.aircraft.type }}</td>
                 <td>{{ flight.aircraft.seat_capacity }}</td>
-                <td>{{ formatDateTime(flight.created_at) }}</td>
+                <td>{{ formatFlightDate(flight.scheduled_departure_local) }}</td>
+                <td>
+                  <span class="status-badge" [class.cancelled]="flight.status === 'CANCELLED'" [class.active]="flight.status !== 'CANCELLED'">
+                    {{ getFlightStatusText(flight.status) }}
+                  </span>
+                </td>
                 <td>
                   <div class="action-buttons">
                     <button class="edit" title="Chỉnh sửa" (click)="editFlight(flight)">
                       <span class="icon">✏️</span>
                       <span class="text">Sửa</span>
                     </button>
-                    <button class="cancel" title="Hủy chuyến" (click)="cancelFlight(flight)">
+                    <button 
+                      class="cancel" 
+                      [title]="canCancelFlight(flight) ? 'Hủy chuyến' : 'Không thể hủy chuyến đã khởi hành/đến'"
+                      (click)="cancelFlight(flight)" 
+                      [disabled]="!canCancelFlight(flight)"
+                    >
                       <span class="icon">❌</span>
-                      <span class="text">Hủy</span>
+                      <span class="text">{{ getCancelButtonText(flight) }}</span>
                     </button>
-                    <button class="delete" title="Xóa vĩnh viễn" (click)="deleteFlight(flight)">
+                    <!-- <button class="delete" title="Xóa vĩnh viễn" (click)="deleteFlight(flight)">
                       <span class="icon">🗑️</span>
                       <span class="text">Xóa</span>
-                    </button>
+                    </button> -->
                   </div>
                 </td>
               </tr>
@@ -80,7 +128,11 @@
   </div>
 </div>
 @if(isShowForm){
-  <app-airline-add-flight-form (close)="CloseForm()"></app-airline-add-flight-form><!--khi nhận được sự kiện từ con thì gọi CloseForm-->
+  <app-airline-add-flight-form 
+    (close)="CloseForm()" 
+    (success)="onFlightFormSuccess()" 
+    (error)="onFlightFormError($event)">
+  </app-airline-add-flight-form><!--khi nhận được sự kiện từ con thì gọi CloseForm-->
 }
 
 <!-- Edit Flight Modal -->
@@ -107,8 +159,11 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="closeEditModal()">Hủy</button>
-        <button class="btn btn-primary" (click)="saveFlightChanges()">Lưu thay đổi</button>
+        <button class="btn btn-secondary" (click)="closeEditModal()" [disabled]="isUpdating">Hủy</button>
+        <button class="btn btn-primary" (click)="saveFlightChanges()" [disabled]="isUpdating">
+          <span *ngIf="isUpdating">Đang cập nhật...</span>
+          <span *ngIf="!isUpdating">Lưu thay đổi</span>
+        </button>
       </div>
     </div>
   </div>
@@ -128,13 +183,17 @@
         <div class="flight-details">
           <p><strong>Số hiệu:</strong> {{ selectedFlight?.flight_number?.code }}</p>
           <p><strong>Tuyến bay:</strong> {{ selectedFlight?.flight_number?.departure_airport?.city }} → {{ selectedFlight?.flight_number?.arrival_airport?.city }}</p>
-          <p><strong>Thời gian:</strong> {{ formatDateTime(selectedFlight?.scheduled_departure_local) }}</p>
+          <p><strong>Ngày bay:</strong> {{ formatFlightDate(selectedFlight?.scheduled_departure_local) }}</p>
+          <p><strong>Giờ bay:</strong> {{ formatTime(selectedFlight?.scheduled_departure_local) }}</p>
         </div>
         <!-- <p class="warning-text">Hành khách sẽ được thông báo về việc hủy chuyến và có thể đổi/hủy vé.</p> -->
       </div>
       <div class="modal-footer">
-        <button class="btn btn-secondary" (click)="closeCancelModal()">Không hủy</button>
-        <button class="btn btn-danger" (click)="confirmCancelFlight()">Xác nhận hủy</button>
+        <button class="btn btn-secondary" (click)="closeCancelModal()" [disabled]="isCancelling">Không hủy</button>
+        <button class="btn btn-danger" (click)="confirmCancelFlight()" [disabled]="isCancelling">
+          <span *ngIf="isCancelling">Đang hủy...</span>
+          <span *ngIf="!isCancelling">Xác nhận hủy</span>
+        </button>
       </div>
     </div>
   </div>
@@ -154,7 +213,8 @@
         <div class="flight-details">
           <p><strong>Số hiệu:</strong> {{ selectedFlight?.flight_number?.code }}</p>
           <p><strong>Tuyến bay:</strong> {{ selectedFlight?.flight_number?.departure_airport?.city }} → {{ selectedFlight?.flight_number?.arrival_airport?.city }}</p>
-          <p><strong>Thời gian:</strong> {{ formatDateTime(selectedFlight?.scheduled_departure_local) }}</p>
+          <p><strong>Ngày bay:</strong> {{ formatFlightDate(selectedFlight?.scheduled_departure_local) }}</p>
+          <p><strong>Giờ bay:</strong> {{ formatTime(selectedFlight?.scheduled_departure_local) }}</p>
         </div>
         <p class="danger-text">Hành động này không thể hoàn tác. Chuyến bay sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
       </div>
@@ -165,3 +225,13 @@
     </div>
   </div>
 }
+
+<!-- Notification Dialog -->
+<app-notification-dialog
+  [visible]="showNotificationDialog"
+  [type]="notificationType"
+  [title]="notificationTitle"
+  [message]="notificationMessage"
+  (confirm)="closeNotificationDialog()"
+  (close)="closeNotificationDialog()">
+</app-notification-dialog>

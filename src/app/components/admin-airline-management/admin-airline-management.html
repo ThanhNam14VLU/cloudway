@@ -2,9 +2,9 @@
   <header class="page-header">
     <h1>Quản lý Hãng bay</h1>
     <div class="header-actions">
-      <!-- <button class="add-new-btn" (click)="toggleAddForm()">
+      <button class="add-new-btn" (click)="toggleAddForm()">
         <i class="fa-solid fa-plus"></i> Thêm Hãng Bay
-      </button> -->
+      </button>
       <button class="refresh-btn" (click)="loadAirlines()">
         <i class="fa-solid fa-refresh"></i> Làm mới
       </button>
@@ -61,6 +61,34 @@
               </div>
             </div>
           </div>
+
+          <div class="form-row">
+            <div class="form-group logo-upload-group">
+              <label for="logo">Logo Hãng Bay</label>
+              <div class="logo-upload-container">
+                <input 
+                  type="file" 
+                  id="logo"
+                  name="logo"
+                  accept="image/*"
+                  (change)="onLogoSelected($event)"
+                  class="logo-file-input">
+                <label for="logo" class="logo-upload-btn">
+                  <i class="fa-solid fa-upload"></i>
+                  Chọn Logo
+                </label>
+                <div *ngIf="logoPreview" class="logo-preview">
+                  <img [src]="logoPreview" alt="Logo preview" class="preview-image">
+                  <button type="button" class="remove-logo-btn" (click)="removeLogo()">
+                    <i class="fa-solid fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="logo-upload-info">
+                <small>Định dạng: JPG, PNG, GIF, WebP | Kích thước tối đa: 5MB</small>
+              </div>
+            </div>
+          </div>
           
           <div class="dialog-actions">
             <button type="button" class="btn btn-secondary" (click)="toggleAddForm()">
@@ -103,6 +131,7 @@
           <th>Mã IATA</th>
           <th>Tên Hãng Bay</th>
           <th>Ngày Tạo</th>
+          <th>Thao tác</th>
         </tr>
         </thead>
         <tbody>
@@ -123,6 +152,14 @@
           <td>{{ airline.iata_code || '-' }}</td>
           <td>{{ airline.name || '-' }}</td>
           <td>{{ formatDate(airline.created_at) }}</td>
+          <td class="actions-cell">
+            <button 
+              class="delete-btn" 
+              (click)="onDeleteAirline(airline)"
+              title="Xóa hãng bay">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -134,4 +171,28 @@
       </div>
     </div>
   </div>
+
+  <!-- Success Notification Dialog -->
+  <app-notification-dialog
+    [visible]="showSuccessDialog"
+    type="success"
+    title="Thành công"
+    [message]="successMessage"
+    confirmText="Đóng"
+    (confirm)="onSuccessDialogClose()"
+    (close)="onSuccessDialogClose()">
+  </app-notification-dialog>
+
+  <!-- Delete Confirmation Dialog -->
+  <app-confirm-dialog
+    [visible]="showDeleteDialog"
+    title="Xác nhận xóa"
+    [message]="getDeleteMessage()"
+    confirmText="Xóa"
+    cancelText="Hủy"
+    iconClass="fa-exclamation-triangle"
+    confirmButtonClass="btn-danger"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()">
+  </app-confirm-dialog>
 </main>

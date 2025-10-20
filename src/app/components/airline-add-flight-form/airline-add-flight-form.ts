@@ -15,6 +15,8 @@ import { CreateFlightInstanceModel } from '../../models/create-flight-instance.m
 })
 export class AirlineAddFlightForm implements OnInit {
  @Output() close = new EventEmitter<void>();//con tạo sự kiện để phát ra ngoài
+ @Output() success = new EventEmitter<void>();//sự kiện thành công
+ @Output() error = new EventEmitter<string>();//sự kiện lỗi với thông báo
 
   constructor(
     private airportService: AirportService,
@@ -127,19 +129,19 @@ export class AirlineAddFlightForm implements OnInit {
         next: (response) => {
           console.log('✅ Flight created successfully!');
           console.log('📥 Backend response:', response);
-          alert('Tạo chuyến bay thành công!');
-          this.close.emit();
+          this.success.emit();
         },
         error: (error) => {
           console.error('❌ Flight creation failed:', error);
           console.error('❌ Error details:', error.error);
           console.error('❌ Error status:', error.status);
-          alert(`Tạo chuyến bay thất bại: ${error.error?.message || error.message || 'Unknown error'}`);
+          const errorMessage = `Tạo chuyến bay thất bại: ${error.error?.message || error.message || 'Unknown error'}`;
+          this.error.emit(errorMessage);
         }
       });
     } catch (error) {
       console.error('❌ Unexpected error:', error);
-      alert('Có lỗi xảy ra khi tạo chuyến bay');
+      this.error.emit('Có lỗi xảy ra khi tạo chuyến bay');
     }
   }
 
@@ -149,40 +151,40 @@ export class AirlineAddFlightForm implements OnInit {
     // Check flight number
     if (!this.flightPayload.flight_number.code) {
       console.error('❌ Flight number is required');
-      alert('Vui lòng nhập số hiệu chuyến bay');
+      this.error.emit('Vui lòng nhập số hiệu chuyến bay');
       return false;
     }
     
     // Check airports
     if (!this.flightPayload.flight_number.departure_airport_id) {
       console.error('❌ Departure airport is required');
-      alert('Vui lòng chọn điểm đi');
+      this.error.emit('Vui lòng chọn điểm đi');
       return false;
     }
     
     if (!this.flightPayload.flight_number.arrival_airport_id) {
       console.error('❌ Arrival airport is required');
-      alert('Vui lòng chọn điểm đến');
+      this.error.emit('Vui lòng chọn điểm đến');
       return false;
     }
     
     // Check aircraft
     if (!this.flightPayload.aircraft_id) {
       console.error('❌ Aircraft is required');
-      alert('Vui lòng chọn máy bay');
+      this.error.emit('Vui lòng chọn máy bay');
       return false;
     }
     
     // Check times
     if (!this.flightPayload.scheduled_departure_local) {
       console.error('❌ Departure time is required');
-      alert('Vui lòng nhập giờ khởi hành');
+      this.error.emit('Vui lòng nhập giờ khởi hành');
       return false;
     }
     
     if (!this.flightPayload.scheduled_arrival_local) {
       console.error('❌ Arrival time is required');
-      alert('Vui lòng nhập giờ đến');
+      this.error.emit('Vui lòng nhập giờ đến');
       return false;
     }
     
@@ -193,12 +195,12 @@ export class AirlineAddFlightForm implements OnInit {
       const fare = this.flightPayload.fares[i];
       if (fare.base_price <= 0) {
         console.error(`❌ Invalid fare price at index ${i}:`, fare);
-        alert(`Vui lòng nhập giá vé cho tất cả hạng vé`);
+        this.error.emit(`Vui lòng nhập giá vé cho tất cả hạng vé`);
         return false;
       }
       if (fare.total_seats <= 0) {
         console.error(`❌ Invalid seat count at index ${i}:`, fare);
-        alert(`Vui lòng nhập số ghế cho tất cả hạng vé`);
+        this.error.emit(`Vui lòng nhập số ghế cho tất cả hạng vé`);
         return false;
       }
     }

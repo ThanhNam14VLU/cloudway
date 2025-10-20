@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { UserService } from '../../services/user/user.service';
 import { Header } from '../../components/header/header';
+import { NotificationService } from '../../services/notification/notification.service';
 
 @Component({
   selector: 'app-profile',
@@ -48,7 +49,8 @@ export class Profile implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -95,6 +97,10 @@ export class Profile implements OnInit {
 
   // Hàm để bật hoặc tắt chế độ chỉnh sửa.
   toggleEdit(): void {
+    // If toggling from edit mode to view mode, attempt to save
+    if (!this.isDisabled) {
+      this.saveProfile();
+    }
     this.isDisabled = !this.isDisabled;
     this.str = this.isDisabled ? 'Chỉnh sửa hồ sơ' : 'Lưu thay đổi';
   }
@@ -110,13 +116,13 @@ export class Profile implements OnInit {
     if (file) {
       // Kiểm tra loại file
       if (!file.type.startsWith('image/')) {
-        alert('Vui lòng chọn file hình ảnh!');
+        this.notificationService.showWarning('Cảnh báo', 'Vui lòng chọn file hình ảnh!');
         return;
       }
 
       // Kiểm tra kích thước file (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert('Kích thước file không được vượt quá 5MB!');
+        this.notificationService.showWarning('Cảnh báo', 'Kích thước file không được vượt quá 5MB!');
         return;
       }
 
@@ -125,8 +131,8 @@ export class Profile implements OnInit {
       reader.onload = (e: any) => {
         this.avatarUrl = e.target.result;
         console.log('Avatar đã được thay đổi:', this.avatarUrl);
-        // Ở đây bạn có thể gọi API để upload avatar lên server
-        // this.uploadAvatar(file);
+        // Gọi API để upload avatar lên server
+        this.uploadAvatar(file);
       };
       reader.readAsDataURL(file);
     }
@@ -134,8 +140,66 @@ export class Profile implements OnInit {
 
   // Hàm upload avatar lên server (có thể implement sau)
   private uploadAvatar(file: File): void {
-    // TODO: Implement upload logic
-    console.log('Uploading avatar:', file.name);
+    if (!this.userData?.id) return;
+    this.isLoading = true;
+    this.userService.uploadAvatar(this.userData.id, file).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        if (res?.avatar_url) {
+          this.avatarUrl = res.avatar_url;
+          this.userData.avatar_url = res.avatar_url;
+        }
+        this.notificationService.showSuccess('Thành công', 'Cập nhật ảnh đại diện thành công');
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Upload avatar error:', err);
+        this.notificationService.showError('Lỗi', 'Cập nhật ảnh đại diện thất bại');
+      }
+    });
+  }
+
+  private saveProfile(): void {
+    if (!this.userData?.id) {
+      console.error('No user ID available');
+      return;
+    }
+    
+    // Create a clean payload with only the fields that should be updated
+    const payload: any = {};
+    
+    if (this.userData.full_name) payload.full_name = this.userData.full_name;
+    if (this.userData.phone) payload.phone = this.userData.phone;
+    if (this.userData.email) payload.email = this.userData.email;
+    
+    console.log('Current userData before save:', this.userData);
+    console.log('Sending update request:', payload);
+    console.log('User ID:', this.userData.id);
+    
+    this.isLoading = true;
+    this.userService.updateProfile(this.userData.id, payload).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        console.log('Update profile success:', res);
+        
+        // Update local data with response data
+        if (res?.user) {
+          this.userData = { ...this.userData, ...res.user };
+          console.log('Updated userData after API response:', this.userData);
+        } else {
+          // If no user data in response, just log the current state
+          console.log('No user data in response, current userData:', this.userData);
+        }
+        
+        this.notificationService.showSuccess('Thành công', 'Lưu thay đổi thành công');
+      },
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Update profile error:', err);
+        console.error('Error details:', err.error);
+        this.notificationService.showError('Lỗi', `Lưu thay đổi thất bại: ${err.error?.message || err.message}`);
+      }
+    });
   }
 
   // Get user role display name
@@ -375,7 +439,7 @@ export class Profile implements OnInit {
 
       // If verification successful, change password
       await this.authService.changePassword(this.changePasswordData.newPassword);
-      alert('Đổi mật khẩu thành công!');
+      this.notificationService.showSuccess('Thành công', 'Đổi mật khẩu thành công!');
       this.closeChangePasswordModal();
     } catch (error: any) {
       console.error('Change password error:', error);

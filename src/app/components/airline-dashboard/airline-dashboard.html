@@ -1,36 +1,82 @@
 <div class="dashboard">
   <h2>Thống kê hãng bay</h2>
 
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Đang tải dữ liệu thống kê...</p>
+  </div>
+
   <!-- Stat cards in pastel style -->
-  <div class="plan-cards">
+  <div *ngIf="!isLoading" class="plan-cards">
     <div class="plan-card is-gray">
       <div class="plan-title">Tổng chuyến bay</div>
-      <div class="plan-price">{{ statistics.total_flights | number }}</div>
+      <div class="plan-price">{{ statistics?.total_flights | number }}</div>
       <div class="plan-desc">Số chuyến bay đã khai thác trong kỳ.</div>
     </div>
 
     <div class="plan-card is-yellow">
       <div class="plan-title">Tổng hành khách</div>
-      <div class="plan-price">{{ statistics.total_passengers | number }}</div>
+      <div class="plan-price">{{ statistics?.total_passengers | number }}</div>
       <div class="plan-desc">Tổng lượt hành khách đã vận chuyển.</div>
     </div>
 
     <div class="plan-card is-pink">
       <div class="plan-title">Tổng doanh thu</div>
-      <div class="plan-price">{{ statistics.total_revenue | number: '1.0-0' }} ₫</div>
+      <div class="plan-price">{{ statistics?.total_revenue | number: '1.0-0' }} ₫</div>
       <div class="plan-desc">Doanh thu gộp theo kỳ thống kê.</div>
     </div>
 
     <div class="plan-card is-blue">
       <div class="plan-title">Đúng giờ</div>
       <div class="plan-price">{{ onTimeRate }}%</div>
-      <div class="plan-desc">{{ statistics.on_time_flights | number }} chuyến đúng giờ.</div>
+      <div class="plan-desc">{{ statistics?.on_time_flights | number }} chuyến đúng giờ.</div>
     </div>
 
     <div class="plan-card is-rose">
       <div class="plan-title">Chuyến bị hủy</div>
-      <div class="plan-price">{{ statistics.cancelled_flights | number }}</div>
+      <div class="plan-price">{{ statistics?.cancelled_flights | number }}</div>
       <div class="plan-desc">Tổng số chuyến bị hủy trong kỳ.</div>
+    </div>
+  </div>
+
+  <!-- Biểu đồ thống kê -->
+  <div *ngIf="!isLoading" class="charts-section">
+    <h3>Biểu đồ thống kê</h3>
+    
+    <div class="charts-grid">
+      <!-- Biểu đồ doanh thu -->
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas baseChart
+                  [data]="revenueChartData"
+                  [options]="revenueChartOptions"
+                  [type]="'line'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Biểu đồ trạng thái chuyến bay -->
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas baseChart
+                  [data]="flightStatusChartData"
+                  [options]="flightStatusChartOptions"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Biểu đồ hành khách -->
+      <div class="chart-container">
+        <div class="chart-wrapper">
+          <canvas baseChart
+                  [data]="passengerChartData"
+                  [options]="passengerChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
     </div>
   </div>
 

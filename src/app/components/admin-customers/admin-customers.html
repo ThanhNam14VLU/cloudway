@@ -40,6 +40,8 @@
           <th>Email</th>
           <th>Số Điện Thoại</th>
           <th>Vai trò</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
           <th>Ngày Tạo</th>
           <th>Cập nhật lần cuối</th>
         </tr>
@@ -53,11 +55,11 @@
               [src]="user.avatar_url" 
               [alt]="user.full_name || 'User'"
               class="user-avatar"
-              (error)="$event.target.src='https://via.placeholder.com/40x40?text=' + (user.full_name?.charAt(0) || 'U')"
+              (error)="$event.target.src='https://via.placeholder.com/40x40?text=' + (user.full_name.charAt(0) || 'U')"
             />
             <ng-template #noAvatar>
               <div class="user-avatar no-avatar">
-                {{ (user.full_name?.charAt(0) || 'U').toUpperCase() }}
+                {{ (user.full_name.charAt(0) || 'U').toUpperCase() }}
               </div>
             </ng-template>
           </td>
@@ -74,6 +76,17 @@
               <option value="AIRLINE">AIRLINE</option>
             </select>
           </td>
+          <td>
+            <span [ngClass]="{'status-badge active': user.account_status === 'ACTIVE', 'status-badge locked': user.account_status === 'LOCKED'}">
+              {{ user.account_status === 'LOCKED' ? 'Đã khóa' : 'Đang hoạt động' }}
+            </span>
+          </td>
+          <td class="actions-column">
+            <button class="lock-action-btn" (click)="toggleAccountStatus(user)">
+              <i class="fa-solid" [ngClass]="user.account_status === 'LOCKED' ? 'fa-lock-open' : 'fa-lock'"></i>
+              {{ user.account_status === 'LOCKED' ? 'Mở khóa' : 'Khóa' }}
+            </button>
+          </td>
           <td>{{ formatDate(user.created_at) }}</td>
           <td>{{ formatDate(user.updated_at) }}</td>
         </tr>
@@ -88,3 +101,16 @@
     </div>
   </div>
 </main>
+
+<!-- Confirm Dialog -->
+<app-confirm-dialog
+  [visible]="showConfirmDialog"
+  [title]="confirmDialogConfig.title"
+  [message]="confirmDialogConfig.message"
+  [confirmText]="confirmDialogConfig.confirmText"
+  [cancelText]="confirmDialogConfig.cancelText"
+  [iconClass]="confirmDialogConfig.iconClass"
+  [confirmButtonClass]="confirmDialogConfig.confirmButtonClass"
+  (confirm)="onConfirmAction()"
+  (cancel)="onCancelAction()">
+</app-confirm-dialog>

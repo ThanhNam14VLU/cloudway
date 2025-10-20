@@ -401,3 +401,60 @@ input[type="checkbox"] {
     max-height: 95vh;
   }
 }
+
+/* Actions Column Styles */
+.actions-cell {
+  text-align: center;
+  width: 80px;
+  padding: 8px;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 36px;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+}
+
+.delete-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 4px rgba(220, 53, 69, 0.3);
+}
+
+.delete-btn i {
+  font-size: 14px;
+}
+
+/* Responsive adjustments for actions */
+@media (max-width: 768px) {
+  .actions-cell {
+    width: 60px;
+    padding: 4px;
+  }
+  
+  .delete-btn {
+    padding: 6px 10px;
+    min-width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+  
+  .delete-btn i {
+    font-size: 12px;
+  }
+}

@@ -77,15 +77,29 @@ export class AuthCallbackComponent implements OnInit {
         console.warn('⚠️ Backend không khả dụng, tiếp tục với frontend auth');
       }
 
-      // Điều hướng theo role (dùng resolver chung để fallback về backend nếu JWT thiếu role)
+      // Get profile and role for navigation
+      const profile = await this.authService.getCurrentUserProfile();
       const role = await this.authService.getCurrentUserRole();
       console.log('🔎 Resolved role after OAuth =', role);
+      console.log('🔎 Account status =', profile?.account_status);
+      
+      // Use actual profile data - check different possible field names
+      const accountStatus = profile?.account_status || profile?.accountStatus || profile?.status || 'ACTIVE';
+      console.log('🔎 Using accountStatus:', accountStatus);
+      
+      // Navigate based on role and pass account status info
       if (role === 'ADMIN' || role === 'admin') {
-        this.router.navigate(['/admin/admin-customers']);
+        this.router.navigate(['/admin/admin-customers'], { 
+          queryParams: { accountStatus: accountStatus } 
+        });
       } else if (role === 'AIRLINE' || role === 'airline') {
-        this.router.navigate(['/airline/airline-dashboard']);
+        this.router.navigate(['/airline/airline-dashboard'], { 
+          queryParams: { accountStatus: accountStatus } 
+        });
       } else {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/home'], { 
+          queryParams: { accountStatus: accountStatus } 
+        });
       }
     } catch (e) {
       console.error('❌ Auth callback error:', e);

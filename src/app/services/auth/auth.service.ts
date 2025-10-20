@@ -71,6 +71,8 @@ export class AuthService {
 
       if (error) {
         console.error('❌ Password sign in error:', error);
+        
+        
         throw error;
       }
 
@@ -174,23 +176,58 @@ export class AuthService {
     return data?.session?.access_token ?? null;
   }
 
+  /** 🔹 Debug method để kiểm tra token và session */
+  async debugAuthInfo() {
+    try {
+      const { data } = await supabase.auth.getSession();
+      const user = data?.session?.user;
+      const token = data?.session?.access_token;
+      
+      console.log('🔍 Debug Auth Info:');
+      console.log('  - User ID:', user?.id);
+      console.log('  - User Email:', user?.email);
+      console.log('  - Token exists:', !!token);
+      console.log('  - Token length:', token?.length || 0);
+      console.log('  - Token preview:', token ? `${token.substring(0, 20)}...` : 'null');
+      console.log('  - User role from metadata:', user?.app_metadata?.['role'] || user?.user_metadata?.['role'] || 'none');
+      
+      return {
+        userId: user?.id,
+        userEmail: user?.email,
+        hasToken: !!token,
+        tokenLength: token?.length || 0,
+        userRole: user?.app_metadata?.['role'] || user?.user_metadata?.['role'] || null
+      };
+    } catch (error) {
+      console.error('🔍 Error getting auth debug info:', error);
+      return null;
+    }
+  }
+
   /** 🔹 Lấy role hiện tại từ session (ưu tiên app_metadata.role, sau đó user_metadata.role) */
   async getCurrentUserRole(): Promise<string | null> {
     const { data } = await supabase.auth.getSession();
     const user: any = data?.session?.user;
     if (!user) return null;
-    const tokenRole = user?.app_metadata?.role || user?.user_metadata?.role || null;
+    const tokenRole = user?.app_metadata?.['role'] || user?.user_metadata?.['role'] || null;
     if (tokenRole) return tokenRole;
 
     // Fallback: lấy role từ backend profile nếu JWT không có role
     try {
       const userId: string = user.id;
+      console.log('🔍 Attempting to fetch role from backend for user:', userId);
       const profile: any = await firstValueFrom(
         this.http.get(`${this.backendUrl}/user/${userId}`)
       );
+      console.log('✅ Successfully fetched role from backend:', profile?.role);
       return profile?.role ?? null;
-    } catch (e) {
+    } catch (e: any) {
       console.warn('⚠️ Không thể lấy role từ backend:', e);
+      if (e.status === 403) {
+        console.warn('⚠️ Backend returned 403 - user may not exist in backend database or server is down');
+      } else if (e.status === 0) {
+        console.warn('⚠️ Backend server appears to be down or unreachable');
+      }
       return null;
     }
   }
@@ -198,17 +235,45 @@ export class AuthService {
   /** 🔹 Lấy thông tin user đầy đủ từ backend (bao gồm airlines) */
   async getCurrentUserProfile(): Promise<any> {
     try {
+      console.log('🔍 AuthService - Getting user profile...');
       const { data } = await supabase.auth.getSession();
       const user = data?.session?.user;
-      if (!user) return null;
+      if (!user) {
+        console.log('🔍 AuthService - No user session found');
+        return null;
+      }
 
       const userId = user.id;
+      console.log('🔍 AuthService - User ID:', userId);
+      console.log('🔍 AuthService - Backend URL:', this.backendUrl);
+      
       const profile = await firstValueFrom(
         this.http.get(`${this.backendUrl}/user/${userId}`)
       );
+      console.log('🔍 AuthService - Profile received:', profile);
       return profile;
-    } catch (error) {
-      console.error('Error fetching user profile:', error);
+    } catch (error: any) {
+      console.error('🔍 AuthService - Error fetching user profile:', error);
+      console.error('🔍 AuthService - Error status:', error.status);
+      console.error('🔍 AuthService - Error response:', error.response);
+      console.error('🔍 AuthService - Error response data:', error.response?.data);
+      
+      
+      // Xử lý lỗi 403 - có thể là user chưa tồn tại trong backend DB
+      if (error.status === 403) {
+        console.warn('🔍 AuthService - 403 Forbidden - User may not exist in backend database');
+        console.warn('🔍 AuthService - This is normal for new users who haven\'t been synced to backend yet');
+        return null;
+      }
+      
+      // Xử lý lỗi kết nối
+      if (error.status === 0) {
+        console.warn('🔍 AuthService - Backend server appears to be down or unreachable');
+        return null;
+      }
+      
+      // Nếu không phải lỗi account locked, trả về null như cũ
+      console.log('🔍 AuthService - Not account locked error, returning null');
       return null;
     }
   }
@@ -224,6 +289,23 @@ export class AuthService {
     } catch (error) {
       console.error('Error getting airline ID:', error);
       return null;
+    }
+  }
+
+  /** 🔹 Kiểm tra xem backend có khả dụng không */
+  async isBackendAvailable(): Promise<boolean> {
+    try {
+      console.log('🔍 Checking backend availability...');
+      await firstValueFrom(
+        this.http.get(`${this.backendUrl}/health`, { 
+          timeout: 5000 // 5 second timeout
+        })
+      );
+      console.log('✅ Backend is available');
+      return true;
+    } catch (error: any) {
+      console.warn('⚠️ Backend is not available:', error.status || 'Connection failed');
+      return false;
     }
   }
 

@@ -283,7 +283,7 @@
           </div>
 
           <!-- Flight Info -->
-          <div class="overview-section">
+          <!-- <div class="overview-section">
             <h4>Thông tin chuyến bay</h4>
             @if (selectedFlight) {
               <div class="overview-item">
@@ -311,7 +311,7 @@
                 <span class="value">Không có thông tin chuyến bay</span>
               </div>
             }
-          </div>
+          </div> -->
 
           <!-- Special Requests -->
           @if (specialRequests) {
@@ -351,13 +351,13 @@
           <h3>Phương thức thanh toán</h3>
           
           <div class="payment-method">
-            <div class="momo-payment">
-              <div class="momo-header">
-                <div class="momo-logo">
-                  <img width="40px" height="40px" src="./assets/images/momo.webp" alt="MoMo Logo">
+            <div class="sepay-payment">
+              <div class="sepay-header">
+                <div class="sepay-logo">
+                  <img width="40px" height="40px" src="./assets/images/QR_SePay.png" alt="SePay Logo">
                 </div>
-                <div class="momo-info">
-                  <h4>MoMo</h4>
+                <div class="sepay-info">
+                  <h4>SePay</h4>
                   <p>Quét mã QR để thanh toán</p>
                 </div>
               </div>
@@ -371,19 +371,23 @@
               
               <div class="qr-section">
                 <div class="qr-code">
-                  <img width="100px" height="100px" src="./assets/images/momo_qr.jpg" alt="MoMo QR Code" class="qr-image">
-                  <p class="qr-instruction">Quét mã QR bằng ứng dụng MoMo để thanh toán</p>
+                  <img src="./assets/images/QR_SePay.png" alt="SePay QR Code" class="qr-image">
+                  <p class="qr-instruction">Quét mã QR bằng ứng dụng ngân hàng để thanh toán</p>
                 </div>
               </div>
               
               <div class="payment-info">
                 <div class="info-item">
-                  <!-- <i class="fas fa-shield-alt"></i> -->
+                  <i class="fas fa-shield-alt"></i>
                   <span>Thanh toán an toàn và bảo mật</span>
                 </div>
                 <div class="info-item">
-                  <!-- <i class="fas fa-clock"></i> -->
+                  <i class="fas fa-clock"></i>
                   <span>Xử lý trong 1-2 phút</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-mobile-alt"></i>
+                  <span>Hỗ trợ tất cả ngân hàng</span>
                 </div>
               </div>
             </div>
@@ -471,7 +475,34 @@
 
         <!-- Price Breakdown -->
         <div class="price-breakdown">
-          @if (selectedFlight.pricing && selectedFlight.pricing.breakdown) {
+          @if (hasSelectedFare()) {
+            <!-- Use selected fare price from dialog (most accurate) -->
+            <div class="price-item">
+              <span>Chuyến đi - {{ getSelectedFareClass() }}:</span>
+              <span>{{ formatPrice(getSelectedFarePrice()) }} ₫</span>
+            </div>
+            
+            @if (tripType === 'roundtrip' && hasSelectedReturnFare()) {
+              <div class="price-item">
+                <span>Chuyến về - {{ getSelectedReturnFareClass() }}:</span>
+                <span>{{ formatPrice(getSelectedReturnFarePrice()) }} ₫</span>
+              </div>
+            } @else if (tripType === 'roundtrip' && selectedReturnFlight) {
+              <div class="price-item">
+                <span>Chuyến về:</span>
+                <span>{{ formatPrice(calculateFlightPrice(selectedReturnFlight)) }} ₫</span>
+              </div>
+            }
+            
+            <div class="price-item">
+              <span>Số hành khách:</span>
+              <span>{{ getTotalPassengerCount() }} người</span>
+            </div>
+            <div class="price-item total">
+              <span>Tổng cộng:</span>
+              <span>{{ formatPrice(getTotalAmount()) }} ₫</span>
+            </div>
+          } @else if (selectedFlight.pricing && selectedFlight.pricing.breakdown) {
             <!-- Use real pricing data from API -->
             <div class="price-item">
               <span>Giá vé cơ bản:</span>
@@ -506,16 +537,24 @@
           } @else if (selectedFlight.fares && selectedFlight.fares.length > 0) {
             <!-- Fallback: Use first available fare -->
             <div class="price-item">
-              <span>Giá vé ({{ selectedFlight.fares[0].fare_bucket?.class_type || 'Economy' }}):</span>
+              <span>Chuyến đi - {{ selectedFlight.fares[0].fare_bucket?.class_type || 'Economy' }}:</span>
               <span>{{ formatPrice(selectedFlight.fares[0].base_price) }} ₫</span>
             </div>
+            
+            @if (tripType === 'roundtrip' && selectedReturnFlight && selectedReturnFlight.fares && selectedReturnFlight.fares.length > 0) {
+              <div class="price-item">
+                <span>Chuyến về - {{ selectedReturnFlight.fares[0].fare_bucket?.class_type || 'Economy' }}:</span>
+                <span>{{ formatPrice(selectedReturnFlight.fares[0].base_price) }} ₫</span>
+              </div>
+            }
+            
             <div class="price-item">
               <span>Số hành khách:</span>
               <span>{{ getTotalPassengerCount() }} người</span>
             </div>
             <div class="price-item total">
               <span>Tổng cộng (ước tính):</span>
-              <span>{{ formatPrice(selectedFlight.fares[0].base_price * getTotalPassengerCount()) }} ₫</span>
+              <span>{{ formatPrice(getTotalAmount()) }} ₫</span>
             </div>
           } @else {
             <!-- No pricing data available -->
