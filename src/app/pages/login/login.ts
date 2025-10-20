@@ -65,17 +65,27 @@ export class Login implements OnInit {
     try {
       this.isLoading = true;
       this.errorMessage = '';
+      
       await this.authService.signInWithPassword(this.loginForm.email, this.loginForm.password);
+      
       const role = await this.authService.getCurrentUserRole();
       console.log('roleeeeeeee', role);
+      
+      // Navigate based on role (always route, check account status at destination)
+      console.log('Navigating based on role:', role);
+      
       if (role === 'ADMIN') {
+        console.log('Navigating to admin dashboard');
         this.router.navigate(['/admin/admin-customers']);
       } else if (role === 'AIRLINE') {
+        console.log('Navigating to airline dashboard');
         this.router.navigate(['/airline/airline-dashboard']);
       } else {
+        console.log('Navigating to home');
         this.router.navigate(['/home']);
       }
     } catch (error: any) {
+      console.log('❌ Login error:', error);
       this.errorMessage = error.message || 'Đăng nhập thất bại';
     } finally {
       this.isLoading = false;
@@ -152,10 +162,16 @@ export class Login implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       const mode = params['mode'];
+      const error = params['error'];
+      
       if (mode === 'register') {
         this.isActive = true;
       } else {
         this.isActive = false;
+      }
+      
+      if (error) {
+        this.errorMessage = error;
       }
     });
   }
@@ -177,4 +193,5 @@ export class Login implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
   }
+
 }

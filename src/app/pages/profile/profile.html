@@ -70,15 +70,15 @@
         <div class="info-grid">
           <div class="form-group">
             <label>Full Name</label>
-            <input type="text" [value]="userData.full_name || ''" [disabled]="isDisabled"/>
+            <input type="text" [(ngModel)]="userData.full_name" name="full_name" [disabled]="isDisabled"/>
           </div>
           <div class="form-group">
             <label>Email Address</label>
-            <input type="email" [value]="userData.email || ''" [disabled]="isDisabled"/>
+            <input type="email" [(ngModel)]="userData.email" name="email" [disabled]="isDisabled"/>
           </div>
           <div class="form-group">
             <label>Phone Number</label>
-            <input type="text" [value]="userData.phone || ''" [disabled]="isDisabled"/>
+            <input type="text" [(ngModel)]="userData.phone" name="phone" [disabled]="isDisabled"/>
           </div>
           <div class="form-group">
             <label>Role</label>

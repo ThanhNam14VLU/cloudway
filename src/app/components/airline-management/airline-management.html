@@ -80,7 +80,11 @@
   </div>
 </div>
 @if(isShowForm){
-  <app-airline-add-flight-form (close)="CloseForm()"></app-airline-add-flight-form><!--khi nhận được sự kiện từ con thì gọi CloseForm-->
+  <app-airline-add-flight-form 
+    (close)="CloseForm()" 
+    (success)="onFlightFormSuccess()" 
+    (error)="onFlightFormError($event)">
+  </app-airline-add-flight-form><!--khi nhận được sự kiện từ con thì gọi CloseForm-->
 }
 
 <!-- Edit Flight Modal -->
@@ -165,3 +169,13 @@
     </div>
   </div>
 }
+
+<!-- Notification Dialog -->
+<app-notification-dialog
+  [visible]="showNotificationDialog"
+  [type]="notificationType"
+  [title]="notificationTitle"
+  [message]="notificationMessage"
+  (confirm)="closeNotificationDialog()"
+  (close)="closeNotificationDialog()">
+</app-notification-dialog>

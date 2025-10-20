@@ -33,4 +33,8 @@ export class AirlineService {
   createAirline(airline: any): Observable<any> {
     return this.httpClient.post<any>(`${environment.apiUrl}/airline`, airline);
   }
+
+  deleteAirline(id: string): Observable<any> {
+    return this.httpClient.delete<any>(`${environment.apiUrl}/airline/${id}`);
+  }
 }

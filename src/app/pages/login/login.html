@@ -8,7 +8,9 @@
 
             <!-- Error/Success Messages -->
             @if (errorMessage) {
-                <div class="alert alert-error">{{ errorMessage }}</div>
+                <div class="alert alert-error">
+                    {{ errorMessage }}
+                </div>
             }
             @if (successMessage) {
                 <div class="alert alert-success">{{ successMessage }}</div>
@@ -55,6 +57,7 @@
                     alt="">Đăng nhập bằng Google
             </button>
             <a href="" class="back"><i class="fa-solid fa-arrow-left"></i> Quay lại</a>
+            
         </div>
 
         <!-- Phần register -->
@@ -63,7 +66,9 @@
 
             <!-- Error/Success Messages -->
             @if (errorMessage) {
-                <div class="alert alert-error">{{ errorMessage }}</div>
+                <div class="alert alert-error">
+                    {{ errorMessage }}
+                </div>
             }
             @if (successMessage) {
                 <div class="alert alert-success">{{ successMessage }}</div>

@@ -149,6 +149,7 @@
           <th>Quốc Gia</th>
           <th>Múi Giờ</th>
           <th>Ngày Tạo</th>
+          <th>Thao tác</th>
         </tr>
         </thead>
         <tbody>
@@ -159,6 +160,14 @@
           <td>{{ airport.country || '-' }}</td>
           <td>{{ airport.timezone || '-' }}</td>
           <td>{{ formatDate(airport.created_at) }}</td>
+          <td class="actions-cell">
+            <button 
+              class="delete-btn" 
+              (click)="onDeleteAirport(airport)"
+              title="Xóa sân bay">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </td>
         </tr>
         </tbody>
       </table>
@@ -170,4 +179,28 @@
       </div>
     </div>
   </div>
+
+  <!-- Success Notification Dialog -->
+  <app-notification-dialog
+    [visible]="showSuccessDialog"
+    type="success"
+    title="Thành công"
+    [message]="successMessage"
+    confirmText="Đóng"
+    (confirm)="onSuccessDialogClose()"
+    (close)="onSuccessDialogClose()">
+  </app-notification-dialog>
+
+  <!-- Delete Confirmation Dialog -->
+  <app-confirm-dialog
+    [visible]="showDeleteDialog"
+    title="Xác nhận xóa"
+    [message]="getDeleteMessage()"
+    confirmText="Xóa"
+    cancelText="Hủy"
+    iconClass="fa-exclamation-triangle"
+    confirmButtonClass="btn-danger"
+    (confirm)="onConfirmDelete()"
+    (cancel)="onCancelDelete()">
+  </app-confirm-dialog>
 </main>

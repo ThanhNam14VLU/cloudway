@@ -10,6 +10,7 @@ import { FlightService } from '../../services/flight/flight.service';
 import { AirportService } from '../../services/airport/airport.service';
 import { AirportModel } from '../../models/airport.model';
 import { FlightSearchRequest, FlightSearchResponse } from '../../models/flight.model';
+import { NotificationService } from '../../services/notification/notification.service';
 import { Subscription } from 'rxjs';
 
 interface Flight {
@@ -132,7 +133,8 @@ export class TicketList implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private flightService: FlightService,
-    private airportService: AirportService
+    private airportService: AirportService,
+    private notificationService: NotificationService
   ) {}
 
   airlines: Airline[] = [
@@ -423,14 +425,14 @@ export class TicketList implements OnInit, OnDestroy {
     } else {
       // Show alert if flights are not selected properly
       if (this.tripType === 'oneway' && !this.selectedDepartureFlight) {
-        alert('Vui lòng chọn chuyến bay đi trước khi tiếp tục');
+        this.notificationService.showWarning('Cảnh báo', 'Vui lòng chọn chuyến bay đi trước khi tiếp tục');
       } else if (this.tripType === 'roundtrip') {
         if (!this.selectedDepartureFlight && !this.selectedReturnFlight) {
-          alert('Vui lòng chọn cả chuyến bay đi và về trước khi tiếp tục');
+          this.notificationService.showWarning('Cảnh báo', 'Vui lòng chọn cả chuyến bay đi và về trước khi tiếp tục');
         } else if (!this.selectedDepartureFlight) {
-          alert('Vui lòng chọn chuyến bay đi trước khi tiếp tục');
+          this.notificationService.showWarning('Cảnh báo', 'Vui lòng chọn chuyến bay đi trước khi tiếp tục');
         } else if (!this.selectedReturnFlight) {
-          alert('Vui lòng chọn chuyến bay về trước khi tiếp tục');
+          this.notificationService.showWarning('Cảnh báo', 'Vui lòng chọn chuyến bay về trước khi tiếp tục');
         }
       }
     }

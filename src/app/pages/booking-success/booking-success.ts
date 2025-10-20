@@ -4,6 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { Header } from '../../components/header/header';
 import { BookingResponse, BookingSegmentResponse, PassengerInfo } from '../../models/booking.model';
+import { NotificationService } from '../../services/notification/notification.service';
 import jsPDF from 'jspdf';
 
 @Component({
@@ -41,7 +42,8 @@ export class BookingSuccess implements OnInit {
   constructor(
     private router: Router, 
     private route: ActivatedRoute,
-    private http: HttpClient
+    private http: HttpClient,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
@@ -339,7 +341,7 @@ export class BookingSuccess implements OnInit {
       console.log('PDF downloaded successfully');
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Có lỗi xảy ra khi tạo file PDF. Vui lòng thử lại.');
+      this.notificationService.showError('Lỗi', 'Có lỗi xảy ra khi tạo file PDF. Vui lòng thử lại.');
     }
   }
 

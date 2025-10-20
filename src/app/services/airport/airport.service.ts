@@ -17,4 +17,8 @@ export class AirportService {
   createAirport(airport: CreateAirportModel): Observable<any> {
     return this.httpClient.post<any>(`${environment.apiUrl}/airport`, airport);
   }
+
+  deleteAirport(id: string): Observable<any> {
+    return this.httpClient.delete<any>(`${environment.apiUrl}/airport/${id}`);
+  }
 }

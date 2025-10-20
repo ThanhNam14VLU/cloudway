@@ -283,7 +283,7 @@
           </div>
 
           <!-- Flight Info -->
-          <div class="overview-section">
+          <!-- <div class="overview-section">
             <h4>Thông tin chuyến bay</h4>
             @if (selectedFlight) {
               <div class="overview-item">
@@ -311,7 +311,7 @@
                 <span class="value">Không có thông tin chuyến bay</span>
               </div>
             }
-          </div>
+          </div> -->
 
           <!-- Special Requests -->
           @if (specialRequests) {
@@ -471,7 +471,34 @@
 
         <!-- Price Breakdown -->
         <div class="price-breakdown">
-          @if (selectedFlight.pricing && selectedFlight.pricing.breakdown) {
+          @if (hasSelectedFare()) {
+            <!-- Use selected fare price from dialog (most accurate) -->
+            <div class="price-item">
+              <span>Chuyến đi - {{ getSelectedFareClass() }}:</span>
+              <span>{{ formatPrice(getSelectedFarePrice()) }} ₫</span>
+            </div>
+            
+            @if (tripType === 'roundtrip' && hasSelectedReturnFare()) {
+              <div class="price-item">
+                <span>Chuyến về - {{ getSelectedReturnFareClass() }}:</span>
+                <span>{{ formatPrice(getSelectedReturnFarePrice()) }} ₫</span>
+              </div>
+            } @else if (tripType === 'roundtrip' && selectedReturnFlight) {
+              <div class="price-item">
+                <span>Chuyến về:</span>
+                <span>{{ formatPrice(calculateFlightPrice(selectedReturnFlight)) }} ₫</span>
+              </div>
+            }
+            
+            <div class="price-item">
+              <span>Số hành khách:</span>
+              <span>{{ getTotalPassengerCount() }} người</span>
+            </div>
+            <div class="price-item total">
+              <span>Tổng cộng:</span>
+              <span>{{ formatPrice(getTotalAmount()) }} ₫</span>
+            </div>
+          } @else if (selectedFlight.pricing && selectedFlight.pricing.breakdown) {
             <!-- Use real pricing data from API -->
             <div class="price-item">
               <span>Giá vé cơ bản:</span>
@@ -506,16 +533,24 @@
           } @else if (selectedFlight.fares && selectedFlight.fares.length > 0) {
             <!-- Fallback: Use first available fare -->
             <div class="price-item">
-              <span>Giá vé ({{ selectedFlight.fares[0].fare_bucket?.class_type || 'Economy' }}):</span>
+              <span>Chuyến đi - {{ selectedFlight.fares[0].fare_bucket?.class_type || 'Economy' }}:</span>
               <span>{{ formatPrice(selectedFlight.fares[0].base_price) }} ₫</span>
             </div>
+            
+            @if (tripType === 'roundtrip' && selectedReturnFlight && selectedReturnFlight.fares && selectedReturnFlight.fares.length > 0) {
+              <div class="price-item">
+                <span>Chuyến về - {{ selectedReturnFlight.fares[0].fare_bucket?.class_type || 'Economy' }}:</span>
+                <span>{{ formatPrice(selectedReturnFlight.fares[0].base_price) }} ₫</span>
+              </div>
+            }
+            
             <div class="price-item">
               <span>Số hành khách:</span>
               <span>{{ getTotalPassengerCount() }} người</span>
             </div>
             <div class="price-item total">
               <span>Tổng cộng (ước tính):</span>
-              <span>{{ formatPrice(selectedFlight.fares[0].base_price * getTotalPassengerCount()) }} ₫</span>
+              <span>{{ formatPrice(getTotalAmount()) }} ₫</span>
             </div>
           } @else {
             <!-- No pricing data available -->

@@ -4,10 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { AirlineAddFlightForm } from '../airline-add-flight-form/airline-add-flight-form';
 import { AirlineService } from '../../services/airline/airline.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { NotificationDialog } from '../notification-dialog/notification-dialog';
 
 @Component({
   selector: 'app-airline-management',
-  imports: [AirlineAddFlightForm, CommonModule, FormsModule],
+  imports: [AirlineAddFlightForm, CommonModule, FormsModule, NotificationDialog],
   standalone: true,
   templateUrl: './airline-management.html',
   styleUrl: './airline-management.scss'
@@ -21,6 +22,12 @@ export class AirlineManagement implements OnInit {
   showEditModal = false;
   showCancelModal = false;
   showDeleteModal = false;
+  
+  // Notification dialog properties
+  showNotificationDialog = false;
+  notificationType: 'success' | 'error' | 'warning' | 'info' = 'success';
+  notificationTitle = '';
+  notificationMessage = '';
 
   constructor(
     private airlineService: AirlineService,
@@ -102,6 +109,35 @@ export class AirlineManagement implements OnInit {
     this.isShowForm = false;
     // Reload flights after adding new one
     this.loadFlights();
+  }
+
+  // Handle flight form events
+  onFlightFormSuccess() {
+    this.showSuccessNotification();
+    this.CloseForm();
+  }
+
+  onFlightFormError(errorMessage: string) {
+    this.showErrorNotification(errorMessage);
+  }
+
+  // Notification dialog methods
+  showSuccessNotification() {
+    this.notificationType = 'success';
+    this.notificationTitle = 'Thành công';
+    this.notificationMessage = 'Đã thêm chuyến bay thành công!';
+    this.showNotificationDialog = true;
+  }
+
+  showErrorNotification(message: string) {
+    this.notificationType = 'error';
+    this.notificationTitle = 'Lỗi';
+    this.notificationMessage = message;
+    this.showNotificationDialog = true;
+  }
+
+  closeNotificationDialog() {
+    this.showNotificationDialog = false;
   }
 
   // Edit flight

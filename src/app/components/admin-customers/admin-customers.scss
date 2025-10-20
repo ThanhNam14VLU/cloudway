@@ -1,3 +1,30 @@
+.status-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+.status-badge.active { background-color: #e8f6ef; color: #2ecc71; }
+.status-badge.locked { background-color: #fdecea; color: #e74c3c; }
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px 10px;
+  font-size: 12px;
+  color: #7f8c8d;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.action-btn:hover {
+  background-color: #f0f0f0;
+  color: #2c3e50;
+}
+
 /* Kế thừa từ các component trước */
 .main-content {
   margin-left: 260px;
