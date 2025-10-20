@@ -85,6 +85,6 @@ export class AdminCustomers implements OnInit {
   }
 
   formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('vi-VN');
+    return new Date(dateString).toLocaleDateString('en-US');
   }
 }

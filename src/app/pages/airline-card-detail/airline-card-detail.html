@@ -40,65 +40,105 @@
           <h2>Thông tin hành khách</h2>
         </div>
 
-        <!-- Passenger 1 Card -->
-        <div class="passenger-card">
-          <h3>Hành khách 1</h3>
-          
-          <div class="form-row">
-            <div class="form-group">
-              <label>Danh xưng *</label>
-              <select [(ngModel)]="passengerInfo.title">
-                <option value="">Chọn</option>
-                <option value="mr">Ông</option>
-                <option value="ms">Bà</option>
-                <option value="miss">Cô</option>
-              </select>
+        <!-- Dynamic Passenger Cards -->
+        @for (passenger of passengerForms; track passenger.id; let i = $index) {
+          <div class="passenger-card" [class]="'passenger-type-' + passenger.passengerType.toLowerCase()">
+            <div class="passenger-header">
+              <h3>Hành khách {{ i + 1 }}</h3>
+              <span class="passenger-type-badge">{{ passenger.passengerTypeLabel }}</span>
             </div>
-          </div>
+            
+            <div class="form-row">
+              <div class="form-group">
+                <label>Danh xưng *</label>
+                <select [(ngModel)]="passenger.title" (change)="clearErrors()">
+                  <option value="">Chọn</option>
+                  <option value="mr">Ông</option>
+                  <option value="ms">Bà</option>
+                  <option value="miss">Cô/Chị</option>
+                </select>
+              </div>
+            </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Họ và tên đệm *</label>
-              <input type="text" placeholder="Nhập họ và tên đệm" [(ngModel)]="passengerInfo.firstName">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Họ và tên đệm *</label>
+                <input type="text" placeholder="Nhập họ và tên đệm" [(ngModel)]="passenger.firstName" (input)="clearErrors()">
+              </div>
             </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Tên *</label>
-              <input type="text" placeholder="Nhập tên" [(ngModel)]="passengerInfo.lastName">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Tên *</label>
+                <input type="text" placeholder="Nhập tên" [(ngModel)]="passenger.lastName" (input)="clearErrors()">
+              </div>
             </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Ngày sinh *</label>
-              <input type="date" [(ngModel)]="passengerInfo.birthDate">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Ngày sinh *</label>
+                <input 
+                  type="date" 
+                  [(ngModel)]="passenger.birthDate"
+                  [min]="getMinBirthDate(passenger.passengerType)"
+                  [max]="getMaxBirthDate(passenger.passengerType)"
+                  (change)="clearErrors()">
+                <div class="age-info">
+                  @if (passenger.passengerType === 'ADULT') {
+                    <span class="age-text">Từ 13 tuổi trở lên</span>
+                  } @else if (passenger.passengerType === 'CHILD') {
+                    <span class="age-text">Từ 2-12 tuổi</span>
+                  } @else if (passenger.passengerType === 'INFANT') {
+                    <span class="age-text">Dưới 2 tuổi</span>
+                  }
+                </div>
+              </div>
             </div>
-          </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>CMND/CCCD *</label>
-              <input type="text" placeholder="Nhập số CMND/CCCD" [(ngModel)]="passengerInfo.idNumber">
-            </div>
-          </div>
+            <!-- CMND/CCCD - chỉ hiển thị cho người lớn -->
+            @if (passenger.passengerType === 'ADULT') {
+              <div class="form-row">
+                <div class="form-group">
+                  <label>CMND/CCCD *</label>
+                  <input type="text" placeholder="Nhập số CMND/CCCD" [(ngModel)]="passenger.idNumber" (input)="clearErrors()">
+                </div>
+              </div>
+            }
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Số điện thoại</label>
-              <input type="tel" placeholder="Nhập số điện thoại" [(ngModel)]="passengerInfo.phone">
-            </div>
-          </div>
+            <!-- Email - chỉ hiển thị cho người lớn -->
+            @if (passenger.passengerType === 'ADULT') {
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Email *</label>
+                  <input type="email" placeholder="Nhập email" [(ngModel)]="passenger.email">
+                </div>
+              </div>
+            }
 
-          <!-- Information Alert -->
-          <div class="info-alert">
-            <div class="alert-icon">
-              <!-- <i class="fas fa-info-circle"></i> -->
-            </div>
-            <p>Vui lòng nhập thông tin chính xác theo giấy tờ tùy thân. Thông tin sai có thể dẫn đến từ chối check-in.</p>
+            <!-- Số điện thoại - chỉ hiển thị cho người lớn -->
+            @if (passenger.passengerType === 'ADULT') {
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Số điện thoại</label>
+                  <input type="tel" placeholder="Nhập số điện thoại" [(ngModel)]="passenger.phone">
+                </div>
+              </div>
+            }
+
+            <!-- Information Alert for first passenger only -->
+            @if (i === 0) {
+              <div class="info-alert">
+                <div class="alert-icon">
+                  <!-- <i class="fas fa-info-circle"></i> -->
+                </div>
+                <p>Vui lòng nhập thông tin chính xác theo giấy tờ tùy thân. Thông tin sai có thể dẫn đến từ chối check-in.</p>
+                @if (passenger.passengerType === 'CHILD' || passenger.passengerType === 'INFANT') {
+                  <p><strong>Lưu ý:</strong> Trẻ em và em bé không cần CMND/CCCD, số điện thoại và email riêng.</p>
+                }
+              </div>
+            }
           </div>
-        </div>
+        }
       }
 
       <!-- Step 2: Contact Information -->
@@ -115,11 +155,11 @@
           <div class="form-row">
             <div class="form-group">
               <label>Danh xưng *</label>
-              <select [(ngModel)]="contactInfo.title">
+              <select [(ngModel)]="contactInfo.title" (change)="clearErrors()">
                 <option value="">Chọn</option>
                 <option value="mr">Ông</option>
                 <option value="ms">Bà</option>
-                <option value="miss">Cô</option>
+                <option value="miss">Cô/Chị</option>
               </select>
             </div>
           </div>
@@ -127,27 +167,27 @@
           <div class="form-row">
             <div class="form-group">
               <label>Họ và tên *</label>
-              <input type="text" placeholder="Nhập họ và tên đầy đủ" [(ngModel)]="contactInfo.fullName">
+              <input type="text" placeholder="Nhập họ và tên đầy đủ" [(ngModel)]="contactInfo.fullName" (input)="clearErrors()">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Số điện thoại *</label>
-              <input type="tel" placeholder="Nhập số điện thoại" [(ngModel)]="contactInfo.phone">
+              <input type="tel" placeholder="Nhập số điện thoại" [(ngModel)]="contactInfo.phone" (input)="clearErrors()">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label>Email *</label>
-              <input type="email" placeholder="Nhập email" [(ngModel)]="contactInfo.email">
+              <input type="email" placeholder="Nhập email" [(ngModel)]="contactInfo.email" (input)="clearErrors()">
             </div>
           </div>
         </div>
 
         <!-- Special Requests -->
-        <div class="special-requests-card">
+        <!-- <div class="special-requests-card">
           <h3>Yêu cầu đặc biệt (tuỳ chọn)</h3>
           <div class="form-group">
             <textarea 
@@ -155,10 +195,10 @@
               [(ngModel)]="specialRequests"
               rows="4"></textarea>
           </div>
-        </div>
+        </div> -->
 
         <!-- Additional Services -->
-        <div class="additional-services-card">
+        <!-- <div class="additional-services-card">
           <h3>Dịch vụ bổ sung</h3>
           
           <div class="service-item">
@@ -184,7 +224,7 @@
               <span class="service-text">Chọn ghế ngồi (+200.000 VND)</span>
             </label>
           </div>
-        </div>
+        </div> -->
       }
 
       <!-- Step 3: Payment -->
@@ -200,19 +240,29 @@
           
           <!-- Passenger Info -->
           <div class="overview-section">
-            <h4>Thông tin hành khách</h4>
-            <div class="overview-item">
-              <span class="label">Hành khách:</span>
-              <span class="value">{{ getPassengerDisplayName() }}</span>
-            </div>
-            <div class="overview-item">
-              <span class="label">Ngày sinh:</span>
-              <span class="value">{{ passengerInfo.birthDate | date:'dd/MM/yyyy' }}</span>
-            </div>
-            <div class="overview-item">
-              <span class="label">CMND/CCCD:</span>
-              <span class="value">{{ passengerInfo.idNumber }}</span>
-            </div>
+            <h4>Thông tin hành khách ({{ getTotalPassengerCount() }} người)</h4>
+            @for (passenger of passengerForms; track passenger.id; let i = $index) {
+              <div class="passenger-overview">
+                <div class="passenger-overview-header">
+                  <span class="passenger-number">Hành khách {{ i + 1 }}</span>
+                  <span class="passenger-type-badge">{{ passenger.passengerTypeLabel }}</span>
+                </div>
+                <div class="overview-item">
+                  <span class="label">Họ tên:</span>
+                  <span class="value">{{ getPassengerDisplayNames()[i] }}</span>
+                </div>
+                <div class="overview-item">
+                  <span class="label">Ngày sinh:</span>
+                  <span class="value">{{ passenger.birthDate | date:'dd/MM/yyyy' }}</span>
+                </div>
+                @if (passenger.passengerType === 'ADULT') {
+                  <div class="overview-item">
+                    <span class="label">CMND/CCCD:</span>
+                    <span class="value">{{ passenger.idNumber }}</span>
+                  </div>
+                }
+              </div>
+            }
           </div>
 
           <!-- Contact Info -->
@@ -235,22 +285,34 @@
           <!-- Flight Info -->
           <div class="overview-section">
             <h4>Thông tin chuyến bay</h4>
-            <div class="overview-item">
-              <span class="label">Hãng hàng không:</span>
-              <span class="value">Bamboo Airways - QH818</span>
-            </div>
-            <div class="overview-item">
-              <span class="label">Tuyến bay:</span>
-              <span class="value">Hải Phòng → Phú Quốc</span>
-            </div>
-            <div class="overview-item">
-              <span class="label">Ngày bay:</span>
-              <span class="value">Thứ Sáu, 22 tháng 2, 2025</span>
-            </div>
-            <div class="overview-item">
-              <span class="label">Thời gian:</span>
-              <span class="value">11:00 - 13:15</span>
-            </div>
+            @if (selectedFlight) {
+              <div class="overview-item">
+                <span class="label">Hãng hàng không:</span>
+                <span class="value">{{ selectedFlight.airline || 'Unknown Airline' }} - {{ selectedFlight.flight_number || selectedFlight.code || 'N/A' }}</span>
+              </div>
+              <div class="overview-item">
+                <span class="label">Tuyến bay:</span>
+                <span class="value">{{ selectedFlight.departure?.airport?.city || selectedFlight.departAirport || 'N/A' }} → {{ selectedFlight.arrival?.airport?.city || selectedFlight.arriveAirport || 'N/A' }}</span>
+              </div>
+              <div class="overview-item">
+                <span class="label">Ngày bay:</span>
+                <span class="value">{{ getFlightDate() }}</span>
+              </div>
+              <div class="overview-item">
+                <span class="label">Thời gian:</span>
+                <span class="value">{{ getFlightTimeDisplay() }}</span>
+              </div>
+              @if (selectedFlight.duration) {
+                <div class="overview-item">
+                  <span class="label">Thời gian bay:</span>
+                  <span class="value">{{ selectedFlight.duration }}</span>
+                </div>
+              }
+            } @else {
+              <div class="overview-item">
+                <span class="value">Không có thông tin chuyến bay</span>
+              </div>
+            }
           </div>
 
           <!-- Special Requests -->
@@ -304,8 +366,8 @@
               
               <div class="payment-amount">
                 <div class="amount-detail">
-                  <span class="label">Tổng thanh toán: 716.100 VND</span>
-                  <span class="amount">{{ getTotalAmount() | currency:'VND':'symbol':'1.0-0':'vi' }}</span>
+                  <span class="label">Tổng thanh toán:</span>
+                  <span class="amount">{{ getTotalAmount() | currency:'VND':'symbol':'1.0-0' }}</span>
                 </div>
               </div>
               
@@ -336,49 +398,140 @@
     <div class="flight-summary">
       <h2>Chi tiết chuyến bay</h2>
       
-      <div class="airline-info">
-        <div class="airline-logo">
-          <img width="40px" height="40px" src="./assets/images/Bamboo.png" alt="">
-        </div>
-        <div class="airline-details">
-          <h3>Bamboo Airways</h3>
-          <p>QH818</p>
-        </div>
-      </div>
+      @if (selectedFlight) {
+        <!-- Departure Flight -->
+        <div class="flight-section">
+          <h3>Chuyến bay đi</h3>
+          <div class="airline-info">
+            <div class="airline-logo">
+              <img [src]="selectedFlight.logo || '/assets/images/logo.png'" [alt]="selectedFlight.airline || 'Unknown Airline'" width="40px" height="40px">
+            </div>
+            <div class="airline-details">
+              <h3>{{ selectedFlight.airline || 'Unknown Airline' }}</h3>
+              <p>{{ selectedFlight.code || selectedFlight.flight_id }}</p>
+            </div>
+          </div>
 
-      <div class="flight-details">
-        <div class="detail-item">
-          <span class="label">Ngày bay:</span>
-          <span class="value">Thứ Sáu, 22 tháng 2, 2025</span>
+          <div class="flight-details">
+            <div class="detail-item">
+              <span class="label">Ngày bay:</span>
+              <span class="value">{{ getFlightDate() }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Tuyến bay:</span>
+              <span class="value">{{ selectedFlight.departAirport || 'N/A' }} → {{ selectedFlight.arriveAirport || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Thời gian:</span>
+              <span class="value">{{ selectedFlight.departTime || 'N/A' }} - {{ selectedFlight.arriveTime || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Thời gian bay:</span>
+              <span class="value">{{ selectedFlight.duration || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+              <span class="label">Hành khách:</span>
+              <span class="value">{{ getTotalPassengerCount() }} người</span>
+            </div>
+          </div>
         </div>
-        <div class="detail-item">
-          <span class="label">Tuyến bay:</span>
-          <span class="value">Hải Phòng → Phú Quốc</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Thời gian:</span>
-          <span class="value">11:00 - 13:15</span>
-        </div>
-        <div class="detail-item">
-          <span class="label">Hành khách:</span>
-          <span class="value">1 người</span>
-        </div>
-      </div>
 
-      <div class="price-breakdown">
-        <div class="price-item">
-          <span>Giá vé (1 x 651.000 ₫):</span>
-          <span>651.000 ₫</span>
+        <!-- Return Flight (if roundtrip) -->
+        @if (tripType === 'roundtrip' && selectedReturnFlight) {
+          <div class="flight-section">
+            <h3>Chuyến bay về</h3>
+            <div class="airline-info">
+              <div class="airline-logo">
+                <img [src]="selectedReturnFlight.logo || '/assets/images/logo.png'" [alt]="selectedReturnFlight.airline || 'Unknown Airline'" width="40px" height="40px">
+              </div>
+              <div class="airline-details">
+                <h3>{{ selectedReturnFlight.airline || 'Unknown Airline' }}</h3>
+                <p>{{ selectedReturnFlight.code || selectedReturnFlight.flight_id }}</p>
+              </div>
+            </div>
+
+            <div class="flight-details">
+              <div class="detail-item">
+                <span class="label">Ngày bay:</span>
+                <span class="value">{{ getReturnFlightDate() }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Tuyến bay:</span>
+                <span class="value">{{ selectedReturnFlight.departAirport || 'N/A' }} → {{ selectedReturnFlight.arriveAirport || 'N/A' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Thời gian:</span>
+                <span class="value">{{ selectedReturnFlight.departTime || 'N/A' }} - {{ selectedReturnFlight.arriveTime || 'N/A' }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">Thời gian bay:</span>
+                <span class="value">{{ selectedReturnFlight.duration || 'N/A' }}</span>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Price Breakdown -->
+        <div class="price-breakdown">
+          @if (selectedFlight.pricing && selectedFlight.pricing.breakdown) {
+            <!-- Use real pricing data from API -->
+            <div class="price-item">
+              <span>Giá vé cơ bản:</span>
+              <span>{{ formatPrice(selectedFlight.pricing?.base_price || 0) }} ₫</span>
+            </div>
+            
+            @if (selectedFlight.pricing?.breakdown?.adults && selectedFlight.pricing.breakdown.adults.count > 0) {
+              <div class="price-item">
+                <span>Người lớn ({{ selectedFlight.pricing.breakdown.adults.count }} x {{ formatPrice(selectedFlight.pricing.breakdown.adults.unit_price) }} ₫):</span>
+                <span>{{ formatPrice(selectedFlight.pricing.breakdown.adults.total) }} ₫</span>
+              </div>
+            }
+            
+            @if (selectedFlight.pricing?.breakdown?.children && selectedFlight.pricing.breakdown.children.count > 0) {
+              <div class="price-item">
+                <span>Trẻ em ({{ selectedFlight.pricing.breakdown.children.count }} x {{ formatPrice(selectedFlight.pricing.breakdown.children.unit_price) }} ₫):</span>
+                <span>{{ formatPrice(selectedFlight.pricing.breakdown.children.total) }} ₫</span>
+              </div>
+            }
+            
+            @if (selectedFlight.pricing?.breakdown?.infants && selectedFlight.pricing.breakdown.infants?.count && (selectedFlight.pricing.breakdown.infants?.count || 0) > 0) {
+              <div class="price-item">
+                <span>Em bé ({{ selectedFlight.pricing.breakdown.infants?.count }} x {{ formatPrice(selectedFlight.pricing.breakdown.infants?.unit_price || 0) }} ₫):</span>
+                <span>{{ formatPrice(selectedFlight.pricing.breakdown.infants?.total || 0) }} ₫</span>
+              </div>
+            }
+            
+            <div class="price-item total">
+              <span>Tổng cộng:</span>
+              <span>{{ formatPrice(selectedFlight.pricing?.total_price || 0) }} ₫</span>
+            </div>
+          } @else if (selectedFlight.fares && selectedFlight.fares.length > 0) {
+            <!-- Fallback: Use first available fare -->
+            <div class="price-item">
+              <span>Giá vé ({{ selectedFlight.fares[0].fare_bucket?.class_type || 'Economy' }}):</span>
+              <span>{{ formatPrice(selectedFlight.fares[0].base_price) }} ₫</span>
+            </div>
+            <div class="price-item">
+              <span>Số hành khách:</span>
+              <span>{{ getTotalPassengerCount() }} người</span>
+            </div>
+            <div class="price-item total">
+              <span>Tổng cộng (ước tính):</span>
+              <span>{{ formatPrice(selectedFlight.fares[0].base_price * getTotalPassengerCount()) }} ₫</span>
+            </div>
+          } @else {
+            <!-- No pricing data available -->
+            <div class="price-item">
+              <span>Không có thông tin giá</span>
+              <span>Liên hệ để biết giá</span>
+            </div>
+          }
         </div>
-        <div class="price-item">
-          <span>Thuế và phí:</span>
-          <span>65.100 ₫</span>
+      } @else {
+        <div class="no-flight-data">
+          <p>Không có thông tin chuyến bay</p>
         </div>
-        <div class="price-item total">
-          <span>Tổng cộng:</span>
-          <span>716.100 ₫</span>
-        </div>
-      </div>
+      }
     </div>
   </div>
 

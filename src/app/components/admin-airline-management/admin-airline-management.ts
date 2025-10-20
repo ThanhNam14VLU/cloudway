@@ -70,7 +70,7 @@ export class AdminAirlineManagement implements OnInit {
     try {
       const date = new Date(dateString);
       if (isNaN(date.getTime())) return '-';
-      return date.toLocaleDateString('vi-VN');
+      return date.toLocaleDateString('en-US');
     } catch (error) {
       console.error('Error formatting date:', error);
       return '-';

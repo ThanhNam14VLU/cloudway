@@ -54,24 +54,24 @@
         <div class="fare-card">
           <div class="fare-title">Thương gia</div>
           <div class="fare-row">
-            <label>Người lớn</label>
-            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[0].base_price" name="bizAdultPrice" required />
+            <label>Giá vé</label>
+            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[0].base_price" name="bizPrice" required />
           </div>
           <div class="fare-row">
-            <label>Trẻ em</label>
-            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[1].base_price" name="bizChildPrice" required />
+            <label>Số ghế</label>
+            <input type="number" placeholder="Số ghế" [(ngModel)]="flightPayload.fares[0].total_seats" name="bizSeats" required />
           </div>
         </div>
 
         <div class="fare-card">
           <div class="fare-title">Phổ thông</div>
           <div class="fare-row">
-            <label>Người lớn</label>
-            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[2].base_price" name="ecoAdultPrice" required />
+            <label>Giá vé</label>
+            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[1].base_price" name="ecoPrice" required />
           </div>
           <div class="fare-row">
-            <label>Trẻ em</label>
-            <input type="number" placeholder="Giá vé (₫)" [(ngModel)]="flightPayload.fares[3].base_price" name="ecoChildPrice" required />
+            <label>Số ghế</label>
+            <input type="number" placeholder="Số ghế" [(ngModel)]="flightPayload.fares[1].total_seats" name="ecoSeats" required />
           </div>
         </div>
       </div>

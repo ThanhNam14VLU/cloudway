@@ -80,12 +80,13 @@ export class AdminFlights implements OnInit {
     try {
       const date = new Date(dateTimeString);
       if (isNaN(date.getTime())) return '-';
-      return date.toLocaleString('vi-VN', {
+      return date.toLocaleString('en-US', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
         hour: '2-digit',
-        minute: '2-digit'
+        minute: '2-digit',
+        hour12: false
       });
     } catch (error) {
       console.error('Error formatting date:', error);

@@ -65,20 +65,22 @@ export class AirlineManagement implements OnInit {
 
   formatDateTime(dateTimeString: string): string {
     const date = new Date(dateTimeString);
-    return date.toLocaleString('vi-VN', {
+    return date.toLocaleString('en-US', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false
     });
   }
 
   formatTime(dateTimeString: string): string {
     const date = new Date(dateTimeString);
-    return date.toLocaleTimeString('vi-VN', {
+    return date.toLocaleTimeString('en-US', {
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
+      hour12: false
     });
   }
 

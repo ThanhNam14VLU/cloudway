@@ -50,26 +50,96 @@
 
       <!-- Điểm đi + Điểm đến -->
       <div class="form-row">
-        <div class="form-group input-wrapper">
+        <div class="form-group custom-dropdown-wrapper">
           <label>Điểm đi</label>
-          <mat-icon>flight_takeoff</mat-icon>
-          <select [(ngModel)]="departureAirportId" (change)="clearErrors()" required>
-            <option value="" selected disabled>Vui lòng chọn điểm đi</option>
-            @for (airport of airports; track airport.id) {
-              <option [value]="airport.id">{{ airport.city }} - {{ airport.name }} ({{ airport.iata_code }})</option>
+          <div class="custom-dropdown" [class.open]="departureDropdownOpen" (click)="toggleDepartureDropdown()">
+            <div class="dropdown-selected">
+              <mat-icon>flight_takeoff</mat-icon>
+              <span class="selected-text">
+                @if (getSelectedAirport(departureAirportId)) {
+                  {{ getSelectedAirport(departureAirportId)?.city }} - {{ getSelectedAirport(departureAirportId)?.name }} ({{ getSelectedAirport(departureAirportId)?.iata_code }})
+                } @else {
+                  Vui lòng chọn điểm đi
+                }
+              </span>
+              <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
+            </div>
+            @if (departureDropdownOpen) {
+              <div class="dropdown-menu">
+                <div class="search-box">
+                  <mat-icon>search</mat-icon>
+                  <input 
+                    type="text" 
+                    placeholder="Tìm kiếm sân bay..." 
+                    [(ngModel)]="departureSearchTerm"
+                    (input)="filterDepartureAirports()"
+                    (click)="$event.stopPropagation()">
+                </div>
+                <div class="dropdown-options">
+                  @for (airport of filteredDepartureAirports; track airport.id) {
+                    <div 
+                      class="dropdown-option" 
+                      [class.selected]="airport.id === departureAirportId"
+                      (click)="selectDepartureAirport(airport.id, $event)">
+                      <div class="airport-info">
+                        <div class="airport-name">{{ airport.city }} - {{ airport.name }}</div>
+                        <div class="airport-code">{{ airport.iata_code }}</div>
+                      </div>
+                    </div>
+                  }
+                  @if (filteredDepartureAirports.length === 0) {
+                    <div class="no-results">Không tìm thấy sân bay nào</div>
+                  }
+                </div>
+              </div>
             }
-          </select>
+          </div>
         </div>
 
-        <div class="form-group input-wrapper">
+        <div class="form-group custom-dropdown-wrapper">
           <label>Điểm đến</label>
-          <mat-icon>flight_land</mat-icon>
-          <select [(ngModel)]="destinationAirportId" (change)="clearErrors()" required>
-            <option value="" selected disabled>Vui lòng chọn điểm đến</option>
-            @for (airport of airports; track airport.id) {
-              <option [value]="airport.id">{{ airport.city }} - {{ airport.name }} ({{ airport.iata_code }})</option>
+          <div class="custom-dropdown" [class.open]="destinationDropdownOpen" (click)="toggleDestinationDropdown()">
+            <div class="dropdown-selected">
+              <mat-icon>flight_land</mat-icon>
+              <span class="selected-text">
+                @if (getSelectedAirport(destinationAirportId)) {
+                  {{ getSelectedAirport(destinationAirportId)?.city }} - {{ getSelectedAirport(destinationAirportId)?.name }} ({{ getSelectedAirport(destinationAirportId)?.iata_code }})
+                } @else {
+                  Vui lòng chọn điểm đến
+                }
+              </span>
+              <mat-icon class="dropdown-arrow">keyboard_arrow_down</mat-icon>
+            </div>
+            @if (destinationDropdownOpen) {
+              <div class="dropdown-menu">
+                <div class="search-box">
+                  <mat-icon>search</mat-icon>
+                  <input 
+                    type="text" 
+                    placeholder="Tìm kiếm sân bay..." 
+                    [(ngModel)]="destinationSearchTerm"
+                    (input)="filterDestinationAirports()"
+                    (click)="$event.stopPropagation()">
+                </div>
+                <div class="dropdown-options">
+                  @for (airport of filteredDestinationAirports; track airport.id) {
+                    <div 
+                      class="dropdown-option" 
+                      [class.selected]="airport.id === destinationAirportId"
+                      (click)="selectDestinationAirport(airport.id, $event)">
+                      <div class="airport-info">
+                        <div class="airport-name">{{ airport.city }} - {{ airport.name }}</div>
+                        <div class="airport-code">{{ airport.iata_code }}</div>
+                      </div>
+                    </div>
+                  }
+                  @if (filteredDestinationAirports.length === 0) {
+                    <div class="no-results">Không tìm thấy sân bay nào</div>
+                  }
+                </div>
+              </div>
             }
-          </select>
+          </div>
         </div>
       </div>
 

@@ -1,6 +1,38 @@
 <app-header></app-header>
 
 <div class="success-container">
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+      <h3>Đang tải thông tin booking...</h3>
+      <p>Vui lòng chờ trong giây lát</p>
+    </div>
+  }
+
+  <!-- Error Messages -->
+  @if (errorMessages.length > 0) {
+    <div class="error-container">
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3>Có lỗi xảy ra</h3>
+      <ul>
+        @for (error of errorMessages; track error) {
+          <li>{{ error }}</li>
+        }
+      </ul>
+      <button class="btn-retry" (click)="retryLoadData()">
+        <i class="fas fa-redo"></i>
+        Thử lại
+      </button>
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!isLoading && errorMessages.length === 0) {
   <!-- Main Success Card -->
   <div class="success-card">
     <h1>Đặt vé thành công!</h1>
@@ -25,7 +57,7 @@
       
       <div class="detail-row">
         <span class="label">Tổng tiền</span>
-        <span class="value total-amount">{{ bookingData.totalAmount | currency:'VND':'symbol':'1.0-0':'vi' }}</span>
+        <span class="value total-amount">{{ formatCurrency(bookingData.totalAmount) }}</span>
       </div>
     </div>
     
@@ -37,6 +69,118 @@
       <button class="btn-primary" (click)="goHome()">
         Về trang chủ
       </button>
+    </div>
+  </div>
+
+  <!-- Tickets Section -->
+  <div class="tickets-section">
+    <h3>Vé đã đặt</h3>
+    <p class="tickets-subtitle">Dưới đây là thông tin chi tiết các vé bạn đã đặt</p>
+    
+    <div class="tickets-container">
+      @if (getAllTickets().length > 0) {
+        @for (ticket of getAllTickets(); track ticket.passenger.full_name + ticket.segment.id; let i = $index) {
+          <div class="ticket-card">
+            <!-- Ticket Header -->
+            <div class="ticket-header">
+              <div class="airline-info">
+                <h4>{{ bookingData.airline || 'N/A' }}</h4>
+                <span class="flight-number">{{ bookingData.flightNumber || 'N/A' }}</span>
+              </div>
+              <div class="ticket-status">
+                <span class="status-badge confirmed">Đã xác nhận</span>
+              </div>
+            </div>
+
+            <!-- Flight Route -->
+            <div class="flight-route">
+              <div class="route-info">
+                <div class="airport-code">{{ bookingData.departure || 'N/A' }}</div>
+                <div class="airport-name">{{ bookingData.departure && bookingData.departure !== 'N/A' ? 'Sân bay ' + bookingData.departure : 'N/A' }}</div>
+              </div>
+              
+              <div class="flight-details">
+                <div class="flight-time">
+                  <span class="departure-time">{{ bookingData.departureTime || 'N/A' }}</span>
+                  <div class="flight-duration">
+                    <i class="fas fa-plane"></i>
+                    <span>2h 15m</span>
+                  </div>
+                  <span class="arrival-time">{{ bookingData.arrivalTime || 'N/A' }}</span>
+                </div>
+                <div class="flight-date">{{ bookingData.flightDate || 'N/A' }}</div>
+              </div>
+              
+              <div class="route-info">
+                <div class="airport-code">{{ bookingData.destination || 'N/A' }}</div>
+                <div class="airport-name">{{ bookingData.destination && bookingData.destination !== 'N/A' ? 'Sân bay ' + bookingData.destination : 'N/A' }}</div>
+              </div>
+            </div>
+
+            <!-- Passenger Information -->
+            <div class="passenger-info">
+              <div class="passenger-details">
+                <div class="passenger-name">{{ ticket.passenger.full_name }}</div>
+                <div class="passenger-type">{{ getPassengerTypeLabel(ticket.passenger.passenger_type) }}</div>
+                <div class="fare-class">{{ getFareBucketClass(ticket.segment) }} - {{ getFareBucketDescription(ticket.segment) }}</div>
+              </div>
+              <div class="ticket-price">
+                <span class="price-label">Giá vé</span>
+                <span class="price-amount">{{ formatCurrency(bookingData.totalAmount / getAllTickets().length) }}</span>
+              </div>
+            </div>
+
+            <!-- Ticket Footer -->
+            <div class="ticket-footer">
+              <div class="booking-code">
+                <span class="code-label">Mã đặt chỗ</span>
+                <span class="code-value">{{ bookingData.bookingCode }}</span>
+              </div>
+              <div class="ticket-number">
+                <span class="ticket-label">Vé số</span>
+                <span class="ticket-value">{{ i + 1 }}</span>
+              </div>
+            </div>
+
+            <!-- Ticket Perforation -->
+            <div class="ticket-perforation">
+              <div class="perforation-line"></div>
+              <div class="perforation-dots">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+              <div class="perforation-line"></div>
+            </div>
+          </div>
+        }
+      } @else {
+        <div class="no-tickets-message">
+          <div class="no-tickets-icon">
+            <i class="fas fa-ticket-alt"></i>
+          </div>
+          <h4>Không tìm thấy thông tin vé</h4>
+          <p>Dữ liệu vé có thể chưa được tải hoặc có lỗi xảy ra.</p>
+          <div class="debug-info">
+            <p><strong>Debug Info:</strong></p>
+            <p>Có dữ liệu thật: {{ hasRealBookingData() ? 'Có' : 'Không' }}</p>
+            <p>Số segments: {{ bookingData.segments?.length || 0 }}</p>
+            <p>Số vé: {{ getAllTickets().length }}</p>
+            <p>Mã booking: {{ bookingData.bookingCode || 'Không có' }}</p>
+            <p>ID booking: {{ bookingData.bookingId || 'Không có' }}</p>
+            
+            <div class="debug-actions">
+              <button class="btn-test" (click)="loadSampleData()">
+                <i class="fas fa-flask"></i>
+                Load Sample Data (Test)
+              </button>
+            </div>
+            
+            <details>
+              <summary>Chi tiết debug</summary>
+              <pre>{{ getDebugInfo() | json }}</pre>
+            </details>
+          </div>
+        </div>
+      }
     </div>
   </div>
 
@@ -88,4 +232,5 @@
       <li>Liên hệ hotline 1900 1234 nếu cần hỗ trợ</li>
     </ul>
   </div>
+  }
 </div>
