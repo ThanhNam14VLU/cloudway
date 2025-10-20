@@ -33,6 +33,7 @@
 
   <!-- Main Content -->
   @if (!isLoading && errorMessages.length === 0) {
+  <div class="main-sections">
   <!-- Main Success Card -->
   <div class="success-card">
     <h1>Đặt vé thành công!</h1>
@@ -63,19 +64,16 @@
     
     <!-- Action Buttons -->
     <div class="action-buttons">
-      <button class="btn-secondary" (click)="viewTicketDetails()">
-        Xem chi tiết vé
-      </button>
       <button class="btn-primary" (click)="goHome()">
         Về trang chủ
       </button>
     </div>
   </div>
 
-  <!-- Tickets Section -->
-  <div class="tickets-section">
+    <!-- Tickets Section -->
+    <div class="tickets-section">
     <h3>Vé đã đặt</h3>
-    <p class="tickets-subtitle">Dưới đây là thông tin chi tiết các vé bạn đã đặt</p>
+    <p class="tickets-subtitle">Thông tin chi tiết các vé bạn đã đặt</p>
     
     <div class="tickets-container">
       @if (getAllTickets().length > 0) {
@@ -121,11 +119,12 @@
             <div class="passenger-info">
               <div class="passenger-details">
                 <div class="passenger-name">{{ ticket.passenger.full_name }}</div>
-                <div class="passenger-type">{{ getPassengerTypeLabel(ticket.passenger.passenger_type) }}</div>
-                <div class="fare-class">{{ getFareBucketClass(ticket.segment) }} - {{ getFareBucketDescription(ticket.segment) }}</div>
+                <div class="passenger-info-row">
+                  <span class="passenger-type">{{ getPassengerTypeLabel(ticket.passenger.passenger_type) }}</span>
+                  <span class="fare-class">{{ getFareBucketClass(ticket.segment) }} - {{ getFareBucketDescription(ticket.segment) }}</span>
+                </div>
               </div>
               <div class="ticket-price">
-                <span class="price-label">Giá vé</span>
                 <span class="price-amount">{{ formatCurrency(bookingData.totalAmount / getAllTickets().length) }}</span>
               </div>
             </div>
@@ -141,15 +140,6 @@
                 <span class="ticket-value">{{ i + 1 }}</span>
               </div>
             </div>
-
-            <!-- Ticket Perforation -->
-            <div class="ticket-perforation">
-              <div class="perforation-line"></div>
-              <div class="perforation-dots">
-                <span></span><span></span><span></span><span></span><span></span>
-              </div>
-              <div class="perforation-line"></div>
-            </div>
           </div>
         }
       } @else {
@@ -162,7 +152,7 @@
           <div class="debug-info">
             <p><strong>Debug Info:</strong></p>
             <p>Có dữ liệu thật: {{ hasRealBookingData() ? 'Có' : 'Không' }}</p>
-            <p>Số segments: {{ bookingData.segments?.length || 0 }}</p>
+            <p>Số segments: {{ bookingData.segments.length || 0 }}</p>
             <p>Số vé: {{ getAllTickets().length }}</p>
             <p>Mã booking: {{ bookingData.bookingCode || 'Không có' }}</p>
             <p>ID booking: {{ bookingData.bookingId || 'Không có' }}</p>
@@ -182,55 +172,78 @@
         </div>
       }
     </div>
-  </div>
+    </div>
 
-  <!-- Support Section -->
-  <div class="support-card">
-    <h3>Cần hỗ trợ?</h3>
-    
-    <div class="support-info">
-      <div class="support-item">
-        <i class="fas fa-phone"></i>
-        <span>Hotline: 1900 1234</span>
+    <!-- Support Section -->
+    <div class="support-card">
+      <h3>Hỗ trợ khách hàng</h3>
+      
+      <div class="support-content">
+        <div class="support-item">
+          <div class="support-icon">
+            <i class="fas fa-phone"></i>
+          </div>
+          <div class="support-details">
+            <div class="support-label">Hotline</div>
+            <div class="support-value">1900 1234</div>
+          </div>
+        </div>
+        
+        <div class="support-item">
+          <div class="support-icon">
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div class="support-details">
+            <div class="support-label">Email</div>
+            <div class="support-value">support@cloudway.com</div>
+          </div>
+        </div>
+        
+        <div class="support-item">
+          <div class="support-icon">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="support-details">
+            <div class="support-label">Thời gian</div>
+            <div class="support-value">24/7</div>
+          </div>
+        </div>
       </div>
       
-      <div class="support-item">
-        <i class="fas fa-envelope"></i>
-        <span>Email: support@vietflight.com</span>
+      <div class="support-footer">
+        <p>Phản hồi trong vòng 30 phút</p>
       </div>
     </div>
-    
-    <p class="support-note">Hỗ trợ 24/7 - Phản hồi trong vòng 30 phút</p>
+
+    <!-- Important Information -->
+    <div class="important-info">
+      <h4>Thông tin quan trọng</h4>
+      <ul>
+        <li>Vui lòng có mặt tại sân bay trước giờ bay ít nhất 90 phút</li>
+        <li>Mang theo giấy tờ tùy thân hợp lệ (CMND/CCCD/Hộ chiếu)</li>
+        <li>Thông tin đặt chỗ đã được gửi đến email: {{ bookingData.contactEmail }}</li>
+        <li>Check-in online mở từ 24h trước giờ bay trên website hãng</li>
+        <li>Liên hệ hotline 1900 1234 nếu cần hỗ trợ</li>
+      </ul>
+    </div>
   </div>
 
   <!-- Additional Actions -->
   <div class="additional-actions">
-    <button class="action-btn" (click)="printTicket()">
+    <!-- <button class="action-btn" (click)="printTicket()">
       <i class="fas fa-print"></i>
       In vé
-    </button>
+    </button> -->
     
-    <button class="action-btn" (click)="downloadPDF()">
+    <!-- <button class="action-btn" (click)="downloadPDF()">
       <i class="fas fa-download"></i>
       Tải PDF
-    </button>
+    </button> -->
     
     <button class="action-btn primary" (click)="bookNewTicket()">
       <i class="fas fa-home"></i>
       Đặt vé mới
     </button>
-  </div>
-
-  <!-- Important Information -->
-  <div class="important-info">
-    <h4>Thông tin quan trọng</h4>
-    <ul>
-      <li>Vui lòng có mặt tại sân bay trước giờ bay ít nhất 90 phút</li>
-      <li>Mang theo giấy tờ tùy thân hợp lệ (CMND/CCCD/Hộ chiếu)</li>
-      <li>Thông tin đặt chỗ đã được gửi đến email: {{ bookingData.contactEmail }}</li>
-      <li>Check-in online mở từ 24h trước giờ bay trên website hãng</li>
-      <li>Liên hệ hotline 1900 1234 nếu cần hỗ trợ</li>
-    </ul>
   </div>
   }
 </div>

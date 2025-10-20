@@ -110,7 +110,7 @@
               <div class="form-row">
                 <div class="form-group">
                   <label>Email *</label>
-                  <input type="email" placeholder="Nhập email" [(ngModel)]="passenger.email">
+                  <input type="email" placeholder="Nhập email" [(ngModel)]="passenger.email" (input)="clearErrors()">
                 </div>
               </div>
             }
@@ -302,12 +302,10 @@
                 <span class="label">Thời gian:</span>
                 <span class="value">{{ getFlightTimeDisplay() }}</span>
               </div>
-              @if (selectedFlight.duration) {
-                <div class="overview-item">
-                  <span class="label">Thời gian bay:</span>
-                  <span class="value">{{ selectedFlight.duration }}</span>
-                </div>
-              }
+              <div class="overview-item">
+                <span class="label">Thời gian bay:</span>
+                <span class="value">{{ getFlightDurationDisplay() }}</span>
+              </div>
             } @else {
               <div class="overview-item">
                 <span class="value">Không có thông tin chuyến bay</span>
@@ -423,11 +421,11 @@
             </div>
             <div class="detail-item">
               <span class="label">Thời gian:</span>
-              <span class="value">{{ selectedFlight.departTime || 'N/A' }} - {{ selectedFlight.arriveTime || 'N/A' }}</span>
+              <span class="value">{{ getFlightTimeDisplay() }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Thời gian bay:</span>
-              <span class="value">{{ selectedFlight.duration || 'N/A' }}</span>
+              <span class="value">{{ getFlightDurationDisplay() }}</span>
             </div>
             <div class="detail-item">
               <span class="label">Hành khách:</span>
@@ -461,11 +459,11 @@
               </div>
               <div class="detail-item">
                 <span class="label">Thời gian:</span>
-                <span class="value">{{ selectedReturnFlight.departTime || 'N/A' }} - {{ selectedReturnFlight.arriveTime || 'N/A' }}</span>
+                <span class="value">{{ getReturnFlightTimeDisplay() }}</span>
               </div>
               <div class="detail-item">
                 <span class="label">Thời gian bay:</span>
-                <span class="value">{{ selectedReturnFlight.duration || 'N/A' }}</span>
+                <span class="value">{{ getReturnFlightDurationDisplay() }}</span>
               </div>
             </div>
           </div>
