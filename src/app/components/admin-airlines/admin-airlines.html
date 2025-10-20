@@ -46,6 +46,7 @@
           <th>Số Điện Thoại</th>
           <th>Vai trò</th>
           <th>Trạng thái</th>
+          <th>Thao tác</th>
           <th>Ngày Tạo</th>
           <th>Cập nhật lần cuối</th>
         </tr>
@@ -84,7 +85,9 @@
             <span [ngClass]="{'status-badge active': user.account_status === 'ACTIVE', 'status-badge locked': user.account_status === 'LOCKED'}">
               {{ user.account_status === 'LOCKED' ? 'Đã khóa' : 'Đang hoạt động' }}
             </span>
-            <button class="action-btn" (click)="toggleAccountStatus(user)">
+          </td>
+          <td class="actions-column">
+            <button class="lock-action-btn" (click)="toggleAccountStatus(user)">
               <i class="fa-solid" [ngClass]="user.account_status === 'LOCKED' ? 'fa-lock-open' : 'fa-lock'"></i>
               {{ user.account_status === 'LOCKED' ? 'Mở khóa' : 'Khóa' }}
             </button>

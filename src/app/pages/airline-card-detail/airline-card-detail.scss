@@ -178,6 +178,7 @@ body {
   border: 1px solid #e2e8f0;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   position: relative;
+  margin-bottom: 4px;
 }
 
 .passenger-header {
@@ -569,28 +570,28 @@ body {
   border-bottom: 2px solid #007bff;
 }
 
-/* MoMo Payment */
-.momo-payment {
-  background: linear-gradient(135deg, #d63384, #e83e8c);
+/* SePay Payment */
+.sepay-payment {
+  background: linear-gradient(135deg, #1e3a8a, #3b82f6);
   border-radius: 12px;
   padding: 25px;
   color: white;
 }
 
-.momo-header {
+.sepay-header {
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 20px;
 }
 
-.momo-info h4 {
+.sepay-info h4 {
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 4px;
 }
 
-.momo-info p {
+.sepay-info p {
   font-size: 14px;
   opacity: 0.9;
   margin: 0;
@@ -634,10 +635,11 @@ body {
 }
 
 .qr-image {
-  width: 200px;
-  height: 200px;
-  border-radius: 8px;
+  width: 250px;
+  height: auto;
+  border-radius: 12px;
   margin-bottom: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .qr-instruction {
@@ -649,20 +651,45 @@ body {
 
 .payment-info {
   display: flex;
-  justify-content: space-around;
-  gap: 20px;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
 }
 
 .info-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
+  font-size: 12px;
   opacity: 0.9;
+  flex: 1;
+  min-width: 120px;
+  justify-content: center;
 }
 
 .info-item i {
-  font-size: 16px;
+  font-size: 14px;
+}
+
+/* Responsive adjustments for SePay payment */
+@media (max-width: 768px) {
+  .sepay-payment {
+    padding: 20px;
+  }
+  
+  .qr-image {
+    width: 200px;
+  }
+  
+  .payment-info {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .info-item {
+    justify-content: flex-start;
+    min-width: auto;
+  }
 }
 
 /* Flight Summary */

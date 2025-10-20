@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user/user.service';
 import { ProfileModel } from '../../models/user.model';
@@ -21,7 +21,8 @@ export class Header implements OnInit {
 
   constructor(
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -54,5 +55,14 @@ export class Header implements OnInit {
 
   logout() {
     this.authService.signOut();
+    // Navigate to home page after logout
+    this.router.navigate(['/home']);
+  }
+
+  // Check if user is admin or airline (should not show profile button)
+  isAdminOrAirline(): boolean {
+    const isAdminOrAirline = this.userProfile?.role === 'ADMIN' || this.userProfile?.role === 'AIRLINE';
+    console.log('Header - User role:', this.userProfile?.role, 'Is admin/airline:', isAdminOrAirline);
+    return isAdminOrAirline;
   }
 }
