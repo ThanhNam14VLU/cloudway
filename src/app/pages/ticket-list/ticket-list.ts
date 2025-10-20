@@ -162,7 +162,6 @@ export class TicketList implements OnInit, OnDestroy {
   selectedReturnFlight: Flight | null = null;
 
   ngOnInit() {
-    console.log('=== TICKET LIST INIT ===');
     
     // Load airports
     this.loadAirports();
@@ -172,13 +171,9 @@ export class TicketList implements OnInit, OnDestroy {
     
     // Get search result from router state
     const navigation = this.router.getCurrentNavigation();
-    console.log('🔍 Navigation object:', navigation);
-    console.log('🔍 Navigation extras:', navigation?.extras);
-    console.log('🔍 Navigation state:', navigation?.extras?.state);
     
     if (navigation?.extras?.state?.['searchResult']) {
       this.searchResult = navigation.extras.state['searchResult'];
-      console.log('📋 Search result received from router state:', this.searchResult);
       this.loadSearchResult();
     } else {
       console.warn('⚠️ No search result found in router state');
@@ -186,11 +181,9 @@ export class TicketList implements OnInit, OnDestroy {
       // Try to get from service as fallback
       const serviceResult = this.flightService.getCurrentSearchResult();
       if (serviceResult) {
-        console.log('📋 Search result found in service:', serviceResult);
         this.searchResult = serviceResult;
         this.loadSearchResult();
       } else {
-        console.log('🔄 No search result anywhere, redirecting to search page');
         this.router.navigate(['/']);
       }
     }
@@ -223,7 +216,6 @@ export class TicketList implements OnInit, OnDestroy {
     const airportsSub = this.airportService.getAirports().subscribe({
       next: (airports) => {
         this.airports = airports;
-        console.log('✅ Loaded airports in ticket-list:', this.airports);
       },
       error: (error) => {
         console.error('❌ Error loading airports in ticket-list:', error);
@@ -257,12 +249,6 @@ export class TicketList implements OnInit, OnDestroy {
           this.searchParams.destination = destinationAirport.iata_code;
         }
       }
-      
-      console.log('✅ Loaded search params from service:', {
-        searchParams,
-        passengers: this.passengers,
-        tripType: this.tripType
-      });
     }
   }
 
@@ -280,7 +266,6 @@ export class TicketList implements OnInit, OnDestroy {
   loadSearchResult() {
     if (!this.searchResult) return;
 
-    console.log('📋 Processing search result:', this.searchResult);
 
     // Set trip type and passengers from search result
     this.tripType = this.searchResult.trip_type || 'oneway';
@@ -372,19 +357,23 @@ export class TicketList implements OnInit, OnDestroy {
   // Flight selection methods
   selectDepartureFlight(flight: Flight): void {
     this.selectedDepartureFlight = flight;
-    console.log('Selected departure flight:', flight);
+    console.log('🔁 Step 1 - Selected departure flight:', flight.code, flight.flight_instance_id);
+    // Persist in service for downstream pages
+    this.flightService.setSelectedFlight(flight);
   }
 
   selectReturnFlight(flight: Flight): void {
     this.selectedReturnFlight = flight;
-    console.log('Selected return flight:', flight);
+    console.log('🔁 Step 1 - Selected return flight:', flight.code, flight.flight_instance_id);
+    // Persist in service for downstream pages
+    this.flightService.setSelectedReturnFlight(flight);
   }
 
   proceedToBooking(): void {
-    console.log('🚀 Proceeding to booking with passengers:', this.passengers);
-    console.log('🚀 Adults:', this.passengers.adults);
-    console.log('🚀 Children:', this.passengers.children);
-    console.log('🚀 Infants:', this.passengers.infants);
+    console.log('🔁 Step 1 - proceedToBooking called');
+    console.log('🔁 Step 1 - selectedDepartureFlight:', this.selectedDepartureFlight?.code, this.selectedDepartureFlight?.flight_instance_id);
+    console.log('🔁 Step 1 - selectedReturnFlight:', this.selectedReturnFlight?.code, this.selectedReturnFlight?.flight_instance_id);
+    console.log('🔁 Step 1 - tripType:', this.tripType);
     
     // Store passenger data in service for airline-card-detail to access
     this.flightService.setPassengers(this.passengers);
@@ -397,7 +386,6 @@ export class TicketList implements OnInit, OnDestroy {
     if (this.tripType === 'oneway' && this.selectedDepartureFlight) {
       // Create booking data for oneway
       const bookingData = this.createBookingData([this.selectedDepartureFlight]);
-      console.log('📋 Oneway booking data:', bookingData);
       
       // Navigate to booking page with selected flight
       const navigationState = {
@@ -407,8 +395,6 @@ export class TicketList implements OnInit, OnDestroy {
         tripType: this.tripType,
         bookingData: bookingData
       };
-      console.log('🚀 Navigation state being passed:', navigationState);
-      console.log('🚀 Passengers in navigation state:', navigationState.passengers);
       
       this.router.navigate(['/airline-card-detail/1'], {
         state: navigationState
@@ -416,7 +402,8 @@ export class TicketList implements OnInit, OnDestroy {
     } else if (this.tripType === 'roundtrip' && this.selectedDepartureFlight && this.selectedReturnFlight) {
       // Create booking data for roundtrip
       const bookingData = this.createBookingData([this.selectedDepartureFlight, this.selectedReturnFlight]);
-      console.log('📋 Roundtrip booking data:', bookingData);
+      // Debug duy nhất cho khứ hồi
+      console.log('🔁 Roundtrip - segments prepared:', bookingData?.segments?.length, bookingData?.segments);
       
       // Navigate to booking page with both selected flights
       const navigationState = {
@@ -427,8 +414,8 @@ export class TicketList implements OnInit, OnDestroy {
         tripType: this.tripType,
         bookingData: bookingData
       };
-      console.log('🚀 Roundtrip navigation state being passed:', navigationState);
-      console.log('🚀 Passengers in roundtrip navigation state:', navigationState.passengers);
+      // Debug duy nhất cho khứ hồi
+      console.log('🔁 Roundtrip - navigating with two flights');
       
       this.router.navigate(['/airline-card-detail/1'], {
         state: navigationState
@@ -732,7 +719,6 @@ export class TicketList implements OnInit, OnDestroy {
   onPassengerSelectorClick(event: Event) {
     event.stopPropagation();
     this.showPassengerDropdown = !this.showPassengerDropdown;
-    console.log('Passenger selector clicked, dropdown:', this.showPassengerDropdown);
   }
 
   getTotalPassengers(): number {

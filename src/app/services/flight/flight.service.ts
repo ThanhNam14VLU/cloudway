@@ -24,6 +24,10 @@ export class FlightService {
   private selectedFlightSubject = new BehaviorSubject<any>(null);
   public selectedFlight$ = this.selectedFlightSubject.asObservable();
 
+  // Store selected return flight data (for roundtrip)
+  private selectedReturnFlightSubject = new BehaviorSubject<any>(null);
+  public selectedReturnFlight$ = this.selectedReturnFlightSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -112,10 +116,31 @@ export class FlightService {
   }
 
   /**
+   * Set selected return flight data
+   */
+  setSelectedReturnFlight(flight: any): void {
+    this.selectedReturnFlightSubject.next(flight);
+  }
+
+  /**
+   * Get current selected return flight data
+   */
+  getCurrentSelectedReturnFlight(): any {
+    return this.selectedReturnFlightSubject.value;
+  }
+
+  /**
    * Clear selected flight data
    */
   clearSelectedFlight(): void {
     this.selectedFlightSubject.next(null);
+  }
+
+  /**
+   * Clear selected return flight data
+   */
+  clearSelectedReturnFlight(): void {
+    this.selectedReturnFlightSubject.next(null);
   }
 
   /**

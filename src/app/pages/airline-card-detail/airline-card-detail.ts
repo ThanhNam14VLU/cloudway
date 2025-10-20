@@ -74,7 +74,7 @@ export class AirlineCardDetail implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('=== AIRLINE CARD DETAIL INIT ===');
+    // Init component
     
     // Get router state immediately
     this.loadDataFromRouterState();
@@ -85,76 +85,97 @@ export class AirlineCardDetail implements OnInit {
     const navigation = this.router.getCurrentNavigation();
     let state = navigation?.extras?.state;
     
+    console.log('🔁 Step 2 - getCurrentNavigation result:', !!navigation);
+    console.log('🔁 Step 2 - navigation state:', !!state);
+    
     // If getCurrentNavigation() returns null, try to get state from ActivatedRoute
     if (!state) {
-      // Try to get state from route snapshot
-      const routeState = this.route.snapshot.paramMap;
-      console.log('🔍 Route params:', routeState);
-      
+      console.log('🔁 Step 2 - getCurrentNavigation returned null, trying ActivatedRoute');
       // Try to get state from route snapshot
       const routeSnapshot = this.route.snapshot;
-      console.log('🔍 Route snapshot:', routeSnapshot);
+      state = (routeSnapshot as any).state;
+      console.log('🔁 Step 2 - ActivatedRoute state:', !!state);
     }
     
     if (state) {
       // Check for new booking data structure
       if (state['bookingData']) {
         this.bookingData = state['bookingData'];
-        console.log('📋 Booking data received:', this.bookingData);
+        
       }
       
       // Check for trip type and flights
       if (state['tripType']) {
         this.tripType = state['tripType'];
-        console.log('🔄 Trip type:', this.tripType);
+        
       }
       
       // Check for passenger data
       if (state['passengers']) {
         this.passengers = state['passengers'];
-        console.log('👥 Passengers data received:', this.passengers);
-        console.log('👥 Adults:', this.passengers.adults);
-        console.log('👥 Children:', this.passengers.children);
-        console.log('👥 Infants:', this.passengers.infants);
+        
         this.initializePassengerForms();
       } else {
         console.warn('⚠️ No passengers data found in router state');
-        console.log('🔍 Available state keys:', Object.keys(state));
+        
       }
       
       // Check for selected flights
+      console.log('🔁 Step 2 - Router state keys:', Object.keys(state));
+      console.log('🔁 Step 2 - selectedFlight in state:', !!state['selectedFlight']);
+      console.log('🔁 Step 2 - selectedDepartureFlight in state:', !!state['selectedDepartureFlight']);
+      console.log('🔁 Step 2 - selectedReturnFlight in state:', !!state['selectedReturnFlight']);
+      
       if (state['selectedFlight']) {
         this.selectedFlight = state['selectedFlight'];
-        console.log('✈️ Selected flight received:', this.selectedFlight);
-        console.log('💰 Flight pricing data:', this.selectedFlight?.pricing);
+        console.log('🔁 Step 2 - Using selectedFlight from state');
       } else if (state['selectedDepartureFlight']) {
         this.selectedFlight = state['selectedDepartureFlight'];
-        console.log('✈️ Selected departure flight received:', this.selectedFlight);
-        console.log('💰 Departure flight pricing data:', this.selectedFlight?.pricing);
+        console.log('🔁 Step 2 - Using selectedDepartureFlight from state');
         
         // Store return flight if available
         if (state['selectedReturnFlight']) {
           this.selectedReturnFlight = state['selectedReturnFlight'];
-          console.log('✈️ Selected return flight received:', this.selectedReturnFlight);
-          console.log('💰 Return flight pricing data:', this.selectedReturnFlight?.pricing);
+          console.log('🔁 Step 2 - Using selectedReturnFlight from state');
         }
-        } else {
+      } else {
           console.warn('⚠️ No flight data found');
           // Don't load mock data, let the component handle empty state
         }
+      
+      // Fallback: if trip is roundtrip and return flight is missing, try to get from bookingData
+      if (this.tripType === 'roundtrip' && !this.selectedReturnFlight && this.bookingData && Array.isArray(this.bookingData.flights) && this.bookingData.flights.length > 1) {
+        const [, returnFlight] = this.bookingData.flights;
+        if (returnFlight) {
+          this.selectedReturnFlight = returnFlight;
+        }
+      }
     } else {
       console.warn('⚠️ No navigation state found, trying to get data from service');
       
       // Try to get flight data from service
       const serviceFlight = this.flightService.getCurrentSelectedFlight();
       if (serviceFlight) {
-        console.log('✈️ Found flight data in service:', serviceFlight);
-        
+        console.log('🔁 Step 2 - Found flight in service:', serviceFlight.code, serviceFlight.flight_instance_id);
         // Use service flight data directly
         this.selectedFlight = serviceFlight;
       } else {
         console.warn('⚠️ No flight data in service');
         // Don't load mock data, let the component handle empty state
+      }
+      
+      // Try to get return flight from service for roundtrip
+      const serviceReturnFlight = this.flightService.getCurrentSelectedReturnFlight();
+      if (serviceReturnFlight) {
+        console.log('🔁 Step 2 - Found return flight in service:', serviceReturnFlight.code, serviceReturnFlight.flight_instance_id);
+        this.selectedReturnFlight = serviceReturnFlight;
+        // If we have return flight, set tripType to roundtrip
+        if (this.tripType !== 'roundtrip') {
+          console.log('🔁 Step 2 - Setting tripType to roundtrip based on return flight');
+          this.tripType = 'roundtrip';
+        }
+      } else {
+        console.log('🔁 Step 2 - No return flight in service');
       }
       
       // Try to get passenger data from service
@@ -171,19 +192,17 @@ export class AirlineCardDetail implements OnInit {
     }
     
     // Debug selectedFlight data
-    console.log('🔍 Final selectedFlight data:', this.selectedFlight);
+    
     
     // Debug flight time data if we have a selected flight
-    if (this.selectedFlight) {
-      this.debugFlightTimeData();
-    }
+    
   }
 
   /**
    * Initialize passenger forms based on passenger count
    */
   initializePassengerForms(): void {
-    console.log('🚀 Initializing passenger forms with data:', this.passengers);
+    
     this.passengerForms = [];
     let passengerIndex = 1;
 
@@ -238,13 +257,7 @@ export class AirlineCardDetail implements OnInit {
       passengerIndex++;
     }
 
-    console.log('👥 Initialized passenger forms:', this.passengerForms);
-    console.log('👥 Total forms created:', this.passengerForms.length);
-    console.log('👥 Forms breakdown:', {
-      adults: this.passengerForms.filter(p => p.passengerType === 'ADULT').length,
-      children: this.passengerForms.filter(p => p.passengerType === 'CHILD').length,
-      infants: this.passengerForms.filter(p => p.passengerType === 'INFANT').length
-    });
+    
   }
 
 
@@ -286,9 +299,9 @@ export class AirlineCardDetail implements OnInit {
         this.savePassengerData();
         this.completedSteps.push(1);
         this.currentStep = 2;
-        console.log('✅ Passenger data saved and moving to step 2');
+        
       } else {
-        console.log('❌ Passenger validation failed');
+        
         this.showValidationErrors();
       }
     } else if (this.currentStep === 2) {
@@ -298,9 +311,9 @@ export class AirlineCardDetail implements OnInit {
         this.saveContactData();
         this.completedSteps.push(2);
         this.currentStep = 3;
-        console.log('✅ Contact data saved and moving to step 3');
+        
       } else {
-        console.log('❌ Contact validation failed');
+        
         this.showContactValidationErrors();
       }
     }
@@ -326,7 +339,7 @@ export class AirlineCardDetail implements OnInit {
   private savePassengerData(): void {
     // Data is already stored in this.passengerForms
     // This method can be extended to save to localStorage or service if needed
-    console.log('💾 Passenger data saved:', this.passengerForms);
+    
   }
 
   /**
@@ -335,7 +348,7 @@ export class AirlineCardDetail implements OnInit {
   private saveContactData(): void {
     // Data is already stored in this.contactInfo
     // This method can be extended to save to localStorage or service if needed
-    console.log('💾 Contact data saved:', this.contactInfo);
+    
   }
 
   /**
@@ -361,6 +374,15 @@ export class AirlineCardDetail implements OnInit {
       }
       if (passenger.passengerType === 'ADULT' && !passenger.idNumber) {
         errors.push(`Hành khách ${passengerNumber}: Vui lòng nhập CMND/CCCD`);
+      }
+      
+      // Check email validation for adults
+      if (passenger.passengerType === 'ADULT') {
+        if (!passenger.email) {
+          errors.push(`Hành khách ${passengerNumber}: Vui lòng nhập email`);
+        } else if (!this.validateEmail(passenger.email)) {
+          errors.push(`Hành khách ${passengerNumber}: Email không đúng định dạng`);
+        }
       }
       
       // Check age validation
@@ -391,6 +413,8 @@ export class AirlineCardDetail implements OnInit {
     }
     if (!this.contactInfo.email) {
       errors.push('Vui lòng nhập email liên hệ');
+    } else if (!this.validateEmail(this.contactInfo.email)) {
+      errors.push('Email liên hệ không đúng định dạng');
     }
     
     this.errorMessages = errors;
@@ -420,7 +444,9 @@ export class AirlineCardDetail implements OnInit {
 
       // Additional fields only required for adults
       if (passenger.passengerType === 'ADULT') {
-        return basicFieldsValid && passenger.idNumber && ageValid;
+        // Check email validation for adults
+        const emailValid = this.validateEmail(passenger.email);
+        return basicFieldsValid && passenger.idNumber && ageValid && emailValid;
       } else {
         // For children and infants, only basic fields and age are required
         return basicFieldsValid && ageValid;
@@ -457,6 +483,16 @@ export class AirlineCardDetail implements OnInit {
   }
 
   /**
+   * Validate email format
+   */
+  private validateEmail(email: string): boolean {
+    if (!email) return false;
+    
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  }
+
+  /**
    * Validate contact information
    */
   private validateContactInfo(): boolean {
@@ -464,7 +500,8 @@ export class AirlineCardDetail implements OnInit {
       this.contactInfo.title && 
       this.contactInfo.fullName && 
       this.contactInfo.phone && 
-      this.contactInfo.email
+      this.contactInfo.email &&
+      this.validateEmail(this.contactInfo.email)
     );
   }
 
@@ -673,11 +710,11 @@ export class AirlineCardDetail implements OnInit {
    * Complete booking and navigate to success page
    */
   async completeBooking(): Promise<void> {
-    console.log('=== COMPLETING BOOKING ===');
+    // Completing booking (roundtrip debug below)
     
     // Store flight data before booking to ensure we have it for success page
     this.flightDataForSuccess = this.selectedFlight;
-    console.log('💾 Stored flight data for success page:', this.flightDataForSuccess);
+    
     
     this.isCreatingBooking = true;
     this.errorMessages = [];
@@ -687,7 +724,7 @@ export class AirlineCardDetail implements OnInit {
       // 1. Get current user ID
       const currentUser = await this.authService.getCurrentUserProfile();
       const userId = currentUser?.id;
-      console.log('👤 Current user:', userId);
+      
 
       // 2. Create passenger info from form data
       const passengerInfos: PassengerInfo[] = this.passengerForms.map(passenger => {
@@ -705,7 +742,7 @@ export class AirlineCardDetail implements OnInit {
         );
       });
 
-      console.log('👤 Passenger infos created:', passengerInfos);
+      
 
       // 3. Create contact info
       const contactInfo = {
@@ -718,14 +755,43 @@ export class AirlineCardDetail implements OnInit {
         throw new Error('No flight selected');
       }
 
-      const bookingDto = this.bookingHelper.createBookingDto(
-        [this.selectedFlight],
-        passengerInfos,
-        contactInfo,
-        userId
-      );
+      console.log('🔁 Step 3 - Creating booking DTO');
+      console.log('🔁 Step 3 - tripType:', this.tripType);
+      console.log('🔁 Step 3 - selectedFlight:', this.selectedFlight?.code, this.selectedFlight?.flight_instance_id);
+      console.log('🔁 Step 3 - selectedReturnFlight:', this.selectedReturnFlight?.code, this.selectedReturnFlight?.flight_instance_id);
+      
+      const flightsToBook = this.tripType === 'roundtrip' && this.selectedReturnFlight
+        ? [this.selectedFlight, this.selectedReturnFlight]
+        : [this.selectedFlight];
+        
+      console.log('🔁 Step 3 - flightsToBook length:', flightsToBook.length);
+      console.log('🔁 Step 3 - flightsToBook:', flightsToBook.map(f => ({ code: f?.code, flight_instance_id: f?.flight_instance_id })));
 
-      console.log('📋 Booking DTO created:', bookingDto);
+      // Prefer building from selected flights; if missing return flight for roundtrip, fallback to bookingData.segments
+      let bookingDto: CreateBookingWithPassengersDto;
+      if (this.tripType === 'roundtrip' && (!this.selectedReturnFlight) && this.bookingData?.segments?.length > 1) {
+        const segments = this.bookingData.segments.map((seg: any) => ({
+          flight_instance_id: seg.flight_instance_id || seg.flight_id,
+          fare_bucket_id: seg.fare_bucket_id || (this.selectedFlight as any)?.fare_bucket_id,
+          passengers: passengerInfos
+        }));
+        bookingDto = {
+          user_id: userId,
+          contact_fullname: contactInfo.fullname,
+          contact_phone: contactInfo.phone,
+          segments
+        };
+      } else {
+        bookingDto = this.bookingHelper.createBookingDto(
+          flightsToBook,
+          passengerInfos,
+          contactInfo,
+          userId
+        );
+      }
+
+      // Roundtrip debug: segments count
+      console.log('🔁 Roundtrip - bookingDto.segments length:', bookingDto?.segments?.length);
 
       // 5. Validate booking data
       const validationErrors = this.bookingHelper.validateBookingData(bookingDto);
@@ -737,10 +803,10 @@ export class AirlineCardDetail implements OnInit {
       }
 
       // 6. Call booking API
-      console.log('🚀 Calling booking API...');
+      
       this.bookingService.createBookingWithPassengers(bookingDto).subscribe({
         next: (response) => {
-          console.log('✅ Booking created successfully:', response);
+          console.log('✅ Booking created successfully');
           this.bookingResult = response;
           this.isCreatingBooking = false;
           
@@ -770,31 +836,26 @@ export class AirlineCardDetail implements OnInit {
     const booking = bookingResponse.booking;
     
     // Debug selectedFlight data
-    console.log('🔍 Selected flight data:', this.selectedFlight);
-    console.log('🔍 Flight number:', this.selectedFlight?.flight_number);
-    console.log('🔍 Airline:', this.selectedFlight?.airline?.name);
-    console.log('🔍 Departure:', this.selectedFlight?.departure?.airport?.city);
-    console.log('🔍 Destination:', this.selectedFlight?.arrival?.airport?.city);
+    
     
     // Use stored flight data if selectedFlight is null
     let flightData = this.selectedFlight || this.flightDataForSuccess;
-    console.log('🔍 Using flight data:', flightData);
+    
     
     if (!flightData && booking.segments && booking.segments.length > 0) {
-      console.log('🔍 Trying to get flight data from segments...');
-      console.log('🔍 Segments:', booking.segments);
+      
       
       // Get flight instance ID from first segment
       const firstSegment = booking.segments[0];
       if (firstSegment.flight_instance_id) {
-        console.log('🔍 Flight instance ID:', firstSegment.flight_instance_id);
+        
         // You might need to fetch flight details using this ID
         // For now, let's try to extract what we can from the segment
       }
     }
     
     // Navigate to booking success page with booking ID
-    console.log('🚀 Navigating to booking success with ID:', booking.id);
+    
     this.router.navigate(['/booking-success', booking.id]);
   }
 
@@ -895,28 +956,172 @@ export class AirlineCardDetail implements OnInit {
   formatTime(timeString: string): string {
     if (!timeString) return 'N/A';
     
-    // Debug log to see what we're receiving
-    console.log('🔍 formatTime input:', timeString, 'type:', typeof timeString);
-    
     try {
+      // Handle different time formats
+      let timeStr = timeString.toString().trim();
+      
+      // If it's already in HH:MM format, validate and return
+      if (/^\d{1,2}:\d{2}$/.test(timeStr)) {
+        const [hours, minutes] = timeStr.split(':');
+        const h = parseInt(hours);
+        const m = parseInt(minutes);
+        if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+          return `${h.toString().padStart(2, '0')}:${minutes}`;
+        }
+      }
+      
+      // If it's in HH:MM:SS format, extract HH:MM
+      if (/^\d{1,2}:\d{2}:\d{2}$/.test(timeStr)) {
+        const [hours, minutes] = timeStr.split(':');
+        const h = parseInt(hours);
+        const m = parseInt(minutes);
+        if (h >= 0 && h <= 23 && m >= 0 && m <= 59) {
+          return `${h.toString().padStart(2, '0')}:${minutes}`;
+        }
+      }
+      
+      // Try to parse as Date object
       const date = new Date(timeString);
       
       // Check if date is valid
       if (isNaN(date.getTime())) {
-        console.log('❌ Invalid date created from:', timeString);
         return 'N/A';
       }
       
       const hours = date.getHours().toString().padStart(2, '0');
       const minutes = date.getMinutes().toString().padStart(2, '0');
       const result = `${hours}:${minutes}`;
-      
-      console.log('✅ formatTime result:', result);
       return result;
     } catch (error) {
-      console.log('❌ formatTime error:', error, 'for input:', timeString);
       return 'N/A';
     }
+  }
+
+  /**
+   * Format flight duration to readable format
+   */
+  formatFlightDuration(duration: string | number): string {
+    if (!duration) return 'N/A';
+    
+    try {
+      let durationStr = duration.toString().trim();
+      
+      // Handle negative durations - more comprehensive check
+      if (durationStr.startsWith('-') || durationStr.includes('-') || 
+          (typeof duration === 'number' && duration < 0)) {
+        return 'N/A';
+      }
+      
+      // Handle different duration formats
+      if (typeof duration === 'number') {
+        // If it's a number, assume it's in minutes
+        if (duration <= 0) {
+          return 'N/A';
+        }
+        // Reject unrealistic durations (> 24h)
+        if (duration > 24 * 60) {
+          return 'N/A';
+        }
+        return this.minutesToDisplay(duration);
+      }
+      
+      // Handle string formats like "2h 30m", "150m", "2:30"
+      if (durationStr.includes('h') && durationStr.includes('m')) {
+        // Check if it contains negative values
+        if (durationStr.includes('-')) {
+          return 'N/A';
+        }
+        // Parse to minutes to validate range
+        const mins = this.parseDurationToMinutes(durationStr);
+        if (mins <= 0 || mins > 24 * 60) {
+          return 'N/A';
+        }
+        return this.minutesToDisplay(mins);
+      } else if (durationStr.includes(':')) {
+        // Format like "2:30"
+        const parts = durationStr.split(':');
+        const hours = parseInt(parts[0]) || 0;
+        const minutes = parseInt(parts[1]) || 0;
+        if (hours < 0 || minutes < 0) {
+          return 'N/A';
+        }
+        const mins = hours * 60 + minutes;
+        if (mins <= 0 || mins > 24 * 60) {
+          return 'N/A';
+        }
+        return this.minutesToDisplay(mins);
+      } else if (durationStr.endsWith('m')) {
+        // Format like "150m"
+        const minutes = parseInt(durationStr.replace('m', '')) || 0;
+        if (minutes <= 0) {
+          return 'N/A';
+        }
+        if (minutes > 24 * 60) {
+          return 'N/A';
+        }
+        return this.minutesToDisplay(minutes);
+      } else {
+        // Try to parse as number of minutes
+        const minutes = parseInt(durationStr) || 0;
+        if (minutes > 0) {
+          if (minutes > 24 * 60) {
+            return 'N/A';
+          }
+          return this.minutesToDisplay(minutes);
+        } else {
+          return 'N/A';
+        }
+      }
+      
+      return 'N/A';
+    } catch (error) {
+      return 'N/A';
+    }
+  }
+
+  /**
+   * Parse a duration string (like "2h 30m" or "150m") to minutes
+   */
+  private parseDurationToMinutes(duration: string): number {
+    try {
+      const trimmed = duration.trim();
+      const hmMatch = trimmed.match(/^(\d+)h\s*(\d+)m$/i);
+      if (hmMatch) {
+        const h = parseInt(hmMatch[1]);
+        const m = parseInt(hmMatch[2]);
+        return h * 60 + m;
+      }
+      const hOnly = trimmed.match(/^(\d+)h$/i);
+      if (hOnly) {
+        return parseInt(hOnly[1]) * 60;
+      }
+      const mOnly = trimmed.match(/^(\d+)m$/i);
+      if (mOnly) {
+        return parseInt(mOnly[1]);
+      }
+      const colon = trimmed.match(/^(\d+):(\d{2})$/);
+      if (colon) {
+        const h = parseInt(colon[1]);
+        const m = parseInt(colon[2]);
+        return h * 60 + m;
+      }
+      const asNum = parseInt(trimmed);
+      if (!isNaN(asNum)) {
+        return asNum;
+      }
+      return 0;
+    } catch {
+      return 0;
+    }
+  }
+
+  /**
+   * Convert minutes to display string "Xh Ym"
+   */
+  private minutesToDisplay(totalMinutes: number): string {
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    return `${hours}h ${minutes}m`;
   }
 
   /**
@@ -932,22 +1137,7 @@ export class AirlineCardDetail implements OnInit {
   /**
    * Debug pricing data
    */
-  debugPricingData(): void {
-    console.log('🔍 Debugging pricing data:');
-    console.log('Selected flight:', this.selectedFlight);
-    if (this.selectedFlight) {
-      console.log('Flight pricing:', this.selectedFlight.pricing);
-      console.log('Flight fares:', this.selectedFlight.fares);
-      console.log('Flight price (from fare selection):', (this.selectedFlight as any).price);
-      console.log('Flight class (from fare selection):', (this.selectedFlight as any).class);
-      console.log('Selected fare bucket ID:', (this.selectedFlight as any).fare_bucket_id);
-      if (this.selectedFlight.pricing) {
-        console.log('Pricing breakdown:', this.selectedFlight.pricing.breakdown);
-        console.log('Base price:', this.selectedFlight.pricing.base_price);
-        console.log('Total price:', this.selectedFlight.pricing.total_price);
-      }
-    }
-  }
+  debugPricingData(): void {}
 
   /**
    * Get flight time display string
@@ -955,21 +1145,18 @@ export class AirlineCardDetail implements OnInit {
   getFlightTimeDisplay(): string {
     if (!this.selectedFlight) return 'N/A';
     
-    // Try different time field combinations
+    // Try different time field combinations with more fallback options
     const departureTime = this.selectedFlight.departure?.time || 
                          this.selectedFlight.departTime || 
-                         (this.selectedFlight as any).departure_time;
+                         (this.selectedFlight as any).departure_time ||
+                         (this.selectedFlight as any).departureTime ||
+                         (this.selectedFlight as any).depart_time;
     
     const arrivalTime = this.selectedFlight.arrival?.time || 
                        this.selectedFlight.arriveTime || 
-                       (this.selectedFlight as any).arrival_time;
-    
-    console.log('🔍 Flight time data:', {
-      departureTime,
-      arrivalTime,
-      departureTimeType: typeof departureTime,
-      arrivalTimeType: typeof arrivalTime
-    });
+                       (this.selectedFlight as any).arrival_time ||
+                       (this.selectedFlight as any).arrivalTime ||
+                       (this.selectedFlight as any).arrive_time;
     
     const formattedDeparture = this.formatTime(departureTime);
     const formattedArrival = this.formatTime(arrivalTime);
@@ -993,27 +1180,266 @@ export class AirlineCardDetail implements OnInit {
   }
 
   /**
-   * Debug flight time data
+   * Get flight duration display string
    */
-  debugFlightTimeData(): void {
-    console.log('🔍 Debugging flight time data:');
-    console.log('Selected flight:', this.selectedFlight);
-    if (this.selectedFlight) {
-      console.log('Departure time (departure.time):', this.selectedFlight.departure?.time);
-      console.log('Arrival time (arrival.time):', this.selectedFlight.arrival?.time);
-      console.log('Departure time (departTime):', this.selectedFlight.departTime);
-      console.log('Arrival time (arriveTime):', this.selectedFlight.arriveTime);
-      console.log('Duration:', this.selectedFlight.duration);
-      
-      // Test formatTime with different time formats
-      if (this.selectedFlight.departure?.time) {
-        console.log('Testing formatTime with departure.time:', this.formatTime(this.selectedFlight.departure.time));
-      }
-      if (this.selectedFlight.departTime) {
-        console.log('Testing formatTime with departTime:', this.formatTime(this.selectedFlight.departTime));
+  getFlightDurationDisplay(): string {
+    if (!this.selectedFlight) return 'N/A';
+    
+    const duration = this.selectedFlight.duration;
+    
+    // Try to format the duration
+    const formattedDuration = this.formatFlightDuration(duration);
+    
+    // If duration is invalid or N/A, try to calculate from departure and arrival times
+    if (formattedDuration === 'N/A') {
+      const calculatedDuration = this.calculateDurationFromTimes();
+      if (calculatedDuration !== 'N/A') {
+        return calculatedDuration;
       }
     }
+    
+    return formattedDuration;
   }
+
+  /**
+   * Calculate duration from departure and arrival times
+   */
+  private calculateDurationFromTimes(): string {
+    if (!this.selectedFlight) return 'N/A';
+    
+    try {
+      // Get departure and arrival times
+      const departureTime = this.selectedFlight.departure?.time || 
+                           this.selectedFlight.departTime || 
+                           (this.selectedFlight as any).departure_time ||
+                           (this.selectedFlight as any).departureTime ||
+                           (this.selectedFlight as any).depart_time;
+      
+      const arrivalTime = this.selectedFlight.arrival?.time || 
+                         this.selectedFlight.arriveTime || 
+                         (this.selectedFlight as any).arrival_time ||
+                         (this.selectedFlight as any).arrivalTime ||
+                         (this.selectedFlight as any).arrive_time;
+      
+      if (!departureTime || !arrivalTime) {
+        console.log('❌ Missing departure or arrival time for calculation');
+        return 'N/A';
+      }
+      
+      // Try to parse as time strings first (HH:MM format)
+      const departureTimeStr = departureTime.toString().trim();
+      const arrivalTimeStr = arrivalTime.toString().trim();
+      
+      // Check if they are in HH:MM format
+      const timeRegex = /^(\d{1,2}):(\d{2})$/;
+      const departureMatch = departureTimeStr.match(timeRegex);
+      const arrivalMatch = arrivalTimeStr.match(timeRegex);
+      
+      if (departureMatch && arrivalMatch) {
+        // Parse as time strings
+        const depHours = parseInt(departureMatch[1]);
+        const depMinutes = parseInt(departureMatch[2]);
+        const arrHours = parseInt(arrivalMatch[1]);
+        const arrMinutes = parseInt(arrivalMatch[2]);
+        
+        // Convert to total minutes
+        const depTotalMinutes = depHours * 60 + depMinutes;
+        const arrTotalMinutes = arrHours * 60 + arrMinutes;
+        
+        let diffInMinutes = arrTotalMinutes - depTotalMinutes;
+        
+        // Handle case where arrival is next day (e.g., 23:30 to 01:30)
+        if (diffInMinutes < 0) {
+          diffInMinutes += 24 * 60; // Add 24 hours
+        }
+        
+        if (diffInMinutes <= 0 || diffInMinutes > 24 * 60) {
+          return 'N/A';
+        }
+        
+        const hours = Math.floor(diffInMinutes / 60);
+        const minutes = diffInMinutes % 60;
+        return `${hours}h ${minutes}m`;
+      }
+      
+      // Fallback to Date parsing
+      const departureDate = new Date(departureTime);
+      const arrivalDate = new Date(arrivalTime);
+      
+      if (isNaN(departureDate.getTime()) || isNaN(arrivalDate.getTime())) {
+        console.log('❌ Invalid departure or arrival date');
+        return 'N/A';
+      }
+      
+      // Calculate difference in minutes
+      const diffInMs = arrivalDate.getTime() - departureDate.getTime();
+      const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+      
+      if (diffInMinutes <= 0 || diffInMinutes > 24 * 60) {
+        return 'N/A';
+      }
+      
+      const hours = Math.floor(diffInMinutes / 60);
+      const minutes = diffInMinutes % 60;
+      
+      return `${hours}h ${minutes}m`;
+      
+    } catch (error) {
+      return 'N/A';
+    }
+  }
+
+  /**
+   * Get return flight time display string
+   */
+  getReturnFlightTimeDisplay(): string {
+    if (!this.selectedReturnFlight) return 'N/A';
+    
+    // Try different time field combinations
+    const departureTime = this.selectedReturnFlight.departure?.time || 
+                         this.selectedReturnFlight.departTime || 
+                         (this.selectedReturnFlight as any).departure_time;
+    
+    const arrivalTime = this.selectedReturnFlight.arrival?.time || 
+                       this.selectedReturnFlight.arriveTime || 
+                       (this.selectedReturnFlight as any).arrival_time;
+    
+    const formattedDeparture = this.formatTime(departureTime);
+    const formattedArrival = this.formatTime(arrivalTime);
+    
+    // If both times are valid, return the range
+    if (formattedDeparture !== 'N/A' && formattedArrival !== 'N/A') {
+      return `${formattedDeparture} - ${formattedArrival}`;
+    }
+    
+    // If only one time is valid, show what we have
+    if (formattedDeparture !== 'N/A') {
+      return `${formattedDeparture} - N/A`;
+    }
+    
+    if (formattedArrival !== 'N/A') {
+      return `N/A - ${formattedArrival}`;
+    }
+    
+    // If no valid times, return N/A
+    return 'N/A';
+  }
+
+  /**
+   * Get return flight duration display string
+   */
+  getReturnFlightDurationDisplay(): string {
+    if (!this.selectedReturnFlight) return 'N/A';
+    
+    const duration = this.selectedReturnFlight.duration;
+    
+    // Try to format the duration
+    const formattedDuration = this.formatFlightDuration(duration);
+    
+    // If duration is invalid or N/A, try to calculate from departure and arrival times
+    if (formattedDuration === 'N/A') {
+      const calculatedDuration = this.calculateReturnFlightDurationFromTimes();
+      if (calculatedDuration !== 'N/A') {
+        return calculatedDuration;
+      }
+    }
+    
+    return formattedDuration;
+  }
+
+  /**
+   * Calculate return flight duration from departure and arrival times
+   */
+  private calculateReturnFlightDurationFromTimes(): string {
+    if (!this.selectedReturnFlight) return 'N/A';
+    
+    try {
+      // Get departure and arrival times
+      const departureTime = this.selectedReturnFlight.departure?.time || 
+                           this.selectedReturnFlight.departTime || 
+                           (this.selectedReturnFlight as any).departure_time ||
+                           (this.selectedReturnFlight as any).departureTime ||
+                           (this.selectedReturnFlight as any).depart_time;
+      
+      const arrivalTime = this.selectedReturnFlight.arrival?.time || 
+                         this.selectedReturnFlight.arriveTime || 
+                         (this.selectedReturnFlight as any).arrival_time ||
+                         (this.selectedReturnFlight as any).arrivalTime ||
+                         (this.selectedReturnFlight as any).arrive_time;
+      
+      if (!departureTime || !arrivalTime) {
+        console.log('❌ Missing return flight departure or arrival time for calculation');
+        return 'N/A';
+      }
+      
+      // Try to parse as time strings first (HH:MM format)
+      const departureTimeStr = departureTime.toString().trim();
+      const arrivalTimeStr = arrivalTime.toString().trim();
+      
+      // Check if they are in HH:MM format
+      const timeRegex = /^(\d{1,2}):(\d{2})$/;
+      const departureMatch = departureTimeStr.match(timeRegex);
+      const arrivalMatch = arrivalTimeStr.match(timeRegex);
+      
+      if (departureMatch && arrivalMatch) {
+        // Parse as time strings
+        const depHours = parseInt(departureMatch[1]);
+        const depMinutes = parseInt(departureMatch[2]);
+        const arrHours = parseInt(arrivalMatch[1]);
+        const arrMinutes = parseInt(arrivalMatch[2]);
+        
+        // Convert to total minutes
+        const depTotalMinutes = depHours * 60 + depMinutes;
+        const arrTotalMinutes = arrHours * 60 + arrMinutes;
+        
+        let diffInMinutes = arrTotalMinutes - depTotalMinutes;
+        
+        // Handle case where arrival is next day (e.g., 23:30 to 01:30)
+        if (diffInMinutes < 0) {
+          diffInMinutes += 24 * 60; // Add 24 hours
+        }
+        
+        if (diffInMinutes <= 0 || diffInMinutes > 24 * 60) {
+          return 'N/A';
+        }
+        
+        const hours = Math.floor(diffInMinutes / 60);
+        const minutes = diffInMinutes % 60;
+        
+        return `${hours}h ${minutes}m`;
+      }
+      
+      // Fallback to Date parsing
+      const departureDate = new Date(departureTime);
+      const arrivalDate = new Date(arrivalTime);
+      
+      if (isNaN(departureDate.getTime()) || isNaN(arrivalDate.getTime())) {
+        console.log('❌ Invalid return flight departure or arrival date');
+        return 'N/A';
+      }
+      
+      // Calculate difference in minutes
+      const diffInMs = arrivalDate.getTime() - departureDate.getTime();
+      const diffInMinutes = Math.floor(diffInMs / (1000 * 60));
+      
+      if (diffInMinutes <= 0 || diffInMinutes > 24 * 60) {
+        return 'N/A';
+      }
+      
+      const hours = Math.floor(diffInMinutes / 60);
+      const minutes = diffInMinutes % 60;
+      
+      return `${hours}h ${minutes}m`;
+      
+    } catch (error) {
+      return 'N/A';
+    }
+  }
+
+  /**
+   * Debug flight time data
+   */
+  debugFlightTimeData(): void {}
 
 }
 

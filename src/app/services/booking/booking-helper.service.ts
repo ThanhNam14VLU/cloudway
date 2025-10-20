@@ -27,10 +27,10 @@ export class BookingHelperService {
       userId
     });
 
-    // Tạo segments từ selected flights
+    // Tạo segments từ selected flights (ưu tiên dữ liệu đã chọn từ UI)
     const segments: BookingSegment[] = selectedFlights.map(flight => ({
-      flight_instance_id: flight.flight_id,
-      fare_bucket_id: this.getDefaultFareBucketId(flight), // Default to economy
+      flight_instance_id: (flight as any).flight_instance_id || (flight as any).flight_id,
+      fare_bucket_id: (flight as any).fare_bucket_id || this.getDefaultFareBucketId(flight),
       passengers: passengers
     }));
 
