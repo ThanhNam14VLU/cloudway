@@ -141,6 +141,27 @@ export class AuthService {
     }
   }
 
+  /** 🔹 Đổi password */
+  async changePassword(newPassword: string) {
+    try {
+      console.log('🚀 Bắt đầu đổi password');
+      const { data, error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) {
+        console.error('❌ Change password error:', error);
+        throw error;
+      }
+
+      console.log('✅ Password changed successfully:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Change password failed:', error);
+      throw error;
+    }
+  }
+
   /** 🔹 Đăng xuất */
   async signOut() {
     await supabase.auth.signOut();

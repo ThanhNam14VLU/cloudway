@@ -1,65 +1,243 @@
-<div class="profile-container">
-  <div class="profile-header">
-    <div class="profile-pic">
-      <span>Ảnh</span>
-    </div>
-    <div class="profile-info">
-      <h2>Nguyễn Văn A</h2>
-      <p class="role">Người dùng</p>
-      <p class="location">TP. Hồ Chí Minh, Việt Nam</p>
-    </div>
+<div class="profile-page">
+  <app-header></app-header>
+  
+  <!-- Header -->
+  <div class="page-header">
+    <h1>Profile</h1>
+    <p>View all your profile details here.</p>
   </div>
 
-  <!-- Thông tin cá nhân -->
-  <form class="card">
-    <div class="card-header">
-      <h3>Thông tin cá nhân</h3>
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-container">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+      <h3>Đang tải thông tin profile...</h3>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (errorMessage) {
+    <div class="error-container">
+      <div class="error-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h3>Có lỗi xảy ra</h3>
+      <p>{{ errorMessage }}</p>
+      <button class="btn-retry" (click)="loadUserProfile()">
+        <i class="fas fa-redo"></i>
+        Thử lại
+      </button>
+    </div>
+  }
+
+  <!-- Main Content -->
+  @if (!isLoading && !errorMessage) {
+  <div class="profile-content">
+    <!-- Left Column - Profile Card -->
+    <div class="profile-card">
+      <div class="user-name">{{ userData.full_name || 'N/A' }}</div>
+      <div class="user-status">{{ getUserRoleDisplay() }}</div>
+      @if (getAirlineName()) {
+        <div class="airline-info">{{ getAirlineName() }}</div>
+      }
+      
+      <div class="profile-picture">
+        <div class="avatar" (click)="changeAvatar()">
+          <div class="avatar-placeholder" *ngIf="!avatarUrl">
+            <i class="fas fa-user"></i>
+          </div>
+          <img *ngIf="avatarUrl" [src]="avatarUrl" alt="Profile Picture" class="avatar-image" 
+               (error)="onImageError($event)" (load)="onImageLoad($event)">
+          <div class="avatar-overlay">
+            <i class="fas fa-camera"></i>
+            <span>Change Photo</span>
+          </div>
+        </div>
+      </div>
+      
+      <input type="file" #fileInput (change)="onFileSelected($event)" accept="image/*" style="display: none;">
     </div>
 
-    <div class="card-body">
-      <div class="info-grid">
-        <div class="form-group">
-          <label>Họ và tên</label>
-          <input type="text" value="Nguyễn Văn A" [disabled]="isDisabled"/>
-        </div>
-        <div class="form-group">
-          <label>Ngày sinh</label>
-          <input type="date" value="2000-10-14" [disabled]="isDisabled"/>
-        </div>
-        <div class="form-group">
-          <label>Địa chỉ email</label>
-          <input type="email" value="namnguyen@gmail.com" [disabled]="isDisabled"/>
-        </div>
-        <div class="form-group">
-          <label>Số điện thoại</label>
-          <input type="text" value="+84 912 345 678" [disabled]="isDisabled"/>
-        </div>
-
+    <!-- Right Column - Personal Information -->
+    <form class="info-card">
+      <div class="card-header">
+        <h3>Personal Information</h3>
       </div>
 
-      <div class="btn-area">
-        <button type="button" class="save-btn" (click)="toggleEdit()" >{{str}}</button>
-        <button type="button" class="change-pass-btn">Đổi mật khẩu</button>
-      </div>
-    </div>
-  </form>
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" [value]="userData.full_name || ''" [disabled]="isDisabled"/>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" [value]="userData.email || ''" [disabled]="isDisabled"/>
+          </div>
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" [value]="userData.phone || ''" [disabled]="isDisabled"/>
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <input type="text" [value]="getUserRoleDisplay()" [disabled]="true"/>
+          </div>
+        </div>
 
-  <!-- Lịch sử đặt vé -->
-  <div class="card">
-    <div class="card-header">
-      <h3>Lịch sử đặt vé</h3>
-    </div>
-    <div class="card-body">
-      <div class="booking-item">
-        <p><strong>Chuyến bay:</strong> VN123 — TP.HCM → Hà Nội</p>
-        <p><strong>Ngày khởi hành:</strong> 10/10/2025</p>
-        <p><strong>Trạng thái:</strong> Đã xác nhận</p>
+        <div class="btn-area">
+          <button type="button" class="save-btn" (click)="toggleEdit()">{{str}}</button>
+          <button type="button" class="change-pass-btn" (click)="openChangePasswordModal()">Change Password</button>
+        </div>
       </div>
-      <div class="booking-item">
-        <p><strong>Chuyến bay:</strong> VN456 — Hà Nội → Đà Nẵng</p>
-        <p><strong>Ngày khởi hành:</strong> 25/09/2025</p>
-        <p><strong>Trạng thái:</strong> Hoàn thành</p>
+    </form>
+  </div>
+
+  <!-- Booking History Section -->
+  <div class="booking-section">
+    <div class="booking-card">
+      <div class="card-header">
+        <h3>Booking History</h3>
+      </div>
+      <div class="card-body">
+        @if (isLoadingHistory) {
+          <div class="loading-history">
+            <i class="fas fa-spinner fa-spin"></i>
+            <span>Đang tải lịch sử đặt vé...</span>
+          </div>
+        } @else if (historyError) {
+          <div class="history-error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>{{ historyError }}</span>
+            <button class="btn-retry-small" (click)="loadBookingHistory()">
+              <i class="fas fa-redo"></i>
+              Thử lại
+            </button>
+          </div>
+        } @else if (getBookingHistoryArray().length === 0) {
+          <div class="no-history">
+            <i class="fas fa-plane"></i>
+            <span>Chưa có lịch sử đặt vé</span>
+          </div>
+        } @else {
+          @for (booking of getBookingHistoryArray(); track booking.id) {
+            <div class="booking-item">
+              <div class="booking-header">
+                <div class="booking-code">
+                  <strong>Mã đặt chỗ:</strong> {{ booking.pnr_code || booking.id }}
+                </div>
+                <div class="booking-status">
+                  <span [class]="getBookingStatusClass(booking.status)">
+                    {{ getBookingStatusDisplay(booking.status) }}
+                  </span>
+                </div>
+              </div>
+              
+              @if (booking.summary) {
+                <div class="flight-info">
+                  <div class="flight-route">
+                    <strong>Chuyến bay:</strong> 
+                    {{ booking.summary.airline || 'N/A' }} — 
+                    {{ booking.summary.departure_airport || 'N/A' }} → 
+                    {{ booking.summary.arrival_airport || 'N/A' }}
+                  </div>
+                  <div class="flight-details">
+                    <div class="flight-date">
+                      <strong>Ngày khởi hành:</strong> 
+                      {{ formatBookingDate(booking.summary.departure_date) }}
+                    </div>
+                    <div class="flight-passengers">
+                      <strong>Số hành khách:</strong> 
+                      {{ booking.summary.total_passengers || 'N/A' }}
+                    </div>
+                  </div>
+                </div>
+              }
+              
+              <div class="booking-footer">
+                <div class="booking-date">
+                  <strong>Ngày đặt:</strong> {{ formatBookingDate(booking.created_at) }}
+                </div>
+                @if (booking.summary?.total_amount) {
+                  <div class="booking-amount">
+                    <strong>Tổng tiền:</strong> {{ formatCurrency(booking.summary.total_amount) }}
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        }
       </div>
     </div>
   </div>
+  }
+
+  <!-- Change Password Modal -->
+  @if (showChangePasswordModal) {
+  <div class="modal-overlay" (click)="closeChangePasswordModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Đổi mật khẩu</h3>
+        <button class="close-btn" (click)="closeChangePasswordModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="modal-body">
+        <form (ngSubmit)="changePassword()">
+          <div class="form-group">
+            <label>Mật khẩu hiện tại</label>
+            <input 
+              type="password" 
+              name="currentPassword"
+              [(ngModel)]="changePasswordData.currentPassword" 
+              placeholder="Nhập mật khẩu hiện tại"
+              required>
+          </div>
+          
+          <div class="form-group">
+            <label>Mật khẩu mới</label>
+            <input 
+              type="password" 
+              name="newPassword"
+              [(ngModel)]="changePasswordData.newPassword" 
+              placeholder="Nhập mật khẩu mới"
+              required>
+          </div>
+          
+          <div class="form-group">
+            <label>Xác nhận mật khẩu mới</label>
+            <input 
+              type="password" 
+              name="confirmPassword"
+              [(ngModel)]="changePasswordData.confirmPassword" 
+              placeholder="Nhập lại mật khẩu mới"
+              required>
+          </div>
+          
+          @if (changePasswordError) {
+            <div class="error-message">
+              {{ changePasswordError }}
+            </div>
+          }
+          
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" (click)="closeChangePasswordModal()">
+              Hủy
+            </button>
+            <button type="submit" class="btn-confirm" [disabled]="isChangingPassword">
+              @if (isChangingPassword) {
+                <i class="fas fa-spinner fa-spin"></i>
+                Đang xử lý...
+              } @else {
+                Đổi mật khẩu
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  }
 </div>

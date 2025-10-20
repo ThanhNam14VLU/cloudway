@@ -65,35 +65,63 @@
         <div class="form-group input-wrapper">
           <label>Điểm đi</label>
           <mat-icon>flight_takeoff</mat-icon>
-          <select [(ngModel)]="searchParams.departure">
-            <option value="SGN">Sân bay Tân Sơn Nhất (SGN)</option>
-            <option value="HAN">Sân bay Nội Bài (HAN)</option>
-            <option value="DAD">Sân bay Đà Nẵng (DAD)</option>
+          <select [(ngModel)]="searchParams.departure" (change)="searchFlights()">
+            <option value="" disabled>Chọn điểm đi</option>
+            @for (airport of airports; track airport.id) {
+              <option [value]="airport.iata_code">
+                {{ airport.city }} - {{ airport.name }} ({{ airport.iata_code }})
+              </option>
+            }
           </select>
         </div>
         
         <div class="form-group input-wrapper">
           <label>Điểm đến</label>
           <mat-icon>flight_land</mat-icon>
-          <select [(ngModel)]="searchParams.destination">
-            <option value="HAN">Sân bay Nội Bài (HAN)</option>
-            <option value="SGN">Sân bay Tân Sơn Nhất (SGN)</option>
-            <option value="DAD">Sân bay Đà Nẵng (DAD)</option>
+          <select [(ngModel)]="searchParams.destination" (change)="searchFlights()">
+            <option value="" disabled>Chọn điểm đến</option>
+            @for (airport of airports; track airport.id) {
+              <option [value]="airport.iata_code">
+                {{ airport.city }} - {{ airport.name }} ({{ airport.iata_code }})
+              </option>
+            }
           </select>
         </div>
         
         <div class="form-group">
           <label>Ngày đi</label>
-          <input type="date" [(ngModel)]="searchParams.departureDate" />
+          <input type="date" [(ngModel)]="searchParams.departureDate" (change)="searchFlights()" />
         </div>
         
         <div class="form-group" *ngIf="tripType === 'roundtrip'">
           <label>Ngày về</label>
-          <input type="date" [(ngModel)]="searchParams.returnDate" />
+          <input type="date" [(ngModel)]="searchParams.returnDate" (change)="searchFlights()" />
         </div>
         
         <button matButton="filled" (click)="searchFlights()">
           Tìm kiếm
+        </button>
+      </div>
+    </div>
+
+    <!-- Flight Selection Status -->
+    <div class="selection-status" *ngIf="searchResult && (apiFlights.length > 0 || apiReturnFlights.length > 0)">
+      <div class="status-info">
+        <div class="departure-status" [class.completed]="selectedDepartureFlight">
+          <mat-icon>{{ selectedDepartureFlight ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+          <span>Chuyến đi: {{ selectedDepartureFlight ? selectedDepartureFlight.code : 'Chưa chọn' }}</span>
+        </div>
+        <div class="return-status" *ngIf="tripType === 'roundtrip'" [class.completed]="selectedReturnFlight">
+          <mat-icon>{{ selectedReturnFlight ? 'check_circle' : 'radio_button_unchecked' }}</mat-icon>
+          <span>Chuyến về: {{ selectedReturnFlight ? selectedReturnFlight.code : 'Chưa chọn' }}</span>
+        </div>
+      </div>
+      <div class="proceed-section">
+        <!-- <div class="total-price" *ngIf="getTotalPrice() > 0">
+          Tổng cộng: {{ formatPrice(getTotalPrice()) }}
+        </div> -->
+        <button class="proceed-btn" (click)="proceedToBooking()">
+          Tiếp tục đặt vé
         </button>
       </div>
     </div>
@@ -106,7 +134,12 @@
       <div class="filter-section">
         <h3>Lọc kết quả</h3>
         <div class="filter-group">
-          <h4>Hiển thị theo</h4>
+          <div class="filter-header">
+            <h4>Hiển thị theo</h4>
+            <button type="button" class="clear-filters-btn" (click)="clearAirlineFilters()">
+              Xóa tất cả
+            </button>
+          </div>
           <div class="airline-filters">
             <label *ngFor="let airline of airlines">
               <input type="checkbox" [(ngModel)]="airline.selected" (change)="filterFlights()" />
@@ -143,7 +176,7 @@
         <div class="separator-line"></div>
         
         <!-- Date Selector Section -->
-        <div class="date-selector-section">
+        <!-- <div class="date-selector-section">
           <div class="date-selector">
             <div class="date-item" *ngFor="let date of availableDates" 
                  [class.active]="date.isSelected" 
@@ -152,7 +185,7 @@
               <span class="date">{{ date.dayNumber }}</span>
             </div>
           </div>
-        </div>
+        </div> -->
         
         <!-- Flight cards -->
         <div class="flights-list" *ngIf="!isFlightsCollapsed">
@@ -163,17 +196,18 @@
           } @else if (filteredFlights.length > 0) {
             <app-flight-card 
               *ngFor="let flight of filteredFlights" 
-              [flight]="flight">
+              [flight]="flight"
+              [isSelected]="isFlightSelected(flight, false)"
+              (flightSelected)="selectDepartureFlight($event)">
             </app-flight-card>
           } @else if (searchResult && apiFlights.length === 0) {
             <div class="no-flights-message">
               <p>Không tìm thấy chuyến bay phù hợp với yêu cầu của bạn.</p>
             </div>
           } @else {
-            <app-flight-card 
-              *ngFor="let flight of filteredFlights" 
-              [flight]="flight">
-            </app-flight-card>
+            <div class="no-flights-message">
+              <p>Vui lòng tìm kiếm chuyến bay để xem kết quả.</p>
+            </div>
           }
         </div>
       </div>
@@ -215,10 +249,18 @@
         
         <!-- Return Flight cards -->
         <div class="flights-list" *ngIf="!isReturnFlightsCollapsed">
-          <app-flight-card 
-            *ngFor="let flight of filteredReturnFlights" 
-            [flight]="flight">
-          </app-flight-card>
+          @if (filteredReturnFlights.length > 0) {
+            <app-flight-card 
+              *ngFor="let flight of filteredReturnFlights" 
+              [flight]="flight"
+              [isSelected]="isFlightSelected(flight, true)"
+              (flightSelected)="selectReturnFlight($event)">
+            </app-flight-card>
+          } @else {
+            <div class="no-flights-message">
+              <p>Không tìm thấy chuyến bay về phù hợp.</p>
+            </div>
+          }
         </div>
       </div>
     </div>

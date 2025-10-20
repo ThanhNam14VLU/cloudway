@@ -42,8 +42,10 @@ export interface BackendFlight {
   flight_id: string;
   flight_number: string;
   airline: {
+    id: string;
     name: string;
     code: string;
+    logo: string;
   };
   departure: {
     airport: {
@@ -78,13 +80,38 @@ export interface BackendFlight {
   };
   status: string;
   available_seats: number;
+  total_seats: number;
+  fares: Array<{
+    base_price: number;
+    fare_bucket: {
+      id: string;
+      code: string;
+      class_type: string;
+      description: string;
+    };
+  }>;
   pricing: {
-    adult_price: number;
-    child_price: number;
-    infant_price: number;
+    base_price: number;
+    total_passengers: number;
     total_price: number;
     currency: string;
-    breakdown: any;
+    breakdown: {
+      adults: {
+        count: number;
+        unit_price: number;
+        total: number;
+      };
+      children: {
+        count: number;
+        unit_price: number;
+        total: number;
+      };
+      infants: {
+        count: number;
+        unit_price: number;
+        total: number;
+      } | null;
+    };
   };
   fare_buckets: any[];
 }

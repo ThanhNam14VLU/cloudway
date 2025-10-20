@@ -1,17 +1,11 @@
 import { Component } from '@angular/core';
-import { AirlineHeader } from '../../components/airline-header/airline-header';
 import { AirlineNav } from '../../components/airline-nav/airline-nav';
-import { AirlineDashboard } from '../../components/airline-dashboard/airline-dashboard';
-import { AirlineManagement } from '../../components/airline-management/airline-management';
-import { AirlineAddFlightForm } from '../../components/airline-add-flight-form/airline-add-flight-form';
-import { AirlineReport } from '../../components/airline-report/airline-report';
-import { AirlineSetting } from '../../components/airline-setting/airline-setting';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { Header } from '../../components/header/header';
 
 @Component({
   selector: 'app-airline',
-  imports: [RouterOutlet,RouterLink,AirlineHeader, AirlineNav, AirlineDashboard, AirlineManagement,AirlineReport,AirlineSetting, AirlineAddFlightForm, Header],
+  imports: [RouterOutlet, AirlineNav, Header],
   templateUrl: './airline.html',
   styleUrl: './airline.scss'
 })

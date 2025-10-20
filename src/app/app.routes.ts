@@ -192,6 +192,18 @@ export const routes: Routes = [
     }
   },
   {
+    path: "information",
+    loadComponent: () => {
+      return import('./pages/information/information').then(m => m.Information)
+    }
+  },
+  {
+    path: "booking-success/:id",
+    loadComponent: () => {
+      return import('./pages/booking-success/booking-success').then(m => m.BookingSuccess)
+    }
+  },
+  {
     path: "booking-success",
     loadComponent: () => {
       return import('./pages/booking-success/booking-success').then(m => m.BookingSuccess)

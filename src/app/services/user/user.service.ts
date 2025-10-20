@@ -26,4 +26,8 @@ export class UserService {
     // Try different possible endpoints
     return this.httpClient.patch<any>(`${environment.apiUrl}/user/${userId}/role`, { role });
   }
+
+  getUserBookingHistory(userId: string, limit: number = 5): Observable<any> {
+    return this.httpClient.get<any>(`${environment.apiUrl}/bookings/user/${userId}?limit=${limit}`);
+  }
 }

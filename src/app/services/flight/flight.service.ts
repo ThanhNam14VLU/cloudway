@@ -16,6 +16,14 @@ export class FlightService {
   private searchResultSubject = new BehaviorSubject<FlightSearchResponse | null>(null);
   public searchResult$ = this.searchResultSubject.asObservable();
 
+  // Store passenger data để share giữa các components
+  private passengersSubject = new BehaviorSubject<{adults: number, children: number, infants: number} | null>(null);
+  public passengers$ = this.passengersSubject.asObservable();
+
+  // Store selected flight data để share giữa các components
+  private selectedFlightSubject = new BehaviorSubject<any>(null);
+  public selectedFlight$ = this.selectedFlightSubject.asObservable();
+
   constructor(private http: HttpClient) {}
 
   /**
@@ -66,6 +74,48 @@ export class FlightService {
    */
   clearSearchResult(): void {
     this.searchResultSubject.next(null);
+  }
+
+  /**
+   * Set passenger data
+   */
+  setPassengers(passengers: {adults: number, children: number, infants: number}): void {
+    this.passengersSubject.next(passengers);
+  }
+
+  /**
+   * Get current passenger data
+   */
+  getCurrentPassengers(): {adults: number, children: number, infants: number} | null {
+    return this.passengersSubject.value;
+  }
+
+  /**
+   * Clear passenger data
+   */
+  clearPassengers(): void {
+    this.passengersSubject.next(null);
+  }
+
+  /**
+   * Set selected flight data
+   */
+  setSelectedFlight(flight: any): void {
+    this.selectedFlightSubject.next(flight);
+  }
+
+  /**
+   * Get current selected flight data
+   */
+  getCurrentSelectedFlight(): any {
+    return this.selectedFlightSubject.value;
+  }
+
+  /**
+   * Clear selected flight data
+   */
+  clearSelectedFlight(): void {
+    this.selectedFlightSubject.next(null);
   }
 
   /**

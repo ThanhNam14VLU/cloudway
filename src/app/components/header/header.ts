@@ -42,7 +42,6 @@ export class Header implements OnInit {
   private loadUserProfile(userId: string) {
     this.userService.getProfile(userId).subscribe({
       next: (profile) => {
-        console.log('User profile loaded:', profile);
         this.userProfile = profile;
       },
       error: (error) => {

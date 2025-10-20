@@ -68,3 +68,12 @@ body {
 * {
   font-family: "Archivo", sans-serif;
 }
+
+// Dialog container styles
+.fare-selection-dialog-container {
+  .mat-mdc-dialog-container {
+    padding: 0;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+}

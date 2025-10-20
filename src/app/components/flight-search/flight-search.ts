@@ -1,8 +1,8 @@
-import { Component, AfterViewInit, ElementRef, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { NgClass, CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { AirportModel } from '../../models/airport.model';
 import { AirportService } from '../../services/airport/airport.service';
@@ -10,6 +10,7 @@ import { FlightService } from '../../services/flight/flight.service';
 import { FlightSearchRequest } from '../../models/flight.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-flight-search',
@@ -25,7 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
   templateUrl: './flight-search.html',
   styleUrl: './flight-search.scss'
 })
-export class FlightSearch implements AfterViewInit, OnInit {
+export class FlightSearch implements AfterViewInit, OnInit, OnDestroy {
   tripType: 'oneway' | 'roundtrip' = 'oneway';
   airports: AirportModel[] = [];
   
@@ -38,22 +39,34 @@ export class FlightSearch implements AfterViewInit, OnInit {
   children: number = 0;
   infants: number = 0;
 
+  // Custom dropdown state
+  departureDropdownOpen: boolean = false;
+  destinationDropdownOpen: boolean = false;
+  departureSearchTerm: string = '';
+  destinationSearchTerm: string = '';
+  filteredDepartureAirports: AirportModel[] = [];
+  filteredDestinationAirports: AirportModel[] = [];
+
   // UI state
   isLoading: boolean = false;
   errorMessages: string[] = [];
+  private subscriptions: Subscription[] = [];
 
   constructor(
     private router: Router, 
     private elementRef: ElementRef, 
     private airportService: AirportService,
-    private flightService: FlightService
+    private flightService: FlightService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
     // Load airports
-    this.airportService.getAirports().subscribe({
+    const airportsSub = this.airportService.getAirports().subscribe({
       next: (airports) => {
         this.airports = airports;
+        this.filteredDepartureAirports = [...airports];
+        this.filteredDestinationAirports = [...airports];
         console.log('✅ Loaded airports:', this.airports);
       },
       error: (error) => {
@@ -61,9 +74,16 @@ export class FlightSearch implements AfterViewInit, OnInit {
         this.errorMessages.push('Không thể tải danh sách sân bay');
       }
     });
+    this.subscriptions.push(airportsSub);
+
+    // Load existing search params if available
+    this.loadExistingSearchParams();
 
     // Set default dates
     this.setDefaultDates();
+
+    // Add click outside listener
+    this.addClickOutsideListener();
   }
 
   ngAfterViewInit() {
@@ -73,6 +93,30 @@ export class FlightSearch implements AfterViewInit, OnInit {
       video.muted = true;
       video.volume = 0;
       video.defaultMuted = true;
+    }
+  }
+
+  ngOnDestroy() {
+    // Clean up subscriptions
+    this.subscriptions.forEach(sub => sub.unsubscribe());
+  }
+
+  /**
+   * Load existing search params from service or route state
+   */
+  private loadExistingSearchParams(): void {
+    // Check if we have search params from service
+    const existingParams = this.flightService.getCurrentSearchParams();
+    if (existingParams) {
+      this.tripType = existingParams.trip_type;
+      this.departureAirportId = existingParams.departure_airport_id;
+      this.destinationAirportId = existingParams.destination_airport_id;
+      this.departureDate = existingParams.departure_date;
+      this.returnDate = existingParams.return_date || '';
+      this.adults = existingParams.adults;
+      this.children = existingParams.children;
+      this.infants = existingParams.infants;
+      console.log('✅ Loaded existing search params:', existingParams);
     }
   }
 
@@ -151,7 +195,7 @@ export class FlightSearch implements AfterViewInit, OnInit {
     this.isLoading = true;
 
     // Call backend API
-    this.flightService.searchFlights(searchRequest).subscribe({
+    const searchSub = this.flightService.searchFlights(searchRequest).subscribe({
       next: (response) => {
         console.log('✅ Flight search response:', response);
         
@@ -194,6 +238,8 @@ export class FlightSearch implements AfterViewInit, OnInit {
         this.isLoading = false;
       }
     });
+    
+    this.subscriptions.push(searchSub);
   }
 
   /**
@@ -249,5 +295,80 @@ export class FlightSearch implements AfterViewInit, OnInit {
 
   increaseInfants() {
     this.infants++;
+  }
+
+  // Custom dropdown methods
+  toggleDepartureDropdown(): void {
+    this.departureDropdownOpen = !this.departureDropdownOpen;
+    if (this.departureDropdownOpen) {
+      this.destinationDropdownOpen = false;
+      this.departureSearchTerm = '';
+      this.filterDepartureAirports();
+    }
+  }
+
+  toggleDestinationDropdown(): void {
+    this.destinationDropdownOpen = !this.destinationDropdownOpen;
+    if (this.destinationDropdownOpen) {
+      this.departureDropdownOpen = false;
+      this.destinationSearchTerm = '';
+      this.filterDestinationAirports();
+    }
+  }
+
+  selectDepartureAirport(airportId: string, event: Event): void {
+    event.stopPropagation();
+    this.departureAirportId = airportId;
+    this.departureDropdownOpen = false;
+    this.clearErrors();
+  }
+
+  selectDestinationAirport(airportId: string, event: Event): void {
+    event.stopPropagation();
+    this.destinationAirportId = airportId;
+    this.destinationDropdownOpen = false;
+    this.clearErrors();
+  }
+
+  filterDepartureAirports(): void {
+    if (!this.departureSearchTerm.trim()) {
+      this.filteredDepartureAirports = [...this.airports];
+    } else {
+      const searchTerm = this.departureSearchTerm.toLowerCase();
+      this.filteredDepartureAirports = this.airports.filter(airport =>
+        airport.name.toLowerCase().includes(searchTerm) ||
+        airport.city.toLowerCase().includes(searchTerm) ||
+        airport.iata_code.toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
+  filterDestinationAirports(): void {
+    if (!this.destinationSearchTerm.trim()) {
+      this.filteredDestinationAirports = [...this.airports];
+    } else {
+      const searchTerm = this.destinationSearchTerm.toLowerCase();
+      this.filteredDestinationAirports = this.airports.filter(airport =>
+        airport.name.toLowerCase().includes(searchTerm) ||
+        airport.city.toLowerCase().includes(searchTerm) ||
+        airport.iata_code.toLowerCase().includes(searchTerm)
+      );
+    }
+  }
+
+  getSelectedAirport(airportId: string): AirportModel | undefined {
+    return this.airports.find(airport => airport.id === airportId);
+  }
+
+  private addClickOutsideListener(): void {
+    document.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const isInsideDropdown = target.closest('.custom-dropdown');
+      
+      if (!isInsideDropdown) {
+        this.departureDropdownOpen = false;
+        this.destinationDropdownOpen = false;
+      }
+    });
   }
 }

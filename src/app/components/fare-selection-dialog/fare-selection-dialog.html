@@ -1,0 +1,98 @@
+<div class="fare-selection-dialog">
+  <div class="dialog-header">
+    <h2>Chọn hạng vé</h2>
+    <button class="close-btn" (click)="cancel()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+  </div>
+
+  @if (flight) {
+    <div class="flight-info">
+      <div class="flight-details">
+        <div class="airline-info">
+          <img [src]="flight.logo" [alt]="flight.airline" class="airline-logo">
+          <div class="flight-code">{{ flight.code }}</div>
+        </div>
+        <div class="route-info">
+          <div class="route">
+            <span class="airport">{{ flight.departAirport }}</span>
+            <span class="arrow">→</span>
+            <span class="airport">{{ flight.arriveAirport }}</span>
+          </div>
+          <div class="time-info">
+            <span class="departure-time">{{ flight.departTime }}</span>
+            <span class="duration">{{ flight.duration }}</span>
+            <span class="arrival-time">{{ flight.arriveTime }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+
+  <div class="fare-options">
+    <h3>Chọn hạng vé phù hợp</h3>
+    @if (getFareOptions().length > 0) {
+      <div class="fare-cards">
+        @for (fare of getFareOptions(); track fare.id) {
+          <div 
+            class="fare-card"
+            [class.selected]="selectedFare?.id === fare.id"
+            (click)="selectFare(fare)">
+        
+        <div class="fare-header">
+          <div class="fare-type">
+            <h4>{{ fare.class_type }}</h4>
+            <p>{{ fare.description }}</p>
+          </div>
+          <div class="fare-price">
+            <span class="price">{{ formatPrice(fare.base_price) }}</span>
+            <span class="currency">VND</span>
+          </div>
+        </div>
+
+        <div class="fare-features">
+          <ul>
+            @for (feature of fare.features; track feature) {
+              <li>
+                <span class="material-symbols-outlined check-icon">check</span>
+                {{ feature }}
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="fare-footer">
+          @if (selectedFare?.id === fare.id) {
+            <div class="selection-indicator">
+              <span class="material-symbols-outlined">check_circle</span>
+              Đã chọn
+            </div>
+          }
+        </div>
+          </div>
+        }
+      </div>
+    }
+    
+    @if (getFareOptions().length === 0) {
+      <div class="no-fares-message">
+        <div class="message-content">
+          <span class="material-symbols-outlined">info</span>
+          <p>Không có hạng vé nào khả dụng cho chuyến bay này.</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="dialog-actions">
+    <button class="btn btn-secondary" (click)="cancel()">
+      Hủy
+    </button>
+    <button 
+      class="btn btn-primary" 
+      [disabled]="!selectedFare"
+      (click)="confirmSelection()">
+      Xác nhận chọn
+    </button>
+  </div>
+</div>

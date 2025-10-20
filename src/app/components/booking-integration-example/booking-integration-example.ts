@@ -20,7 +20,7 @@ import { BackendFlight } from '../../models/flight.model';
               <strong>{{ selectedFlight.flight_number }}</strong>
               <span>{{ selectedFlight.airline.name }}</span>
               <span>{{ selectedFlight.departure.airport.iata_code }} → {{ selectedFlight.arrival.airport.iata_code }}</span>
-              <span>Giá: {{ selectedFlight.pricing.total_price | currency:'VND':'symbol':'1.0-0':'vi' }}</span>
+              <span>Giá: {{ formatPrice(selectedFlight.pricing.total_price) }}</span>
             </div>
           </div>
         } @else {
@@ -41,7 +41,7 @@ import { BackendFlight } from '../../models/flight.model';
           <div class="result-info">
             <p><strong>PNR Code:</strong> {{ bookingResult.booking.pnr_code }}</p>
             <p><strong>Status:</strong> {{ bookingResult.booking.status }}</p>
-            <p><strong>Total Amount:</strong> {{ bookingResult.booking.payment.amount | currency:'VND':'symbol':'1.0-0':'vi' }}</p>
+            <p><strong>Total Amount:</strong> {{ formatPrice(bookingResult.booking.payment.amount) }}</p>
             <p><strong>Payment Status:</strong> {{ bookingResult.booking.payment.status }}</p>
           </div>
         </div>
@@ -109,8 +109,10 @@ export class BookingIntegrationExampleComponent implements OnInit {
       flight_id: 'cd593248-07ff-4eb6-898b-81bf71704b5a',
       flight_number: 'VN003',
       airline: {
+        id: 'f8236b71-7c5b-4bba-a2e7-978c74a6b672',
         name: 'Vietnam Airlines',
-        code: 'VN'
+        code: 'VN',
+        logo: 'https://tgdwrhbnigwskfpkzfgr.supabase.co/storage/v1/object/public/logos/f8236b71-7c5b-4bba-a2e7-978c74a6b672/f8236b71-7c5b-4bba-a2e7-978c74a6b672.png'
       },
       departure: {
         airport: {
@@ -144,14 +146,46 @@ export class BookingIntegrationExampleComponent implements OnInit {
         seat_capacity: 180
       },
       status: 'SCHEDULED',
-      available_seats: 999,
+      available_seats: 250,
+      total_seats: 250,
+      fares: [
+        {
+          base_price: 2000000,
+          fare_bucket: {
+            id: '6135348f-2e68-4a4b-a750-9a9dc69a17b6',
+            code: 'BUS',
+            class_type: 'Business',
+            description: 'Hạng thương gia'
+          }
+        },
+        {
+          base_price: 1500000,
+          fare_bucket: {
+            id: 'b500ed8d-fc0e-4439-bb9d-46f601295b5b',
+            code: 'ECO',
+            class_type: 'Economy',
+            description: 'Hạng phổ thông'
+          }
+        }
+      ],
       pricing: {
-        adult_price: 5000000,
-        child_price: 3200000,
-        infant_price: 500000,
-        total_price: 5000000,
+        base_price: 1500000,
+        total_passengers: 2,
+        total_price: 3000000,
         currency: 'VND',
-        breakdown: {}
+        breakdown: {
+          adults: {
+            count: 1,
+            unit_price: 1500000,
+            total: 1500000
+          },
+          children: {
+            count: 1,
+            unit_price: 1500000,
+            total: 1500000
+          },
+          infants: null
+        }
       },
       fare_buckets: []
     };
@@ -162,5 +196,9 @@ export class BookingIntegrationExampleComponent implements OnInit {
   onBookingCreated(bookingResponse: BookingResponse) {
     console.log('🎉 Booking created in parent component:', bookingResponse);
     this.bookingResult = bookingResponse;
+  }
+
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat('en-US').format(price) + ' VND';
   }
 }

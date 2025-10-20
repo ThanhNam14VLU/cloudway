@@ -24,6 +24,7 @@ app-header {
   margin-bottom: 1.25rem;
 }
 
+
 /* Top Controls */
 .top-controls {
   display: flex;
@@ -96,6 +97,7 @@ app-header {
   transform: rotate(180deg);
   transition: transform 0.2s ease;
 }
+
 
 /* Passenger Dropdown */
 .passenger-dropdown {
@@ -359,6 +361,28 @@ app-header {
   color: #666;
 }
 
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.clear-filters-btn {
+  background: none;
+  border: none;
+  color: #03a9f4;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.clear-filters-btn:hover {
+  background-color: #f0f8ff;
+}
+
 .airline-filters {
   display: flex;
   flex-direction: column;
@@ -597,6 +621,83 @@ app-header {
   gap: 1rem;
 }
 
+
+/* Selection Status */
+.selection-status {
+  background: #f8f9ff;
+  border: 1px solid #e3f2fd;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.status-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.departure-status,
+.return-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 14px;
+  color: #666;
+}
+
+.departure-status.completed,
+.return-status.completed {
+  color: #4caf50;
+  font-weight: 600;
+}
+
+.departure-status mat-icon,
+.return-status mat-icon {
+  font-size: 20px;
+}
+
+.departure-status.completed mat-icon,
+.return-status.completed mat-icon {
+  color: #4caf50;
+}
+
+.proceed-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.75rem;
+}
+
+.total-price {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e91e63;
+}
+
+.proceed-btn {
+  background: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 25px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.proceed-btn:hover {
+  background: #45a049;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(76, 175, 80, 0.3);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .main-content {
@@ -616,6 +717,21 @@ app-header {
   .search-btn {
     width: 100%;
   }
+
+  .selection-status {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .proceed-section {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .proceed-btn {
+    width: 100%;
+  }
+
 
   .top-controls {
     flex-direction: column;

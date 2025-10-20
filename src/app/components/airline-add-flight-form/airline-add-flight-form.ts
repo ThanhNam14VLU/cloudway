@@ -39,10 +39,8 @@ export class AirlineAddFlightForm implements OnInit {
     scheduled_departure_local: '',
     scheduled_arrival_local: '',
     fares: [
-      { fare_bucket_id: '', passenger_type: 'ADULT', base_price: 0, total_seats: 0 }, // Business - Adult
-      { fare_bucket_id: '', passenger_type: 'CHILD', base_price: 0, total_seats: 0 }, // Business - Child
-      { fare_bucket_id: '', passenger_type: 'ADULT', base_price: 0, total_seats: 0 }, // Economy - Adult
-      { fare_bucket_id: '', passenger_type: 'CHILD', base_price: 0, total_seats: 0 }  // Economy - Child
+      { fare_bucket_id: '', base_price: 0, total_seats: 0 }, // Business
+      { fare_bucket_id: '', base_price: 0, total_seats: 0 }  // Economy
     ]
   };
 
@@ -93,11 +91,9 @@ export class AirlineAddFlightForm implements OnInit {
   }
 
   onBucketChange(): void {
-    // Map hardcoded bucket ids vào 4 fares theo thứ tự Business/Adult, Business/Child, Economy/Adult, Economy/Child
-    this.flightPayload.fares[0].fare_bucket_id = this.businessBucketId; // Business - Adult
-    this.flightPayload.fares[1].fare_bucket_id = this.businessBucketId; // Business - Child
-    this.flightPayload.fares[2].fare_bucket_id = this.economyBucketId;  // Economy - Adult
-    this.flightPayload.fares[3].fare_bucket_id = this.economyBucketId;  // Economy - Child
+    // Map hardcoded bucket ids vào 2 fares theo thứ tự Business, Economy
+    this.flightPayload.fares[0].fare_bucket_id = this.businessBucketId; // Business
+    this.flightPayload.fares[1].fare_bucket_id = this.economyBucketId;  // Economy
     console.log('🔧 Fare bucket IDs set:', {
       business: this.businessBucketId,
       economy: this.economyBucketId
@@ -192,12 +188,17 @@ export class AirlineAddFlightForm implements OnInit {
     
     // Fare bucket IDs are hardcoded, no need to validate
     
-    // Check fares have valid prices (seats are not required for price-only input)
+    // Check fares have valid prices and seat counts
     for (let i = 0; i < this.flightPayload.fares.length; i++) {
       const fare = this.flightPayload.fares[i];
       if (fare.base_price <= 0) {
         console.error(`❌ Invalid fare price at index ${i}:`, fare);
-        alert(`Vui lòng nhập giá vé cho tất cả loại vé`);
+        alert(`Vui lòng nhập giá vé cho tất cả hạng vé`);
+        return false;
+      }
+      if (fare.total_seats <= 0) {
+        console.error(`❌ Invalid seat count at index ${i}:`, fare);
+        alert(`Vui lòng nhập số ghế cho tất cả hạng vé`);
         return false;
       }
     }
