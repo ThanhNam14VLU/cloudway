@@ -87,11 +87,18 @@
   color: #34495e;
 }
 
-.filter-container input[type="date"] {
+.filter-container input[type="date"],
+.filter-container select {
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 8px;
   font-size: 14px;
+}
+
+.filter-container select {
+  min-width: 150px;
+  background-color: #fff;
+  cursor: pointer;
 }
 
 .filter-btn {
@@ -190,12 +197,28 @@ input[type="checkbox"] {
   margin-bottom: 10px;
 }
 
-/* Route info styling */
-.route-info {
+/* Airline info styling */
+.airline-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 4px;
+  gap: 2px;
+}
+
+.airline-name {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 14px;
+}
+
+.airline-code {
+  font-size: 12px;
+  color: #7f8c8d;
+  font-style: italic;
+}
+
+.no-airline {
+  color: #bdc3c7;
+  font-style: italic;
 }
 
 .airport-code {
@@ -213,7 +236,6 @@ input[type="checkbox"] {
 .city-info {
   font-size: 12px;
   color: #7f8c8d;
-  text-align: center;
 }
 
 /* Status badges */
@@ -230,6 +252,16 @@ input[type="checkbox"] {
   color: #1976d2;
 }
 
+.status.boarding {
+  background-color: #fff3e0;
+  color: #f57c00;
+}
+
+.status.departed {
+  background-color: #e8f5e8;
+  color: #2e7d32;
+}
+
 .status.on-time {
   background-color: #e8f5e8;
   color: #2e7d32;
@@ -238,6 +270,16 @@ input[type="checkbox"] {
 .status.completed {
   background-color: #f3e5f5;
   color: #7b1fa2;
+}
+
+.status.cancelled {
+  background-color: #ffebee;
+  color: #d32f2f;
+}
+
+.status.delayed {
+  background-color: #fff8e1;
+  color: #f9a825;
 }
 
 .status.unknown {
@@ -286,7 +328,8 @@ input[type="checkbox"] {
     gap: 10px;
   }
   
-  .filter-container input {
+  .filter-container input,
+  .filter-container select {
     width: 100%;
   }
   
