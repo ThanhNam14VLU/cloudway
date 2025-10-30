@@ -2,12 +2,20 @@
  * Passenger Information DTO
  */
 export interface PassengerInfo {
+  id?: string;
   full_name: string;
   date_of_birth?: string;
   id_number?: string;
   phone?: string;
   email?: string;
   passenger_type: 'ADULT' | 'CHILD' | 'INFANT';
+  created_at?: string;
+  pricing?: {
+    base_price: number;
+    passenger_price: number;
+    passenger_type: string;
+    currency: string;
+  };
 }
 
 /**
@@ -40,6 +48,67 @@ export interface BookingSegmentResponse {
   passengers: PassengerInfo[];
   price: number;
   created_at: string;
+  fare_bucket?: {
+    id: string;
+    code: string;
+    class_type: string;
+    description: string;
+  };
+  flight_instance?: {
+    id: string;
+    scheduled_departure_local: string;
+    scheduled_arrival_local: string;
+    flight_number?: {
+      code: string;
+      airline?: {
+        id: string;
+        name: string;
+        iata_code: string;
+        logo?: string;
+      };
+      departure_airport?: {
+        id: string;
+        city: string;
+        name: string;
+        country: string;
+        iata_code: string;
+      };
+      arrival_airport?: {
+        id: string;
+        city: string;
+        name: string;
+        country: string;
+        iata_code: string;
+      };
+    };
+  };
+  duration?: {
+    hours: number;
+    minutes: number;
+    total_minutes: number;
+    formatted: string;
+  };
+  pricing?: {
+    base_price: number;
+    segment_total: number;
+    currency: string;
+    fare_bucket?: {
+      id: string;
+      code: string;
+      class_type: string;
+      description: string;
+    };
+    fare_details?: {
+      id: string;
+      base_price: number;
+      fare_bucket?: {
+        id: string;
+        code: string;
+        class_type: string;
+        description: string;
+      };
+    };
+  };
 }
 
 /**

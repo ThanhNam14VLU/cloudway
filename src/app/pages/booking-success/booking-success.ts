@@ -6,6 +6,9 @@ import { Header } from '../../components/header/header';
 import { BookingResponse, BookingSegmentResponse, PassengerInfo } from '../../models/booking.model';
 import { NotificationService } from '../../services/notification/notification.service';
 import jsPDF from 'jspdf';
+import { environment } from '../../../environments/environment';
+
+// Updated interfaces to support new API structure with pricing
 
 @Component({
   selector: 'app-booking-success',
@@ -69,7 +72,7 @@ export class BookingSuccess implements OnInit {
     this.isLoading = true;
     this.errorMessages = [];
     
-    const apiUrl = `http://localhost:3000/bookings/${bookingId}/booking-details`;
+    const apiUrl = `${environment.apiUrl}/bookings/${bookingId}/booking-details`;
     console.log('🔗 API URL:', apiUrl);
     
     this.http.get<any>(apiUrl).subscribe({
@@ -99,7 +102,7 @@ export class BookingSuccess implements OnInit {
     this.bookingData = {
       bookingCode: apiData.booking?.pnr_code || '',
       totalAmount: apiData.payment?.amount || 0,
-      paymentStatus: apiData.payment?.status || '',
+      paymentStatus: this.getPaymentStatusLabel(apiData.payment?.status || ''),
       passengerName: apiData.booking?.contact_info?.fullname || '',
       passengerNames: this.extractPassengerNames(apiData.segments || []),
       contactName: apiData.booking?.contact_info?.fullname || '',
@@ -117,6 +120,15 @@ export class BookingSuccess implements OnInit {
     };
     
     console.log('✅ Processed booking data:', this.bookingData);
+    console.log('💰 Total amount from API:', apiData.payment?.amount);
+    console.log('🎫 Segments with pricing:', this.bookingData.segments.map(s => ({
+      id: s.id,
+      segmentTotal: s.pricing?.segment_total,
+      passengers: s.passengers?.map(p => ({
+        name: p.full_name,
+        price: p.pricing?.passenger_price
+      }))
+    })));
   }
 
   /**
@@ -313,10 +325,10 @@ export class BookingSuccess implements OnInit {
         doc.text(`Type: ${this.getPassengerTypeLabel(ticket.passenger.passenger_type)}`, 20, yPosition + 17);
         doc.text(`Class: ${this.getFareBucketClass(ticket.segment)}`, 20, yPosition + 22);
         
-        // Price on the right side
+        // Price on the right side - use individual ticket price
         doc.setFont('helvetica', 'bold');
         doc.setFontSize(10);
-        doc.text(`${this.formatCurrency(this.bookingData.totalAmount / tickets.length)}`, pageWidth - 25, yPosition + 17);
+        doc.text(`${this.formatCurrency(ticket.price)}`, pageWidth - 25, yPosition + 17);
         
         yPosition += 30;
         
@@ -353,10 +365,10 @@ export class BookingSuccess implements OnInit {
   }
 
   /**
-   * Get all tickets from booking segments
+   * Get all tickets from booking segments with pricing
    */
-  getAllTickets(): Array<{segment: any, passenger: any}> {
-    const tickets: Array<{segment: any, passenger: any}> = [];
+  getAllTickets(): Array<{segment: any, passenger: any, price: number}> {
+    const tickets: Array<{segment: any, passenger: any, price: number}> = [];
     
     console.log('🎫 Getting tickets from booking data:', this.bookingData);
     console.log('🎫 Segments:', this.bookingData.segments);
@@ -385,7 +397,18 @@ export class BookingSuccess implements OnInit {
         
         // Validate passenger data
         if (passenger && passenger.full_name) {
-          tickets.push({ segment, passenger });
+          // Get passenger price from API data
+          const passengerPrice = passenger.pricing?.passenger_price || 
+                                segment.pricing?.base_price || 
+                                0;
+          
+          console.log(`💰 Passenger ${passenger.full_name} price:`, passengerPrice);
+          
+          tickets.push({ 
+            segment, 
+            passenger, 
+            price: passengerPrice 
+          });
         } else {
           console.log(`⚠️ Invalid passenger data at index ${passengerIndex}:`, passenger);
         }
@@ -394,6 +417,7 @@ export class BookingSuccess implements OnInit {
     
     console.log('🎫 Final tickets array:', tickets);
     console.log('🎫 Total tickets found:', tickets.length);
+    console.log('💰 Total calculated price:', tickets.reduce((sum, ticket) => sum + ticket.price, 0));
     return tickets;
   }
 
@@ -417,10 +441,32 @@ export class BookingSuccess implements OnInit {
   }
 
   /**
+   * Get payment status label in Vietnamese
+   */
+  private getPaymentStatusLabel(status: string): string {
+    switch (status.toUpperCase()) {
+      case 'PENDING': return 'Chờ thanh toán';
+      case 'PAID': return 'Đã thanh toán';
+      case 'FAILED': return 'Thanh toán thất bại';
+      case 'CANCELLED': return 'Đã hủy';
+      case 'REFUNDED': return 'Đã hoàn tiền';
+      default: return status;
+    }
+  }
+
+  /**
    * Get fare bucket class type
    */
   getFareBucketClass(segment: any): string {
     return segment?.fare_bucket?.class_type || 'Economy';
+  }
+
+  /**
+   * Get total amount from individual ticket prices
+   */
+  getTotalAmountFromTickets(): number {
+    const tickets = this.getAllTickets();
+    return tickets.reduce((sum, ticket) => sum + ticket.price, 0);
   }
 
   /**
@@ -444,20 +490,31 @@ export class BookingSuccess implements OnInit {
    * Get debug information for troubleshooting
    */
   getDebugInfo(): any {
+    const tickets = this.getAllTickets();
     return {
       hasBookingCode: !!this.bookingData.bookingCode,
       hasBookingId: !!this.bookingData.bookingId,
       hasSegments: !!(this.bookingData.segments && this.bookingData.segments.length > 0),
       segmentsCount: this.bookingData.segments?.length || 0,
-      totalTickets: this.getAllTickets().length,
+      totalTickets: tickets.length,
+      totalAmountFromAPI: this.bookingData.totalAmount,
+      totalAmountFromTickets: this.getTotalAmountFromTickets(),
+      paymentStatus: this.bookingData.paymentStatus,
       bookingDataKeys: Object.keys(this.bookingData),
       segmentsStructure: this.bookingData.segments?.map(segment => ({
         id: segment.id,
+        segmentTotal: segment.pricing?.segment_total,
         passengersCount: segment.passengers?.length || 0,
         passengers: segment.passengers?.map(p => ({
           name: p.full_name,
-          type: p.passenger_type
+          type: p.passenger_type,
+          price: p.pricing?.passenger_price
         }))
+      })),
+      ticketsWithPricing: tickets.map(ticket => ({
+        passenger: ticket.passenger.full_name,
+        price: ticket.price,
+        segmentId: ticket.segment.id
       }))
     };
   }

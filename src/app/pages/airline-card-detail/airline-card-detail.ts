@@ -4,10 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Header } from '../../components/header/header';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { BookingService } from '../../services/booking/booking.service';
 import { BookingHelperService } from '../../services/booking/booking-helper.service';
 import { AuthService } from '../../services/auth/auth.service';
 import { FlightService } from '../../services/flight/flight.service';
+import { PaymentRealtimeService } from '../../services/payment/payment-realtime.service';
 import { 
   CreateBookingWithPassengersDto, 
   BookingResponse,
@@ -31,9 +33,9 @@ interface PassengerFormData {
 
 @Component({
   selector: 'app-airline-card-detail',
-  imports: [Header, MatIconModule, FormsModule, CommonModule],
+  imports: [Header, MatIconModule, MatProgressSpinnerModule, FormsModule, CommonModule],
   templateUrl: './airline-card-detail.html',
-  styleUrl: './airline-card-detail.scss'
+  styleUrl: './airline-card-detail.scss',
 })
 export class AirlineCardDetail implements OnInit {
   // Step management
@@ -64,13 +66,21 @@ export class AirlineCardDetail implements OnInit {
   // Dynamic passenger forms
   passengerForms: PassengerFormData[] = [];
 
+  // Payment waiting state
+  paymentWaiting: boolean = false;
+  paymentBookingId: string | null = null;
+  paymentDeadlineMs: number = 0; // epoch ms when countdown ends
+  paymentTimeLeftSec: number = 0; // remaining seconds
+  private paymentCountdownTimer: any = null;
+
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private bookingService: BookingService,
     private bookingHelper: BookingHelperService,
     private authService: AuthService,
-    private flightService: FlightService
+    private flightService: FlightService,
+    private paymentRealtime: PaymentRealtimeService
   ) {}
 
   ngOnInit() {
@@ -78,6 +88,11 @@ export class AirlineCardDetail implements OnInit {
     
     // Get router state immediately
     this.loadDataFromRouterState();
+
+    // In case user lands directly on step 3 via state, auto-start payment flow
+    if (this.currentStep === 3) {
+      this.startPaymentFlowIfNeeded();
+    }
   }
 
   private loadDataFromRouterState(): void {
@@ -311,7 +326,8 @@ export class AirlineCardDetail implements OnInit {
         this.saveContactData();
         this.completedSteps.push(2);
         this.currentStep = 3;
-        
+        // Auto-start booking creation and payment countdown when entering step 3
+        this.startPaymentFlowIfNeeded();
       } else {
         
         this.showContactValidationErrors();
@@ -829,9 +845,20 @@ export class AirlineCardDetail implements OnInit {
           console.log('✅ Booking created successfully');
           this.bookingResult = response;
           this.isCreatingBooking = false;
-          
-          // Navigate to success page with real booking data
-          this.navigateToSuccessPage(response);
+
+          // Start payment waiting flow: 5-minute countdown and realtime listener
+          const bookingId = response?.booking?.id;
+          if (!bookingId) {
+            // Fallback: navigate directly if bookingId is missing
+            this.navigateToSuccessPage(response);
+            return;
+          }
+
+          this.startPaymentCountdown(5 * 60); // 5 minutes
+          this.paymentBookingId = bookingId;
+          this.paymentWaiting = true;
+
+          this.waitForPaymentAndRedirect(bookingId);
         },
         error: (error) => {
           console.error('❌ Booking creation failed:', error);
@@ -847,6 +874,76 @@ export class AirlineCardDetail implements OnInit {
       this.errorMessages = ['Có lỗi xảy ra khi tạo booking'];
       this.isCreatingBooking = false;
     }
+  }
+
+  private startPaymentCountdown(totalSeconds: number) {
+    this.paymentDeadlineMs = Date.now() + totalSeconds * 1000;
+    this.updatePaymentTimeLeft();
+    if (this.paymentCountdownTimer) {
+      clearInterval(this.paymentCountdownTimer);
+    }
+    this.paymentCountdownTimer = setInterval(() => {
+      this.updatePaymentTimeLeft();
+      if (this.paymentTimeLeftSec <= 0) {
+        clearInterval(this.paymentCountdownTimer);
+        this.paymentCountdownTimer = null;
+      }
+    }, 1000);
+  }
+
+  private updatePaymentTimeLeft() {
+    const diffMs = this.paymentDeadlineMs - Date.now();
+    this.paymentTimeLeftSec = Math.max(0, Math.floor(diffMs / 1000));
+  }
+
+  private async waitForPaymentAndRedirect(bookingId: string) {
+    try {
+      const paid = await this.paymentRealtime.waitForPaidByBooking(bookingId, 5 * 60 * 1000);
+      if (paid) {
+        // Navigate to success with booking id
+        this.router.navigate(['/booking-success', bookingId]);
+      } else {
+        // Timeout: redirect to home with message
+        this.router.navigate(['/home'], { queryParams: { paymentTimeout: '1' } });
+      }
+    } finally {
+      this.paymentWaiting = false;
+      if (this.paymentCountdownTimer) {
+        clearInterval(this.paymentCountdownTimer);
+        this.paymentCountdownTimer = null;
+      }
+    }
+  }
+
+  /**
+   * Ensure we only trigger booking creation once when entering payment step
+   */
+  private startPaymentFlowIfNeeded() {
+    if (this.paymentWaiting || this.bookingResult) {
+      return;
+    }
+    // Prevent duplicate clicks by setting flag early
+    this.isCreatingBooking = true;
+    this.completeBooking();
+  }
+
+  /**
+   * Helpers for payment instruction display
+   */
+  getBookingPNR(): string {
+    return this.bookingResult?.booking?.pnr_code || '';
+  }
+
+  getTransferNote(): string {
+    const pnr = this.getBookingPNR();
+    return pnr ? `Thanh toan cho PNR${pnr}` : '';
+  }
+
+  async copyText(text: string) {
+    try {
+      if (!text) return;
+      await navigator.clipboard.writeText(text);
+    } catch (e) {}
   }
 
   /**
