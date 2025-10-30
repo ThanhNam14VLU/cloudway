@@ -16,6 +16,17 @@
           [(ngModel)]="searchTerm">
       </div>
       <div class="filter-container">
+        <label for="airline-filter">Hãng bay:</label>
+        <select 
+          id="airline-filter" 
+          name="airline-filter"
+          [(ngModel)]="selectedAirlineId">
+          <option value="">Tất cả hãng bay</option>
+          <option *ngFor="let airline of airlines" [value]="airline.id">
+            {{ airline.name }}
+          </option>
+        </select>
+        
         <label for="from-date">Từ ngày:</label>
         <input 
           type="date" 
@@ -42,6 +53,7 @@
         <thead>
         <tr>
           <th>Mã Chuyến Bay</th>
+          <th>Hãng Bay</th>
           <th>Tuyến Bay</th>
           <th>Giờ Đi Dự Kiến</th>
           <th>Giờ Đến Dự Kiến</th>
@@ -51,6 +63,13 @@
         <tbody>
         <tr *ngFor="let flight of filteredFlights; let i = index">
           <td>{{ flight.flight_number.code || '-' }}</td>
+          <td>
+            <div class="airline-info" *ngIf="flight.flight_number.airline">
+              <span class="airline-name">{{ flight.flight_number.airline.name }}</span>
+              <span class="airline-code">({{ flight.flight_number.airline.iata_code }})</span>
+            </div>
+            <span *ngIf="!flight.flight_number.airline" class="no-airline">-</span>
+          </td>
           <td>
             <div class="route-info">
               <span class="airport-code">{{ flight.flight_number.departure_airport.iata_code }}</span>
