@@ -374,22 +374,63 @@
                   <img src="./assets/images/QR_SePay.png" alt="SePay QR Code" class="qr-image">
                   <p class="qr-instruction">Quét mã QR bằng ứng dụng ngân hàng để thanh toán</p>
                 </div>
+                <!-- Bank account info -->
+                <div class="bank-info">
+                  <div class="row">
+                    <span class="label">Tên tài khoản:</span>
+                    <span class="value">TRINH TU HAO</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Số tài khoản:</span>
+                    <span class="value code">00001998136</span>
+                  </div>
+                  <div class="row">
+                    <span class="label">Ngân hàng:</span>
+                    <span class="value">TPBank</span>
+                  </div>
+                </div>
               </div>
-              
-              <div class="payment-info">
-                <div class="info-item">
-                  <i class="fas fa-shield-alt"></i>
-                  <span>Thanh toán an toàn và bảo mật</span>
+
+              <!-- Loading while creating booking and preparing countdown -->
+              @if (isCreatingBooking && !paymentWaiting) {
+                <div class="loading-box">
+                  <mat-spinner diameter="26"></mat-spinner>
+                  <div class="loading-text">Đang khởi tạo mã đặt chỗ và bộ đếm thời gian...</div>
                 </div>
-                <div class="info-item">
-                  <i class="fas fa-clock"></i>
-                  <span>Xử lý trong 1-2 phút</span>
+              }
+
+              <!-- Payment instruction with PNR for transfer content -->
+              @if (paymentWaiting && bookingResult?.booking?.pnr_code) {
+                <div class="transfer-instruction">
+                  <div class="instruction-row">
+                    <span class="label">Mã đặt chỗ (PNR):</span>
+                    <span class="value code">{{ getBookingPNR() }}</span>
+                    <button class="icon-btn" (click)="copyText(getBookingPNR())" aria-label="Sao chép PNR">
+                      <mat-icon class="material-symbols-outlined">content_copy</mat-icon>
+                    </button>
+                  </div>
+                  <div class="instruction-row">
+                    <span class="label">Nội dung chuyển khoản:</span>
+                    <span class="value">Thanh toan cho PNR{{ getBookingPNR() }}</span>
+                    <button class="icon-btn" (click)="copyText('Thanh toan cho PNR' + getBookingPNR())" aria-label="Sao chép nội dung">
+                      <mat-icon class="material-symbols-outlined">content_copy</mat-icon>
+                    </button>
+                  </div>
+                  <div class="hint">Vui lòng nhập đúng nội dung để hệ thống tự động xác nhận thanh toán.</div>
                 </div>
-                <div class="info-item">
-                  <i class="fas fa-mobile-alt"></i>
-                  <span>Hỗ trợ tất cả ngân hàng</span>
+              }
+
+              <!-- Payment waiting countdown -->
+              @if (paymentWaiting) {
+                <div class="countdown-box">
+                  <div class="countdown-title">Vui lòng hoàn tất thanh toán trong</div>
+                  <div class="countdown-time">
+                    {{ (paymentTimeLeftSec/60) | number:'2.0-0' }}:
+                    {{ (paymentTimeLeftSec%60) | number:'2.0-0' }}
+                  </div>
+                  <div class="countdown-note">Sau khi thanh toán thành công, hệ thống sẽ tự động xác nhận và chuyển bạn sang trang vé.</div>
                 </div>
-              </div>
+              }
             </div>
           </div>
         </div>
@@ -584,17 +625,10 @@
 
   <!-- Footer Navigation -->
   <div class="booking-footer">
-    <button class="btn-secondary" (click)="previousStep()" [disabled]="isCreatingBooking">Quay lại</button>
+    <button class="btn-secondary" (click)="previousStep()" [disabled]="isCreatingBooking || paymentWaiting">Quay lại</button>
     @if (currentStep < 3) {
       <button class="btn-primary" (click)="nextStep()" [disabled]="isCreatingBooking">Tiếp tục</button>
-    } @else {
-      <button class="btn-primary" (click)="completeBooking()" [disabled]="isCreatingBooking">
-        @if (isCreatingBooking) {
-          Đang tạo booking...
-        } @else {
-          Hoàn tất đặt chỗ
-        }
-      </button>
     }
+    <!-- Khi ở bước 3, không hiển thị nút tạo booking; flow chạy tự động -->
   </div>
 </div>

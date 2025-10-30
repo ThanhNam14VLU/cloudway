@@ -1,3 +1,140 @@
+.transfer-instruction {
+  margin-top: 16px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 12px 14px;
+  border-radius: 10px;
+
+  .instruction-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 8px;
+    line-height: 1.5;
+  }
+
+  .label {
+    font-weight: 600;
+    min-width: 190px;
+  }
+
+  .value {
+    word-break: break-word;
+  }
+
+  .code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(0, 0, 0, 0.25);
+  }
+
+  .icon-btn {
+    border: none;
+    background: transparent;
+    color: #fff;
+    opacity: 0.85;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background 0.2s ease, opacity 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.12);
+      opacity: 1;
+    }
+
+    i {
+      font-size: 16px;
+    }
+
+    mat-icon {
+      display: inline-block;
+      font-size: 20px;
+      width: auto; /* avoid clipping ligature */
+      height: auto;
+      line-height: 1;
+      vertical-align: middle;
+      color: #fff;
+      font-family: 'Material Symbols Outlined';
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  }
+
+  .hint {
+    margin-top: 10px;
+    opacity: 0.9;
+  }
+}
+
+.countdown-box {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  text-align: center;
+
+  .countdown-title {
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  .countdown-time {
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: 1px;
+    padding: 6px 0 2px;
+  }
+
+  .countdown-note {
+    margin-top: 4px;
+    font-size: 13px;
+    opacity: 0.9;
+  }
+}
+
+.bank-info {
+  margin-top: 12px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 10px 12px;
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .label {
+    font-weight: 600;
+    min-width: 130px;
+  }
+
+  .value {
+    word-break: break-word;
+  }
+
+  .code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.08);
+  }
+}
+
+.loading-box {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  padding: 10px 12px;
+  .loading-text { opacity: 0.95; }
+}
 /* General Reset */
 * {
   margin: 0;
@@ -627,11 +764,9 @@ body {
 }
 
 .qr-code {
-  background: white;
   border-radius: 12px;
   padding: 20px;
   display: inline-block;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .qr-image {
@@ -643,7 +778,6 @@ body {
 }
 
 .qr-instruction {
-  color: #333;
   font-size: 14px;
   font-weight: 500;
   margin: 0;

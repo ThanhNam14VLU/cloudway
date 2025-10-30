@@ -58,7 +58,7 @@
       
       <div class="detail-row">
         <span class="label">Tổng tiền</span>
-        <span class="value total-amount">{{ formatCurrency(bookingData.totalAmount) }}</span>
+        <span class="value total-amount">{{ formatCurrency(getTotalAmountFromTickets()) }}</span>
       </div>
     </div>
     
@@ -125,7 +125,7 @@
                 </div>
               </div>
               <div class="ticket-price">
-                <span class="price-amount">{{ formatCurrency(bookingData.totalAmount / getAllTickets().length) }}</span>
+                <span class="price-amount">{{ formatCurrency(ticket.price) }}</span>
               </div>
             </div>
 
@@ -156,6 +156,8 @@
             <p>Số vé: {{ getAllTickets().length }}</p>
             <p>Mã booking: {{ bookingData.bookingCode || 'Không có' }}</p>
             <p>ID booking: {{ bookingData.bookingId || 'Không có' }}</p>
+            <p>Tổng từ API: {{ formatCurrency(bookingData.totalAmount) }}</p>
+            <p>Tổng từ vé: {{ formatCurrency(getTotalAmountFromTickets()) }}</p>
             
             <div class="debug-actions">
               <button class="btn-test" (click)="loadSampleData()">
